@@ -15,6 +15,13 @@
       "when": 1759308315659,
       "tag": "0001_hesitant_warbound",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1759309014462,
+      "tag": "0002_magical_warbird",
+      "breakpoints": true
     }
   ]
 }

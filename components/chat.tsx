@@ -1,0 +1,121 @@
+"use client";
+
+import { useState, useRef, useEffect } from "react";
+import { Send } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Messages } from "@/components/messages";
+import { SidebarToggle } from "@/components/sidebar-toggle";
+import { sendMessage } from "@/app/(chat)/chat/[id]/actions";
+import type { Message } from "@/lib/db/schema/messages";
+import { toast } from "sonner";
+
+interface ChatProps {
+  conversationId: string;
+  initialMessages: Message[];
+  conversationTitle: string;
+}
+
+export function Chat({ conversationId, initialMessages, conversationTitle }: ChatProps) {
+  const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!input.trim() || isLoading) return;
+
+    const userMessage = input.trim();
+    setInput("");
+    setIsLoading(true);
+
+    // Adiciona mensagem do usuário imediatamente
+    const tempUserMessage: Message = {
+      id: `temp-${Date.now()}`,
+      conversationId,
+      role: "user",
+      content: userMessage,
+      confidenceScore: null,
+      createdAt: new Date(),
+    };
+
+    setMessages((prev) => [...prev, tempUserMessage]);
+
+    try {
+      const result = await sendMessage(conversationId, userMessage);
+
+      if (result.success && result.userMessage && result.assistantMessage) {
+        // Substitui a mensagem temporária pelas mensagens reais do servidor
+        setMessages((prev) => [
+          ...prev.filter((m) => m.id !== tempUserMessage.id),
+          result.userMessage!,
+          result.assistantMessage!,
+        ]);
+      } else {
+        toast.error(result.error || "Erro ao enviar mensagem");
+        // Remove mensagem temporária em caso de erro
+        setMessages((prev) => prev.filter((m) => m.id !== tempUserMessage.id));
+      }
+    } catch (error) {
+      toast.error("Erro ao enviar mensagem");
+      setMessages((prev) => prev.filter((m) => m.id !== tempUserMessage.id));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e);
+    }
+  };
+
+  return (
+    <div className="flex h-screen flex-col">
+      {/* Header */}
+      <div className="border-b p-4 flex items-center gap-3">
+        <SidebarToggle />
+        <h1 className="font-semibold text-lg">{conversationTitle}</h1>
+      </div>
+
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto p-4">
+        <Messages messages={messages} isLoading={isLoading} />
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Input */}
+      <div className="border-t p-4">
+        <form onSubmit={handleSubmit} className="flex gap-2">
+          <Textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Faça uma pergunta sobre seus documentos..."
+            className="min-h-[60px] max-h-[200px] resize-none"
+            disabled={isLoading}
+          />
+          <Button
+            type="submit"
+            size="icon"
+            disabled={!input.trim() || isLoading}
+            className="h-[60px] w-[60px]"
+          >
+            <Send className="h-5 w-5" />
+          </Button>
+        </form>
+      </div>
+    </div>
+  );
+}
