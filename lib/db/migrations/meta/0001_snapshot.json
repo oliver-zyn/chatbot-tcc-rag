@@ -1,6 +1,6 @@
 {
-  "id": "f4662839-1ecc-48fc-9ba9-71fd1f9dcd58",
-  "prevId": "ab270498-0532-4efe-aac3-bb80ffc07ce2",
+  "id": "7420ba11-6166-4994-b184-4abe9c2832eb",
+  "prevId": "ff8608e8-0924-4f0e-be9b-9508e8d1f316",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -68,6 +68,43 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
+    },
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password": {
+          "name": "password",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      }
     },
     "public.resources": {
       "name": "resources",
