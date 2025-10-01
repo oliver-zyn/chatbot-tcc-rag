@@ -5,8 +5,8 @@ import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Messages } from "@/components/messages";
-import { SidebarToggle } from "@/components/sidebar-toggle";
-import { sendMessage } from "@/app/(chat)/chat/[id]/actions";
+import { PageHeader } from "@/components/page-header";
+import { sendMessage } from "@/lib/actions/messages";
 import type { Message } from "@/lib/db/schema/messages";
 import { toast } from "sonner";
 
@@ -82,21 +82,15 @@ export function Chat({ conversationId, initialMessages, conversationTitle }: Cha
   };
 
   return (
-    <div className="flex h-screen flex-col">
-      {/* Header */}
-      <div className="border-b p-4 flex items-center gap-3">
-        <SidebarToggle />
-        <h1 className="font-semibold text-lg">{conversationTitle}</h1>
-      </div>
+    <>
+      <PageHeader title={conversationTitle} />
+      <div className="flex h-[calc(100vh-3.5rem)] flex-col">
+        <div className="flex-1 overflow-y-auto p-4">
+          <Messages messages={messages} isLoading={isLoading} />
+          <div ref={messagesEndRef} />
+        </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4">
-        <Messages messages={messages} isLoading={isLoading} />
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* Input */}
-      <div className="border-t p-4">
+        <div className="border-t p-4">
         <form onSubmit={handleSubmit} className="flex gap-2">
           <Textarea
             value={input}
@@ -115,7 +109,8 @@ export function Chat({ conversationId, initialMessages, conversationTitle }: Cha
             <Send className="h-5 w-5" />
           </Button>
         </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

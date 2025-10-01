@@ -73,7 +73,6 @@ export function AppSidebar({
       className="overflow-hidden [&>[data-sidebar=sidebar]]:flex-row"
       {...props}
     >
-      {/* Primeira sidebar - ícones */}
       <Sidebar
         collapsible="none"
         className="!w-[calc(var(--sidebar-width-icon)_+_1px)] border-r"
@@ -126,7 +125,6 @@ export function AppSidebar({
         </SidebarFooter>
       </Sidebar>
 
-      {/* Segunda sidebar - lista de conversas */}
       <Sidebar collapsible="none" className="hidden flex-1 md:flex">
         <SidebarHeader className="gap-3.5 border-b p-4">
           <div className="flex w-full items-center justify-between">

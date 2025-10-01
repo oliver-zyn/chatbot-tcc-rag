@@ -9,7 +9,7 @@ export const messages = pgTable("messages", {
     .references(() => conversations.id, { onDelete: "cascade" }),
   role: text("role", { enum: ["user", "assistant"] }).notNull(),
   content: text("content").notNull(),
-  confidenceScore: integer("confidence_score"), // 0-100, apenas para mensagens do assistente
+  confidenceScore: integer("confidence_score"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

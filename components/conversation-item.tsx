@@ -14,7 +14,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { updateConversationTitleAction } from "@/app/(chat)/actions";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { updateConversationTitleAction } from "@/lib/actions/conversations";
 import type { Conversation } from "@/lib/db/schema/conversations";
 import { toast } from "sonner";
 
@@ -31,6 +41,7 @@ export function ConversationItem({
 }: ConversationItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(conversation.title);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -52,12 +63,13 @@ export function ConversationItem({
       return;
     }
 
-    try {
-      await updateConversationTitleAction(conversation.id, editedTitle.trim());
+    const result = await updateConversationTitleAction(conversation.id, editedTitle.trim());
+
+    if (result.success) {
       setIsEditing(false);
       toast.success("Título atualizado com sucesso");
-    } catch (error) {
-      toast.error("Erro ao atualizar título");
+    } else {
+      toast.error(result.error);
       setEditedTitle(conversation.title);
       setIsEditing(false);
     }
@@ -74,72 +86,97 @@ export function ConversationItem({
   };
 
   return (
-    <SidebarMenuItem>
-      <SidebarMenuButton asChild isActive={isActive} size="lg" className="h-16">
-        {isEditing ? (
-          <div className="flex items-start w-full">
-            <div className="flex flex-col gap-1 flex-1 overflow-hidden">
-              <input
-                ref={inputRef}
-                type="text"
-                value={editedTitle}
-                onChange={(e) => setEditedTitle(e.target.value)}
-                onBlur={handleSave}
-                onKeyDown={handleKeyDown}
-                className="font-medium text-sm bg-background rounded px-2 py-0.5 border-none outline-none focus:ring-0 w-full"
-              />
-              <span className="text-xs text-muted-foreground">
-                {new Date(conversation.updatedAt).toLocaleDateString("pt-BR", {
-                  day: "2-digit",
-                  month: "short",
-                })}
-              </span>
+    <>
+      <SidebarMenuItem>
+        <SidebarMenuButton asChild isActive={isActive} size="lg" className="h-16">
+          {isEditing ? (
+            <div className="flex items-start w-full">
+              <div className="flex flex-col gap-1 flex-1 overflow-hidden">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={editedTitle}
+                  onChange={(e) => setEditedTitle(e.target.value)}
+                  onBlur={handleSave}
+                  onKeyDown={handleKeyDown}
+                  className="font-medium text-sm bg-background rounded px-2 py-0.5 border-none outline-none focus:ring-0 w-full"
+                />
+                <span className="text-xs text-muted-foreground">
+                  {new Date(conversation.updatedAt).toLocaleDateString("pt-BR", {
+                    day: "2-digit",
+                    month: "short",
+                  })}
+                </span>
+              </div>
             </div>
-          </div>
-        ) : (
-          <Link href={`/chat/${conversation.id}`}>
-            <div className="flex flex-col gap-1 flex-1 overflow-hidden">
-              <span className="font-medium text-sm truncate">
-                {conversation.title}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                {new Date(conversation.updatedAt).toLocaleDateString("pt-BR", {
-                  day: "2-digit",
-                  month: "short",
-                })}
-              </span>
-            </div>
-          </Link>
-        )}
-      </SidebarMenuButton>
+          ) : (
+            <Link href={`/chat/${conversation.id}`}>
+              <div className="flex flex-col gap-1 flex-1 overflow-hidden">
+                <span className="font-medium text-sm truncate">
+                  {conversation.title}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {new Date(conversation.updatedAt).toLocaleDateString("pt-BR", {
+                    day: "2-digit",
+                    month: "short",
+                  })}
+                </span>
+              </div>
+            </Link>
+          )}
+        </SidebarMenuButton>
 
-      <DropdownMenu modal={true}>
-        <DropdownMenuTrigger asChild>
-          <SidebarMenuAction
-            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-            showOnHover={!isActive}
-          >
-            <MoreVertical />
-            <span className="sr-only">Mais</span>
-          </SidebarMenuAction>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" side="bottom">
-          <DropdownMenuItem
-            className="cursor-pointer"
-            onSelect={() => setIsEditing(true)}
-          >
-            <Pencil className="h-4 w-4" />
-            <span>Renomear</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            className="cursor-pointer text-destructive focus:bg-destructive/15 focus:text-destructive dark:text-red-500"
-            onSelect={() => onDelete(conversation.id)}
-          >
-            <Trash2 className="h-4 w-4" />
-            <span>Deletar</span>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </SidebarMenuItem>
+        <DropdownMenu modal={true}>
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuAction
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              showOnHover={!isActive}
+            >
+              <MoreVertical />
+              <span className="sr-only">Mais</span>
+            </SidebarMenuAction>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" side="bottom">
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onSelect={() => setIsEditing(true)}
+            >
+              <Pencil className="h-4 w-4" />
+              <span>Renomear</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="cursor-pointer text-destructive focus:bg-destructive/15 focus:text-destructive dark:text-red-500"
+              onSelect={() => setShowDeleteDialog(true)}
+            >
+              <Trash2 className="h-4 w-4" />
+              <span>Deletar</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Deletar conversa</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja deletar esta conversa? Todas as mensagens serão perdidas e esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                onDelete(conversation.id);
+                setShowDeleteDialog(false);
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Deletar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }

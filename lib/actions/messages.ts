@@ -2,29 +2,41 @@
 
 import { revalidatePath } from "next/cache";
 import { auth } from "@/app/(auth)/auth";
-import { createMessage, getConversationById } from "@/lib/db/queries";
+import { createMessage, getConversationById, checkRateLimit, incrementUsage } from "@/lib/db/queries";
 import type { Message } from "@/lib/db/schema/messages";
+import { sendMessageSchema } from "@/lib/validations/message";
 
 export async function sendMessage(conversationId: string, content: string) {
   try {
+    const validation = sendMessageSchema.safeParse({ conversationId, content });
+    if (!validation.success) {
+      return { success: false, error: validation.error.issues[0].message };
+    }
+
     const session = await auth();
 
     if (!session?.user) {
       return { success: false, error: "Não autorizado" };
     }
 
-    // Verifica se a conversa existe e pertence ao usuário
+    const rateLimit = await checkRateLimit(session.user.id);
+    if (!rateLimit.allowed) {
+      return {
+        success: false,
+        error: `Limite diário atingido. Você pode fazer até ${rateLimit.limit} perguntas por dia. Tente novamente amanhã.`,
+      };
+    }
+
     const conversation = await getConversationById(conversationId);
 
     if (!conversation || conversation.userId !== session.user.id) {
       return { success: false, error: "Conversa não encontrada" };
     }
 
-    // Salva mensagem do usuário
     const userMessage = await createMessage(conversationId, "user", content);
 
-    // TODO: Implementar busca RAG e geração de resposta com LLM
-    // Por enquanto, retorna uma resposta mock
+    await incrementUsage(session.user.id);
+
     const mockResponse = generateMockResponse(content);
     const assistantMessage = await createMessage(
       conversationId,
@@ -46,7 +58,6 @@ export async function sendMessage(conversationId: string, content: string) {
   }
 }
 
-// Função mock temporária - será substituída pelo RAG real
 function generateMockResponse(userQuestion: string): {
   content: string;
   confidenceScore: number;
@@ -66,6 +77,5 @@ function generateMockResponse(userQuestion: string): {
     },
   ];
 
-  // Retorna uma resposta aleatória para demonstração
   return responses[Math.floor(Math.random() * responses.length)];
 }
