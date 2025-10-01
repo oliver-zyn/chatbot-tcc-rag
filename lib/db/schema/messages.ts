@@ -1,5 +1,5 @@
 import type { InferSelectModel } from "drizzle-orm";
-import { pgTable, uuid, text, timestamp, integer } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, integer, json } from "drizzle-orm/pg-core";
 import { conversations } from "./conversations";
 
 export const messages = pgTable("messages", {
@@ -10,6 +10,7 @@ export const messages = pgTable("messages", {
   role: text("role", { enum: ["user", "assistant"] }).notNull(),
   content: text("content").notNull(),
   confidenceScore: integer("confidence_score"),
+  sources: json("sources").$type<string[]>(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

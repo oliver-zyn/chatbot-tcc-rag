@@ -126,7 +126,7 @@ export function ConversationItem({
           )}
         </SidebarMenuButton>
 
-        <DropdownMenu modal={true}>
+        <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <SidebarMenuAction
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"

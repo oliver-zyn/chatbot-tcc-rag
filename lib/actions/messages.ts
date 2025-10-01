@@ -3,8 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { auth } from "@/app/(auth)/auth";
 import { createMessage, getConversationById, checkRateLimit, incrementUsage } from "@/lib/db/queries";
-import type { Message } from "@/lib/db/schema/messages";
 import { sendMessageSchema } from "@/lib/validations/message";
+import { generateRAGResponse } from "@/lib/ai/generate-response";
 
 export async function sendMessage(conversationId: string, content: string) {
   try {
@@ -37,12 +37,13 @@ export async function sendMessage(conversationId: string, content: string) {
 
     await incrementUsage(session.user.id);
 
-    const mockResponse = generateMockResponse(content);
+    const ragResponse = await generateRAGResponse(content);
     const assistantMessage = await createMessage(
       conversationId,
       "assistant",
-      mockResponse.content,
-      mockResponse.confidenceScore
+      ragResponse.content,
+      ragResponse.confidenceScore,
+      ragResponse.sources
     );
 
     revalidatePath(`/chat/${conversationId}`);
@@ -56,26 +57,4 @@ export async function sendMessage(conversationId: string, content: string) {
     console.error("Erro ao enviar mensagem:", error);
     return { success: false, error: "Erro ao enviar mensagem" };
   }
-}
-
-function generateMockResponse(userQuestion: string): {
-  content: string;
-  confidenceScore: number;
-} {
-  const responses = [
-    {
-      content: "Esta é uma resposta temporária do sistema. O sistema RAG completo ainda não foi implementado. Por enquanto, estou apenas testando a interface de chat.",
-      confidenceScore: 75,
-    },
-    {
-      content: "Não encontrei informações suficientes nos documentos para responder esta pergunta com precisão. Por favor, certifique-se de que os documentos relevantes foram carregados no sistema.",
-      confidenceScore: 45,
-    },
-    {
-      content: "Baseado nos documentos carregados, posso fornecer as seguintes informações: [Resposta mock]. Esta é uma resposta de exemplo que será substituída pelo sistema RAG real.",
-      confidenceScore: 92,
-    },
-  ];
-
-  return responses[Math.floor(Math.random() * responses.length)];
 }

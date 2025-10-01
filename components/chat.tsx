@@ -46,6 +46,7 @@ export function Chat({ conversationId, initialMessages, conversationTitle }: Cha
       role: "user",
       content: userMessage,
       confidenceScore: null,
+      sources: null,
       createdAt: new Date(),
     };
 

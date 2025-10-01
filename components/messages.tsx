@@ -1,7 +1,8 @@
-import { Brain, User, Loader2 } from "lucide-react";
+import { Brain, User, Loader2, FileText } from "lucide-react";
 import { ConfidenceBadge } from "@/components/confidence-badge";
 import type { Message } from "@/lib/db/schema/messages";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 interface MessagesProps {
   messages: Message[];
@@ -49,8 +50,22 @@ export function Messages({ messages, isLoading }: MessagesProps) {
               <p className="whitespace-pre-wrap break-words">{message.content}</p>
             </div>
 
-            {message.role === "assistant" && message.confidenceScore !== null && (
-              <ConfidenceBadge score={message.confidenceScore} />
+            {message.role === "assistant" && (
+              <div className="flex flex-col gap-2">
+                {message.sources && message.sources.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {message.sources.map((source, idx) => (
+                      <Badge key={idx} variant="secondary" className="text-xs gap-1">
+                        <FileText className="h-3 w-3" />
+                        {source}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+                {message.confidenceScore !== null && (
+                  <ConfidenceBadge score={message.confidenceScore} />
+                )}
+              </div>
             )}
           </div>
 

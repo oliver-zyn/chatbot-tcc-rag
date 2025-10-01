@@ -6,6 +6,9 @@ import { createDocument, deleteDocument, getDocumentById } from "@/lib/db/querie
 import { extractTextFromFile } from "@/lib/documents/extract-text";
 import { actionError, actionSuccess, type ActionResponse } from "@/lib/types/action-response";
 import { uploadDocumentSchema, deleteDocumentSchema } from "@/lib/validations/document";
+import { generateEmbeddings } from "@/lib/ai/embedding";
+import { db } from "@/lib/db";
+import { embeddings as embeddingsTable } from "@/lib/db/schema/embeddings";
 
 export async function uploadDocumentAction(
   formData: FormData
@@ -43,6 +46,20 @@ export async function uploadDocumentAction(
       file.size,
       text
     );
+
+    try {
+      const embeddings = await generateEmbeddings(text);
+      await db.insert(embeddingsTable).values(
+        embeddings.map(embedding => ({
+          documentId: document.id,
+          ...embedding,
+        })),
+      );
+    } catch (embeddingError) {
+      console.error("Erro ao gerar embeddings:", embeddingError);
+      await deleteDocument(document.id);
+      return actionError("Erro ao processar documento. Não foi possível gerar embeddings do conteúdo.");
+    }
 
     revalidatePath("/documents");
 
