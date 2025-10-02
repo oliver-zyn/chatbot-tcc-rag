@@ -39,7 +39,6 @@ export function Chat({ conversationId, initialMessages, conversationTitle }: Cha
     setInput("");
     setIsLoading(true);
 
-    // Adiciona mensagem do usuário imediatamente
     const tempUserMessage: Message = {
       id: `temp-${Date.now()}`,
       conversationId,
@@ -55,16 +54,14 @@ export function Chat({ conversationId, initialMessages, conversationTitle }: Cha
     try {
       const result = await sendMessage(conversationId, userMessage);
 
-      if (result.success && result.userMessage && result.assistantMessage) {
-        // Substitui a mensagem temporária pelas mensagens reais do servidor
+      if (result.success) {
         setMessages((prev) => [
           ...prev.filter((m) => m.id !== tempUserMessage.id),
-          result.userMessage!,
-          result.assistantMessage!,
+          result.data.userMessage,
+          result.data.assistantMessage,
         ]);
       } else {
-        toast.error(result.error || "Erro ao enviar mensagem");
-        // Remove mensagem temporária em caso de erro
+        toast.error(result.error);
         setMessages((prev) => prev.filter((m) => m.id !== tempUserMessage.id));
       }
     } catch (error) {

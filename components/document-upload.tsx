@@ -6,14 +6,12 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { uploadDocumentAction } from "@/lib/actions/documents";
 import { useRouter } from "next/navigation";
-
-const ACCEPTED_FILE_TYPES = {
-  "text/plain": [".txt"],
-  "application/pdf": [".pdf"],
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
-};
-
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+import {
+  MAX_FILE_SIZE,
+  ACCEPTED_FILE_EXTENSIONS,
+  ACCEPTED_EXTENSIONS_STRING,
+  formatFileSize,
+} from "@/lib/constants/documents";
 
 export function DocumentUpload() {
   const router = useRouter();
@@ -23,16 +21,17 @@ export function DocumentUpload() {
 
   const validateFile = (file: File): string | null => {
     const fileExtension = `.${file.name.split(".").pop()?.toLowerCase()}`;
-    const isValidType = Object.values(ACCEPTED_FILE_TYPES)
-      .flat()
-      .includes(fileExtension);
+    const acceptedExtensions = Object.values(ACCEPTED_FILE_EXTENSIONS).flat();
+    const isValidType = acceptedExtensions.includes(
+      fileExtension as (typeof acceptedExtensions)[number]
+    );
 
     if (!isValidType) {
       return "Tipo de arquivo não suportado. Use TXT, PDF ou DOCX.";
     }
 
     if (file.size > MAX_FILE_SIZE) {
-      return "Arquivo muito grande. O tamanho máximo é 10MB.";
+      return `Arquivo muito grande. O tamanho máximo é ${formatFileSize(MAX_FILE_SIZE)}.`;
     }
 
     return null;
@@ -134,7 +133,7 @@ export function DocumentUpload() {
           <input
             id="file-input"
             type="file"
-            accept=".txt,.pdf,.docx"
+            accept={ACCEPTED_EXTENSIONS_STRING}
             className="hidden"
             onChange={handleFileInput}
           />

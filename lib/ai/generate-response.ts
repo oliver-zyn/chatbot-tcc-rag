@@ -21,12 +21,10 @@ export async function generateRAGResponse(userQuestion: string): Promise<{
     const avgSimilarity = relevantChunks.reduce((sum, chunk) => sum + chunk.similarity, 0) / relevantChunks.length;
     const confidenceScore = Math.round(avgSimilarity * 100);
 
-    // Mapeia chunks sem os números de fonte
     const context = relevantChunks
       .map((chunk) => chunk.content)
       .join('\n\n---\n\n');
 
-    // Lista única de documentos usados
     const sources = [...new Set(relevantChunks.map(chunk => chunk.documentName))];
 
     const { text } = await generateText({

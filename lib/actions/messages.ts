@@ -1,60 +1,82 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { auth } from "@/app/(auth)/auth";
-import { createMessage, getConversationById, checkRateLimit, incrementUsage } from "@/lib/db/queries";
+import {
+  createMessage,
+  getConversationById,
+  checkRateLimit,
+  incrementUsage,
+} from "@/lib/db/queries";
 import { sendMessageSchema } from "@/lib/validations/message";
 import { generateRAGResponse } from "@/lib/ai/generate-response";
+import {
+  actionError,
+  actionSuccess,
+  type ActionResponse,
+} from "@/lib/types/action-response";
+import { withAuth, authorizeResourceAccess } from "./utils";
+import { logError } from "@/lib/errors/logger";
+import { RateLimitError } from "@/lib/errors";
 
-export async function sendMessage(conversationId: string, content: string) {
+type SendMessageResponse = {
+  userMessage: Awaited<ReturnType<typeof createMessage>>;
+  assistantMessage: Awaited<ReturnType<typeof createMessage>>;
+};
+
+export async function sendMessage(
+  conversationId: string,
+  content: string
+): Promise<ActionResponse<SendMessageResponse>> {
   try {
     const validation = sendMessageSchema.safeParse({ conversationId, content });
     if (!validation.success) {
-      return { success: false, error: validation.error.issues[0].message };
+      return actionError(validation.error.issues[0].message);
     }
 
-    const session = await auth();
+    return await withAuth(async (userId) => {
+      const rateLimit = await checkRateLimit(userId);
+      if (!rateLimit.allowed) {
+        throw new RateLimitError(
+          `Limite diário atingido. Você pode fazer até ${rateLimit.limit} perguntas por dia. Tente novamente amanhã.`
+        );
+      }
 
-    if (!session?.user) {
-      return { success: false, error: "Não autorizado" };
-    }
+      const conversationResult = await authorizeResourceAccess(
+        () => getConversationById(conversationId),
+        userId,
+        "Conversa"
+      );
 
-    const rateLimit = await checkRateLimit(session.user.id);
-    if (!rateLimit.allowed) {
-      return {
-        success: false,
-        error: `Limite diário atingido. Você pode fazer até ${rateLimit.limit} perguntas por dia. Tente novamente amanhã.`,
-      };
-    }
+      if (!conversationResult.success) {
+        return conversationResult;
+      }
 
-    const conversation = await getConversationById(conversationId);
+      const userMessage = await createMessage(conversationId, "user", content);
 
-    if (!conversation || conversation.userId !== session.user.id) {
-      return { success: false, error: "Conversa não encontrada" };
-    }
+      await incrementUsage(userId);
 
-    const userMessage = await createMessage(conversationId, "user", content);
+      const ragResponse = await generateRAGResponse(content);
+      const assistantMessage = await createMessage(
+        conversationId,
+        "assistant",
+        ragResponse.content,
+        ragResponse.confidenceScore,
+        ragResponse.sources
+      );
 
-    await incrementUsage(session.user.id);
+      revalidatePath(`/chat/${conversationId}`);
 
-    const ragResponse = await generateRAGResponse(content);
-    const assistantMessage = await createMessage(
-      conversationId,
-      "assistant",
-      ragResponse.content,
-      ragResponse.confidenceScore,
-      ragResponse.sources
-    );
-
-    revalidatePath(`/chat/${conversationId}`);
-
-    return {
-      success: true,
-      userMessage,
-      assistantMessage,
-    };
+      return actionSuccess({
+        userMessage,
+        assistantMessage,
+      });
+    });
   } catch (error) {
-    console.error("Erro ao enviar mensagem:", error);
-    return { success: false, error: "Erro ao enviar mensagem" };
+    if (error instanceof RateLimitError) {
+      return actionError(error.message);
+    }
+
+    logError(error, { action: "sendMessage", conversationId });
+    return actionError("Erro ao enviar mensagem");
   }
 }

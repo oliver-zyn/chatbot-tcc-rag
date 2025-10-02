@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { auth } from "@/app/(auth)/auth";
 import { createDocument, deleteDocument, getDocumentById } from "@/lib/db/queries";
 import { extractTextFromFile } from "@/lib/documents/extract-text";
 import { actionError, actionSuccess, type ActionResponse } from "@/lib/types/action-response";
@@ -9,17 +8,13 @@ import { uploadDocumentSchema, deleteDocumentSchema } from "@/lib/validations/do
 import { generateEmbeddings } from "@/lib/ai/embedding";
 import { db } from "@/lib/db";
 import { embeddings as embeddingsTable } from "@/lib/db/schema/embeddings";
+import { withAuth, authorizeResourceAccess } from "./utils";
+import { logError } from "@/lib/errors/logger";
 
 export async function uploadDocumentAction(
   formData: FormData
 ): Promise<ActionResponse<{ id: string }>> {
   try {
-    const session = await auth();
-
-    if (!session?.user) {
-      return actionError("Não autorizado");
-    }
-
     const file = formData.get("file") as File;
 
     if (!file) {
@@ -31,41 +26,48 @@ export async function uploadDocumentAction(
       return actionError(validation.error.issues[0].message);
     }
 
-    const text = await extractTextFromFile(file);
+    return await withAuth(async (userId) => {
+      const text = await extractTextFromFile(file);
 
-    if (!text || text.trim().length === 0) {
-      return actionError("Não foi possível extrair texto do arquivo");
-    }
+      if (!text || text.trim().length === 0) {
+        return actionError("Não foi possível extrair texto do arquivo");
+      }
 
-    const fileExtension = file.name.split(".").pop()?.toLowerCase() || "txt";
+      const fileExtension = file.name.split(".").pop()?.toLowerCase() || "txt";
 
-    const document = await createDocument(
-      session.user.id,
-      file.name,
-      fileExtension,
-      file.size,
-      text
-    );
-
-    try {
-      const embeddings = await generateEmbeddings(text);
-      await db.insert(embeddingsTable).values(
-        embeddings.map(embedding => ({
-          documentId: document.id,
-          ...embedding,
-        })),
+      const document = await createDocument(
+        userId,
+        file.name,
+        fileExtension,
+        file.size,
+        text
       );
-    } catch (embeddingError) {
-      console.error("Erro ao gerar embeddings:", embeddingError);
-      await deleteDocument(document.id);
-      return actionError("Erro ao processar documento. Não foi possível gerar embeddings do conteúdo.");
-    }
 
-    revalidatePath("/documents");
+      try {
+        const embeddings = await generateEmbeddings(text);
+        await db.insert(embeddingsTable).values(
+          embeddings.map((embedding) => ({
+            documentId: document.id,
+            ...embedding,
+          }))
+        );
+      } catch (embeddingError) {
+        logError(embeddingError, {
+          action: "generateEmbeddings",
+          documentId: document.id,
+        });
+        await deleteDocument(document.id);
+        return actionError(
+          "Erro ao processar documento. Não foi possível gerar embeddings do conteúdo."
+        );
+      }
 
-    return actionSuccess({ id: document.id });
+      revalidatePath("/documents");
+
+      return actionSuccess({ id: document.id });
+    });
   } catch (error) {
-    console.error("Error uploading document:", error);
+    logError(error, { action: "uploadDocument" });
     return actionError("Erro ao processar documento");
   }
 }
@@ -79,28 +81,24 @@ export async function deleteDocumentAction(
       return actionError(validation.error.issues[0].message);
     }
 
-    const session = await auth();
+    return await withAuth(async (userId) => {
+      const documentResult = await authorizeResourceAccess(
+        () => getDocumentById(documentId),
+        userId,
+        "Documento"
+      );
 
-    if (!session?.user) {
-      return actionError("Não autorizado");
-    }
+      if (!documentResult.success) {
+        return documentResult;
+      }
 
-    const document = await getDocumentById(documentId);
+      await deleteDocument(documentId);
+      revalidatePath("/documents");
 
-    if (!document) {
-      return actionError("Documento não encontrado");
-    }
-
-    if (document.userId !== session.user.id) {
-      return actionError("Você não tem permissão para deletar este documento");
-    }
-
-    await deleteDocument(documentId);
-    revalidatePath("/documents");
-
-    return actionSuccess(undefined);
+      return actionSuccess(undefined);
+    });
   } catch (error) {
-    console.error("Error deleting document:", error);
+    logError(error, { action: "deleteDocument", documentId });
     return actionError("Erro ao deletar documento");
   }
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter, usePathname } from "next/navigation";
 import { toast } from "sonner";
 import { AppSidebar } from "./app-sidebar";
 import { createNewConversation, deleteConversationAction } from "@/lib/actions/conversations";
@@ -15,6 +16,8 @@ interface AppSidebarWrapperProps {
 }
 
 export function AppSidebarWrapper({ user, conversations }: AppSidebarWrapperProps) {
+  const router = useRouter();
+  const pathname = usePathname();
 
   const handleNewConversation = async () => {
     try {
@@ -25,11 +28,18 @@ export function AppSidebarWrapper({ user, conversations }: AppSidebarWrapperProp
   };
 
   const handleDeleteConversation = async (id: string) => {
-    try {
-      await deleteConversationAction(id);
+    const result = await deleteConversationAction(id);
+
+    if (result.success) {
       toast.success("Conversa deletada com sucesso");
-    } catch (error) {
-      toast.error("Erro ao deletar conversa");
+
+      if (pathname === `/chat/${id}`) {
+        router.push("/");
+      }
+
+      router.refresh();
+    } else {
+      toast.error(result.error);
     }
   };
 

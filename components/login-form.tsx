@@ -4,12 +4,18 @@ import { useFormState } from "react-dom";
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Brain, Loader2 } from "lucide-react";
+import { Brain, Loader2, Eye, EyeOff } from "lucide-react";
+import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { type LoginActionState, login } from "@/app/(auth)/actions";
+
+const loginSchema = z.object({
+  email: z.string().email("Email inválido"),
+  password: z.string().min(8, "Senha deve ter no mínimo 8 caracteres"),
+});
 
 export function LoginForm({
   className,
@@ -19,6 +25,7 @@ export function LoginForm({
   const [isPending, startTransition] = useTransition();
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [state, formAction] = useFormState<LoginActionState, FormData>(
     login,
@@ -46,26 +53,22 @@ export function LoginForm({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     const form = e.currentTarget;
     const formData = new FormData(form);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
 
-    const newErrors: { email?: string; password?: string } = {};
+    const result = loginSchema.safeParse({
+      email: formData.get("email"),
+      password: formData.get("password"),
+    });
 
-    if (!email) {
-      newErrors.email = "Email é obrigatório";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = "Email inválido";
-    }
-
-    if (!password) {
-      newErrors.password = "Senha é obrigatória";
-    } else if (password.length < 8) {
-      newErrors.password = "Senha deve ter no mínimo 8 caracteres";
-    }
-
-    if (Object.keys(newErrors).length > 0) {
+    if (!result.success) {
       e.preventDefault();
-      setErrors(newErrors);
+      const fieldErrors: { email?: string; password?: string } = {};
+      result.error.issues.forEach((issue) => {
+        const field = issue.path[0] as "email" | "password";
+        if (!fieldErrors[field]) {
+          fieldErrors[field] = issue.message;
+        }
+      });
+      setErrors(fieldErrors);
       return;
     }
 
@@ -109,15 +112,30 @@ export function LoginForm({
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Senha</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                disabled={isLoading}
-                className={errors.password ? "border-destructive" : ""}
-                onChange={() => setErrors(prev => ({ ...prev, password: undefined }))}
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  disabled={isLoading}
+                  className={errors.password ? "border-destructive pr-10" : "pr-10"}
+                  onChange={() => setErrors(prev => ({ ...prev, password: undefined }))}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  disabled={isLoading}
+                  aria-label={showPassword ? "Esconder senha" : "Mostrar senha"}
+                >
+                  {showPassword ? (
+                    <Eye className="h-4 w-4" />
+                  ) : (
+                    <EyeOff className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
               {errors.password && (
                 <p className="text-sm text-destructive">{errors.password}</p>
               )}

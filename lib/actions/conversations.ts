@@ -9,11 +9,17 @@ import {
   updateConversationTitle,
   getConversationById,
 } from "@/lib/db/queries";
-import { actionError, type ActionResponse } from "@/lib/types/action-response";
+import {
+  actionError,
+  actionSuccess,
+  type ActionResponse,
+} from "@/lib/types/action-response";
 import {
   updateConversationTitleSchema,
   deleteConversationSchema,
 } from "@/lib/validations/conversation";
+import { withAuth, authorizeResourceAccess } from "./utils";
+import { logError } from "@/lib/errors/logger";
 
 export async function createNewConversation() {
   const session = await auth();
@@ -27,31 +33,35 @@ export async function createNewConversation() {
   redirect(`/chat/${conversation.id}`);
 }
 
-export async function deleteConversationAction(conversationId: string) {
-  const validation = deleteConversationSchema.safeParse({ conversationId });
-  if (!validation.success) {
-    throw new Error(validation.error.issues[0].message);
+export async function deleteConversationAction(
+  conversationId: string
+): Promise<ActionResponse<void>> {
+  try {
+    const validation = deleteConversationSchema.safeParse({ conversationId });
+    if (!validation.success) {
+      return actionError(validation.error.issues[0].message);
+    }
+
+    return await withAuth(async (userId) => {
+      const conversationResult = await authorizeResourceAccess(
+        () => getConversationById(conversationId),
+        userId,
+        "Conversa"
+      );
+
+      if (!conversationResult.success) {
+        return conversationResult;
+      }
+
+      await deleteConversation(conversationId);
+      revalidatePath("/");
+
+      return actionSuccess(undefined);
+    });
+  } catch (error) {
+    logError(error, { action: "deleteConversation", conversationId });
+    return actionError("Erro ao deletar conversa");
   }
-
-  const session = await auth();
-
-  if (!session?.user) {
-    throw new Error("Não autorizado");
-  }
-
-  const conversation = await getConversationById(conversationId);
-
-  if (!conversation) {
-    throw new Error("Conversa não encontrada");
-  }
-
-  if (conversation.userId !== session.user.id) {
-    throw new Error("Você não tem permissão para deletar esta conversa");
-  }
-
-  await deleteConversation(conversationId);
-  revalidatePath("/");
-  redirect("/");
 }
 
 export async function updateConversationTitleAction(
@@ -68,29 +78,25 @@ export async function updateConversationTitleAction(
       return actionError(validation.error.issues[0].message);
     }
 
-    const session = await auth();
+    return await withAuth(async (userId) => {
+      const conversationResult = await authorizeResourceAccess(
+        () => getConversationById(conversationId),
+        userId,
+        "Conversa"
+      );
 
-    if (!session?.user) {
-      return actionError("Não autorizado");
-    }
+      if (!conversationResult.success) {
+        return conversationResult;
+      }
 
-    const conversation = await getConversationById(conversationId);
+      await updateConversationTitle(conversationId, validation.data.title);
+      revalidatePath("/");
+      revalidatePath(`/chat/${conversationId}`);
 
-    if (!conversation) {
-      return actionError("Conversa não encontrada");
-    }
-
-    if (conversation.userId !== session.user.id) {
-      return actionError("Você não tem permissão para editar esta conversa");
-    }
-
-    await updateConversationTitle(conversationId, validation.data.title);
-    revalidatePath("/");
-    revalidatePath(`/chat/${conversationId}`);
-
-    return { success: true, data: undefined };
+      return actionSuccess(undefined);
+    });
   } catch (error) {
-    console.error("Error updating conversation title:", error);
+    logError(error, { action: "updateConversationTitle", conversationId });
     return actionError("Erro ao atualizar título da conversa");
   }
 }

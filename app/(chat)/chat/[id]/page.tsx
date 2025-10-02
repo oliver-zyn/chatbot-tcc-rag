@@ -16,7 +16,6 @@ export default async function ChatPage({ params }: { params: { id: string } }) {
     notFound();
   }
 
-  // Verifica se a conversa pertence ao usuário
   if (conversation.userId !== session.user.id) {
     notFound();
   }
