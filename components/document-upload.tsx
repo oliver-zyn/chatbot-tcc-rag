@@ -82,6 +82,8 @@ export function DocumentUpload() {
     const file = e.dataTransfer.files?.[0];
     if (file) {
       handleUpload(file);
+    } else {
+      toast.error("Seu navegador não suporta arrastar arquivos. Use o botão de seleção.");
     }
   };
 
