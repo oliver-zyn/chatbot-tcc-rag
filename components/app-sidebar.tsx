@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Brain, MessageSquare, FileUp, Plus } from "lucide-react";
+import { Brain, MessageSquare, FileUp, Plus, Upload, Library } from "lucide-react";
 
 import { NavUser } from "@/components/nav-user";
 import { ConversationItem } from "@/components/conversation-item";
@@ -66,6 +66,23 @@ export function AppSidebar({
   const filteredConversations = conversations.filter((conversation) =>
     conversation.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const isDocumentsSection = pathname.startsWith("/documents");
+
+  const documentsNav = [
+    {
+      title: "Upload",
+      url: "/documents",
+      icon: Upload,
+      isActive: pathname === "/documents",
+    },
+    {
+      title: "Biblioteca",
+      url: "/documents/library",
+      icon: Library,
+      isActive: pathname === "/documents/library",
+    },
+  ];
 
   return (
     <Sidebar
@@ -131,7 +148,7 @@ export function AppSidebar({
             <div className="text-base font-medium text-foreground">
               {navMain.find((item) => item.isActive)?.title}
             </div>
-            {!pathname.startsWith("/documents") && (
+            {!isDocumentsSection && (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
@@ -149,7 +166,7 @@ export function AppSidebar({
               </Tooltip>
             )}
           </div>
-          {!pathname.startsWith("/documents") && (
+          {!isDocumentsSection && (
             <SidebarInput
               placeholder="Buscar conversas..."
               value={searchQuery}
@@ -158,7 +175,28 @@ export function AppSidebar({
           )}
         </SidebarHeader>
         <SidebarContent>
-          {!pathname.startsWith("/documents") && (
+          {isDocumentsSection ? (
+            <SidebarGroup className="px-0">
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {documentsNav.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton
+                        isActive={item.isActive}
+                        asChild
+                        className="px-4 py-2"
+                      >
+                        <Link href={item.url}>
+                          <item.icon className="mr-2 h-4 w-4" />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          ) : (
             <SidebarGroup className="px-1">
               <SidebarGroupContent>
                 {filteredConversations.length === 0 ? (

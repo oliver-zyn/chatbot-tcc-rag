@@ -3,6 +3,7 @@ import "server-only";
 import { desc, eq } from "drizzle-orm";
 import { db } from "../index";
 import { type Document, documents } from "../schema/documents";
+import { embeddings } from "../schema/embeddings";
 
 export async function getDocumentsByUserId(userId: string): Promise<Document[]> {
   try {
@@ -86,5 +87,20 @@ export async function updateDocumentStatus(id: string, status: string) {
   } catch (error) {
     console.error("Failed to update document status:", error);
     throw new Error("Failed to update document status");
+  }
+}
+
+export async function getEmbeddingsByDocumentId(documentId: string) {
+  try {
+    return await db
+      .select({
+        id: embeddings.id,
+        content: embeddings.content,
+      })
+      .from(embeddings)
+      .where(eq(embeddings.documentId, documentId));
+  } catch (error) {
+    console.error("Failed to get embeddings:", error);
+    throw new Error("Failed to get embeddings");
   }
 }
