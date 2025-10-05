@@ -1,34 +1,57 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { Send } from "lucide-react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { Send, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Messages } from "@/components/messages";
 import { PageHeader } from "@/components/page-header";
+import { DocumentSelector } from "@/components/document-selector";
+import { SimilarityControl } from "@/components/similarity-control";
 import { sendMessage } from "@/lib/actions/messages";
 import type { Message } from "@/lib/db/schema/messages";
+import type { Document } from "@/lib/db/schema/documents";
 import { toast } from "sonner";
 
 interface ChatProps {
   conversationId: string;
   initialMessages: Message[];
   conversationTitle: string;
+  documents: Document[];
 }
 
-export function Chat({ conversationId, initialMessages, conversationTitle }: ChatProps) {
+export function Chat({ conversationId, initialMessages, conversationTitle, documents }: ChatProps) {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isAtBottom, setIsAtBottom] = useState(true);
+  const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(null);
+  const [similarityThreshold, setSimilarityThreshold] = useState(0.3);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  const scrollToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
+    messagesEndRef.current?.scrollIntoView({ behavior });
+  }, []);
+
+  const handleScroll = useCallback(() => {
+    if (!messagesContainerRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = messagesContainerRef.current;
+    const threshold = 150;
+    setIsAtBottom(scrollHeight - scrollTop - clientHeight < threshold);
+  }, []);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    const container = messagesContainerRef.current;
+    if (container) {
+      container.addEventListener("scroll", handleScroll);
+      return () => container.removeEventListener("scroll", handleScroll);
+    }
+  }, [handleScroll]);
+
+  useEffect(() => {
+    scrollToBottom("auto");
+  }, [messages, scrollToBottom]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,6 +62,8 @@ export function Chat({ conversationId, initialMessages, conversationTitle }: Cha
     setInput("");
     setIsLoading(true);
 
+    const selectedDocument = documents.find(doc => doc.id === selectedDocumentId);
+
     const tempUserMessage: Message = {
       id: `temp-${Date.now()}`,
       conversationId,
@@ -46,13 +71,14 @@ export function Chat({ conversationId, initialMessages, conversationTitle }: Cha
       content: userMessage,
       confidenceScore: null,
       sources: null,
+      contextDocument: selectedDocument?.fileName || null,
       createdAt: new Date(),
     };
 
     setMessages((prev) => [...prev, tempUserMessage]);
 
     try {
-      const result = await sendMessage(conversationId, userMessage);
+      const result = await sendMessage(conversationId, userMessage, selectedDocumentId, similarityThreshold);
 
       if (result.success) {
         setMessages((prev) => [
@@ -82,31 +108,63 @@ export function Chat({ conversationId, initialMessages, conversationTitle }: Cha
   return (
     <>
       <PageHeader title={conversationTitle} />
-      <div className="flex h-[calc(100vh-3.5rem)] flex-col">
-        <div className="flex-1 overflow-y-auto p-4">
+      <div className="flex h-[calc(100vh-3.5rem)] flex-col bg-background relative">
+        <div
+          ref={messagesContainerRef}
+          className="flex-1 overflow-y-auto px-4 py-4"
+          style={{ overflowAnchor: "none" }}
+        >
           <Messages messages={messages} isLoading={isLoading} />
-          <div ref={messagesEndRef} />
+          <div ref={messagesEndRef} className="h-6" />
         </div>
 
-        <div className="border-t p-4">
-        <form onSubmit={handleSubmit} className="flex gap-2">
-          <Textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Faça uma pergunta sobre seus documentos..."
-            className="min-h-[60px] max-h-[200px] resize-none"
-            disabled={isLoading}
-          />
-          <Button
-            type="submit"
-            size="icon"
-            disabled={!input.trim() || isLoading}
-            className="h-[60px] w-[60px]"
-          >
-            <Send className="h-5 w-5" />
-          </Button>
-        </form>
+        {!isAtBottom && (
+          <div className="absolute bottom-28 inset-x-0 flex justify-center z-10 pointer-events-none">
+            <button
+              aria-label="Rolar para o final"
+              className="rounded-full border bg-background p-2 shadow-lg transition-all hover:bg-muted hover:shadow-xl pointer-events-auto"
+              onClick={() => scrollToBottom("smooth")}
+              type="button"
+            >
+              <ArrowDown className="h-4 w-4" />
+            </button>
+          </div>
+        )}
+
+        <div className="sticky bottom-0 z-1 mx-auto flex w-full max-w-3xl flex-col gap-3 border-t bg-background px-4 py-4">
+          <div className="flex items-center gap-2">
+            <DocumentSelector
+              documents={documents}
+              selectedDocumentId={selectedDocumentId}
+              onSelectDocument={setSelectedDocumentId}
+            />
+            <SimilarityControl
+              value={similarityThreshold}
+              onChange={setSimilarityThreshold}
+            />
+          </div>
+          <form onSubmit={handleSubmit} className="flex w-full gap-2">
+            <Textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder={
+                selectedDocumentId
+                  ? "Faça uma pergunta sobre este documento..."
+                  : "Faça uma pergunta sobre seus documentos..."
+              }
+              className="min-h-[60px] max-h-[200px] resize-none flex-1"
+              disabled={isLoading}
+            />
+            <Button
+              type="submit"
+              size="icon"
+              disabled={!input.trim() || isLoading}
+              className="h-[60px] w-[60px] shrink-0"
+            >
+              <Send className="h-5 w-5" />
+            </Button>
+          </form>
         </div>
       </div>
     </>

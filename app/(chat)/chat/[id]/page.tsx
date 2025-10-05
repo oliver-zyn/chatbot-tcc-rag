@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/app/(auth)/auth";
-import { getConversationById, getMessagesByConversationId } from "@/lib/db/queries";
+import { getConversationById, getMessagesByConversationId, getAllDocuments } from "@/lib/db/queries";
 import { Chat } from "@/components/chat";
 
 export default async function ChatPage({ params }: { params: { id: string } }) {
@@ -21,12 +21,14 @@ export default async function ChatPage({ params }: { params: { id: string } }) {
   }
 
   const messages = await getMessagesByConversationId(params.id);
+  const documents = await getAllDocuments();
 
   return (
     <Chat
       conversationId={params.id}
       initialMessages={messages}
       conversationTitle={conversation.title}
+      documents={documents}
     />
   );
 }

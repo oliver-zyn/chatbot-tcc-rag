@@ -133,7 +133,11 @@ export const generateEmbedding = async (value: string): Promise<number[]> => {
   return embedding;
 };
 
-export const findRelevantContent = async (userQuery: string) => {
+export const findRelevantContent = async (
+  userQuery: string,
+  documentId?: string | null,
+  similarityThreshold: number = 0.3
+) => {
   const userQueryEmbedded = await generateEmbedding(userQuery);
 
   const embeddingString = `[${userQueryEmbedded.join(',')}]`;
@@ -141,7 +145,7 @@ export const findRelevantContent = async (userQuery: string) => {
   const { documents } = await import('../db/schema/documents');
 
   // Valores típicos: 0.7+ (alta confiança), 0.5-0.7 (média), 0.3-0.5 (baixa, mas relevante)
-  const similarChunks = await db
+  let query = db
     .select({
       content: embeddings.content,
       similarity: sql<number>`1 - (${embeddings.embedding} <=> ${embeddingString}::vector)`,
@@ -150,7 +154,15 @@ export const findRelevantContent = async (userQuery: string) => {
     })
     .from(embeddings)
     .innerJoin(documents, sql`${embeddings.documentId} = ${documents.id}`)
-    .where(sql`1 - (${embeddings.embedding} <=> ${embeddingString}::vector) > 0.3`)
+    .where(sql`1 - (${embeddings.embedding} <=> ${embeddingString}::vector) > ${similarityThreshold}`)
+    .$dynamic();
+
+  // Se um documentId foi fornecido, filtra apenas por esse documento
+  if (documentId) {
+    query = query.where(sql`${embeddings.documentId} = ${documentId}`);
+  }
+
+  const similarChunks = await query
     .orderBy(sql`${embeddings.embedding} <=> ${embeddingString}::vector`)
     .limit(5);
 

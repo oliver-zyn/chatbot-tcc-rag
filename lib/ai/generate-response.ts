@@ -2,13 +2,17 @@ import { openai } from '@ai-sdk/openai';
 import { generateText } from 'ai';
 import { findRelevantContent } from './embedding';
 
-export async function generateRAGResponse(userQuestion: string): Promise<{
+export async function generateRAGResponse(
+  userQuestion: string,
+  documentId?: string | null,
+  similarityThreshold?: number
+): Promise<{
   content: string;
   confidenceScore: number;
   sources: string[];
 }> {
   try {
-    const relevantChunks = await findRelevantContent(userQuestion);
+    const relevantChunks = await findRelevantContent(userQuestion, documentId, similarityThreshold);
 
     if (relevantChunks.length === 0) {
       return {
@@ -37,13 +41,21 @@ REGRAS IMPORTANTES:
 - Seja claro, conciso e objetivo
 - Não invente ou assuma informações que não estão explícitas no contexto
 - Responda em português brasileiro
-- NÃO cite fontes ou números entre colchetes, apenas responda diretamente`,
+- NÃO cite fontes ou números entre colchetes, apenas responda diretamente
+- Formate sua resposta usando Markdown quando apropriado:
+  * Use listas com bullets (- ou *) para enumerar itens
+  * Use numeração (1., 2., 3.) para listas ordenadas
+  * Use **negrito** para destacar termos importantes
+  * Use \`código\` para termos técnicos ou comandos
+  * Use ### para subtítulos quando necessário
+  * Use > para citações diretas do documento
+- Organize a resposta de forma clara e estruturada quando houver múltiplos pontos`,
       prompt: `Contexto dos documentos:
 ${context}
 
 Pergunta do usuário: ${userQuestion}
 
-Responda a pergunta usando apenas as informações do contexto acima.`,
+Responda a pergunta usando apenas as informações do contexto acima. Use formatação Markdown para tornar a resposta mais clara e organizada.`,
     });
 
     return {

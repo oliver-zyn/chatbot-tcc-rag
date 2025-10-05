@@ -23,7 +23,8 @@ export async function createMessage(
   role: "user" | "assistant",
   content: string,
   confidenceScore?: number,
-  sources?: string[]
+  sources?: string[],
+  contextDocument?: string
 ) {
   try {
     const [message] = await db
@@ -34,6 +35,7 @@ export async function createMessage(
         content,
         confidenceScore,
         sources,
+        contextDocument,
       })
       .returning();
 

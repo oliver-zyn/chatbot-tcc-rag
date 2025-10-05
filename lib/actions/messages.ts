@@ -6,6 +6,7 @@ import {
   getConversationById,
   checkRateLimit,
   incrementUsage,
+  getDocumentById,
 } from "@/lib/db/queries";
 import { sendMessageSchema } from "@/lib/validations/message";
 import { generateRAGResponse } from "@/lib/ai/generate-response";
@@ -25,7 +26,9 @@ type SendMessageResponse = {
 
 export async function sendMessage(
   conversationId: string,
-  content: string
+  content: string,
+  documentId?: string | null,
+  similarityThreshold?: number
 ): Promise<ActionResponse<SendMessageResponse>> {
   try {
     const validation = sendMessageSchema.safeParse({ conversationId, content });
@@ -51,11 +54,24 @@ export async function sendMessage(
         return conversationResult;
       }
 
-      const userMessage = await createMessage(conversationId, "user", content);
+      let contextDocumentName: string | undefined;
+      if (documentId) {
+        const document = await getDocumentById(documentId);
+        contextDocumentName = document?.fileName;
+      }
+
+      const userMessage = await createMessage(
+        conversationId,
+        "user",
+        content,
+        undefined,
+        undefined,
+        contextDocumentName
+      );
 
       await incrementUsage(userId);
 
-      const ragResponse = await generateRAGResponse(content);
+      const ragResponse = await generateRAGResponse(content, documentId, similarityThreshold);
       const assistantMessage = await createMessage(
         conversationId,
         "assistant",

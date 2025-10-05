@@ -11,6 +11,7 @@ export const messages = pgTable("messages", {
   content: text("content").notNull(),
   confidenceScore: integer("confidence_score"),
   sources: json("sources").$type<string[]>(),
+  contextDocument: text("context_document"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
