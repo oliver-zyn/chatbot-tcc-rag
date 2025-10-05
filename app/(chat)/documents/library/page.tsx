@@ -17,10 +17,6 @@ export default async function LibraryPage() {
     <>
       <PageHeader title="Biblioteca de Documentos" />
       <div className="flex flex-col h-[calc(100vh-3.5rem)] p-6 gap-6">
-        <p className="text-sm text-muted-foreground">
-          Explore e visualize o conteúdo de todos os documentos processados
-        </p>
-
         <div className="flex-1 overflow-y-auto">
           <DocumentGrid documents={documents} currentUserId={session.user.id} />
         </div>

@@ -18,17 +18,6 @@ import {
 } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import {
   FileText,
   Calendar,
   HardDrive,
@@ -36,13 +25,9 @@ import {
   ChevronDown,
   ChevronRight,
   Blocks,
-  Trash2,
 } from "lucide-react";
 import type { Document } from "@/lib/db/schema/documents";
 import { getDocumentChunks } from "@/lib/actions/documents-chunks";
-import { deleteDocumentAction } from "@/lib/actions/documents";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 interface DocumentViewerModalProps {
   document: Document | null;
@@ -68,10 +53,11 @@ const formatDate = (date: Date): string => {
 };
 
 const getFileTypeLabel = (fileType: string) => {
-  if (fileType.includes("pdf")) return "PDF";
-  if (fileType.includes("word") || fileType.includes("docx")) return "DOCX";
-  if (fileType.includes("text")) return "TXT";
-  return fileType;
+  const type = fileType.toLowerCase();
+  if (type === "pdf") return "PDF";
+  if (type === "docx" || type === "doc") return "DOCX";
+  if (type === "txt") return "TXT";
+  return fileType.toUpperCase();
 };
 
 export function DocumentViewerModal({
@@ -80,12 +66,10 @@ export function DocumentViewerModal({
   onClose,
   currentUserId,
 }: DocumentViewerModalProps) {
-  const router = useRouter();
   const [chunks, setChunks] = React.useState<Array<{ id: string; content: string }>>([]);
   const [isLoadingChunks, setIsLoadingChunks] = React.useState(false);
   const [chunksOpen, setChunksOpen] = React.useState(false);
   const [contentOpen, setContentOpen] = React.useState(false);
-  const [isDeleting, setIsDeleting] = React.useState(false);
 
   // Reset state quando trocar de documento
   React.useEffect(() => {
@@ -93,27 +77,6 @@ export function DocumentViewerModal({
     setChunksOpen(false);
     setContentOpen(false);
   }, [document?.id]);
-
-  const handleDelete = async () => {
-    if (!document) return;
-
-    setIsDeleting(true);
-    try {
-      const result = await deleteDocumentAction(document.id);
-
-      if (result.success) {
-        toast.success("Documento deletado com sucesso");
-        onClose();
-        router.refresh();
-      } else {
-        toast.error(result.error);
-      }
-    } catch (error) {
-      toast.error("Erro ao deletar documento");
-    } finally {
-      setIsDeleting(false);
-    }
-  };
 
   React.useEffect(() => {
     if (document && chunksOpen && chunks.length === 0) {
@@ -137,52 +100,16 @@ export function DocumentViewerModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col">
         <DialogHeader>
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex-1 min-w-0">
-              <DialogTitle className="text-xl font-semibold flex items-center gap-2">
-                <FileText className="h-5 w-5 text-primary" />
-                <span className="truncate">{document.fileName}</span>
-                <Badge variant="secondary" className="flex-shrink-0">
-                  {getFileTypeLabel(document.fileType)}
-                </Badge>
-              </DialogTitle>
-              <DialogDescription className="mt-2">
-                Documento completo e metadados
-              </DialogDescription>
-            </div>
-            {isOwner && (
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-destructive hover:text-destructive"
-                    disabled={isDeleting}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Deletar documento?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Esta ação não pode ser desfeita. O documento &ldquo;{document.fileName}&rdquo; será
-                      permanentemente removido.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={handleDelete}
-                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                    >
-                      Deletar
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            )}
-          </div>
+          <DialogTitle className="text-xl font-semibold flex items-center gap-2">
+            <FileText className="h-5 w-5 text-primary" />
+            <span className="truncate">{document.fileName}</span>
+            <Badge variant="secondary" className="flex-shrink-0">
+              {getFileTypeLabel(document.fileType)}
+            </Badge>
+          </DialogTitle>
+          <DialogDescription className="mt-2">
+            Documento completo e metadados
+          </DialogDescription>
         </DialogHeader>
 
         <div className="flex-1 overflow-hidden">
