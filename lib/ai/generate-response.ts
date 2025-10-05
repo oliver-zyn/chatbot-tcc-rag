@@ -32,7 +32,7 @@ export async function generateRAGResponse(
     const sources = [...new Set(relevantChunks.map(chunk => chunk.documentName))];
 
     const { text } = await generateText({
-      model: openai('gpt-5-mini'),
+      model: openai('gpt-4o-mini'),
       system: `Você é um assistente útil que responde perguntas baseado APENAS nas informações fornecidas no contexto.
 
 REGRAS IMPORTANTES:

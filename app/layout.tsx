@@ -16,8 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className="dark">
-      <body suppressHydrationWarning={true} className={inter.className} >
+    <html lang="pt-BR" className="dark h-full">
+      <body suppressHydrationWarning={true} className={`${inter.className} h-full overflow-hidden`} >
         {children}
         <Toaster />
       </body>

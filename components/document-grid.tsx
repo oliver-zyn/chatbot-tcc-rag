@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { formatFileSize, getFileTypeLabel } from "@/lib/constants/documents";
 import {
   Select,
   SelectContent,
@@ -41,20 +42,6 @@ const getFileIcon = (fileType: string) => {
   if (type === "docx" || type === "doc") return FileText;
   if (type === "txt") return File;
   return File;
-};
-
-const getFileTypeLabel = (fileType: string) => {
-  const type = fileType.toLowerCase();
-  if (type === "pdf") return "PDF";
-  if (type === "docx" || type === "doc") return "DOCX";
-  if (type === "txt") return "TXT";
-  return fileType.toUpperCase();
-};
-
-const formatFileSize = (bytes: number): string => {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 };
 
 const formatDate = (date: Date): string => {

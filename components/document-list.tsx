@@ -2,6 +2,7 @@
 
 import { FileText, Trash2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { formatFileSize, getFileTypeLabel } from "@/lib/constants/documents";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,21 +29,6 @@ export function DocumentList({ documents, currentUserId }: DocumentListProps) {
   const router = useRouter();
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-
-  const formatFileSize = (bytes: number) => {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-  };
-
-  const getFileTypeLabel = (type: string) => {
-    const labels: Record<string, string> = {
-      txt: "TXT",
-      pdf: "PDF",
-      docx: "DOCX",
-    };
-    return labels[type] || type.toUpperCase();
-  };
 
   const handleDelete = async (id: string) => {
     setDeletingId(id);

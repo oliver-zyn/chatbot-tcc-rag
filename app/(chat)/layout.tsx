@@ -19,16 +19,18 @@ export default async function ChatLayout({
 
   return (
     <SidebarProvider>
-      <AppSidebarWrapper
-        user={{
-          name: session.user.email || "Usuário",
-          email: session.user.email || "",
-        }}
-        conversations={conversations}
-      />
-      <main className="flex-1 w-full">
-        {children}
-      </main>
+      <div className="flex h-full w-full">
+        <AppSidebarWrapper
+          user={{
+            name: session.user.email || "Usuário",
+            email: session.user.email || "",
+          }}
+          conversations={conversations}
+        />
+        <main className="flex-1 w-full overflow-hidden">
+          {children}
+        </main>
+      </div>
     </SidebarProvider>
   );
 }

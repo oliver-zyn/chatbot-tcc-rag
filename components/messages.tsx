@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { ConfidenceBadge } from "@/components/confidence-badge";
+import { MessageActions } from "@/components/message-actions";
 import type { Message } from "@/lib/db/schema/messages";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 interface MessagesProps {
   messages: Message[];
   isLoading: boolean;
+  onRegenerateLastMessage?: () => void;
 }
 
 const ThinkingText = () => {
@@ -37,7 +39,7 @@ const ThinkingText = () => {
   );
 };
 
-export function Messages({ messages, isLoading }: MessagesProps) {
+export function Messages({ messages, isLoading, onRegenerateLastMessage }: MessagesProps) {
   if (messages.length === 0 && !isLoading) {
     return (
       <motion.div
@@ -57,15 +59,25 @@ export function Messages({ messages, isLoading }: MessagesProps) {
   }
 
   return (
-    <div className="mx-auto w-full max-w-3xl space-y-4 md:space-y-6">
-      {messages.map((message, index) => (
+    <div
+      className="mx-auto w-full max-w-3xl space-y-4 md:space-y-6"
+      role="log"
+      aria-live="polite"
+      aria-label="Histórico de mensagens"
+    >
+      {messages.map((message, index) => {
+        const isLastAssistantMessage =
+          message.role === "assistant" &&
+          index === messages.length - 1;
+
+        return (
         <motion.div
           key={message.id}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2, delay: index * 0.05 }}
           className={cn(
-            "flex gap-2 md:gap-3",
+            "group flex gap-2 md:gap-3",
             message.role === "user" ? "justify-end" : "justify-start"
           )}
         >
@@ -160,6 +172,17 @@ export function Messages({ messages, isLoading }: MessagesProps) {
                 )}
               </div>
             )}
+
+            <MessageActions
+              messageId={message.id}
+              content={message.content}
+              role={message.role}
+              onRegenerate={
+                isLastAssistantMessage && onRegenerateLastMessage
+                  ? onRegenerateLastMessage
+                  : undefined
+              }
+            />
           </div>
 
           {message.role === "user" && (
@@ -168,7 +191,8 @@ export function Messages({ messages, isLoading }: MessagesProps) {
             </div>
           )}
         </motion.div>
-      ))}
+      );
+      })}
 
       {isLoading && (
         <motion.div

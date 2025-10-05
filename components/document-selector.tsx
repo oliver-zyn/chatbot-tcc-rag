@@ -3,6 +3,7 @@
 import * as React from "react";
 import { FileText, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { getFileTypeLabel } from "@/lib/constants/documents";
 import {
   Popover,
   PopoverContent,
@@ -18,14 +19,6 @@ interface DocumentSelectorProps {
   selectedDocumentId: string | null;
   onSelectDocument: (documentId: string | null) => void;
 }
-
-const getFileTypeLabel = (fileType: string) => {
-  const type = fileType.toLowerCase();
-  if (type === "pdf") return "PDF";
-  if (type === "docx" || type === "doc") return "DOCX";
-  if (type === "txt") return "TXT";
-  return fileType.toUpperCase();
-};
 
 export function DocumentSelector({
   documents,

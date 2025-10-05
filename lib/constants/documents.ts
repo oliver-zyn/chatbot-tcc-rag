@@ -42,3 +42,11 @@ export function formatFileSize(bytes: number): string {
 
   return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
 }
+
+export function getFileTypeLabel(fileType: string): string {
+  const type = fileType.toLowerCase();
+  if (type === "pdf") return "PDF";
+  if (type === "docx" || type === "doc") return "DOCX";
+  if (type === "txt") return "TXT";
+  return fileType.toUpperCase();
+}

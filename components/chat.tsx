@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { Send, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -53,13 +53,15 @@ export function Chat({ conversationId, initialMessages, conversationTitle, docum
     scrollToBottom("auto");
   }, [messages, scrollToBottom]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent, messageToSend?: string) => {
     e.preventDefault();
 
-    if (!input.trim() || isLoading) return;
+    const userMessage = messageToSend || input.trim();
+    if (!userMessage || isLoading) return;
 
-    const userMessage = input.trim();
-    setInput("");
+    if (!messageToSend) {
+      setInput("");
+    }
     setIsLoading(true);
 
     const selectedDocument = documents.find(doc => doc.id === selectedDocumentId);
@@ -96,14 +98,51 @@ export function Chat({ conversationId, initialMessages, conversationTitle, docum
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [input, isLoading, conversationId, selectedDocumentId, similarityThreshold, documents]);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleRegenerateLastMessage = useCallback(async () => {
+    if (isLoading || messages.length < 2) return;
+
+    // Find last user message
+    const lastUserMessage = [...messages]
+      .reverse()
+      .find((m) => m.role === "user");
+
+    if (!lastUserMessage) return;
+
+    setIsLoading(true);
+
+    try {
+      const result = await sendMessage(
+        conversationId,
+        lastUserMessage.content,
+        selectedDocumentId,
+        similarityThreshold
+      );
+
+      if (result.success) {
+        // Append both user and assistant messages to show the resend
+        setMessages((prev) => [
+          ...prev,
+          result.data.userMessage,
+          result.data.assistantMessage,
+        ]);
+      } else {
+        toast.error(result.error);
+      }
+    } catch (error) {
+      toast.error("Erro ao reenviar mensagem");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isLoading, messages, conversationId, selectedDocumentId, similarityThreshold]);
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmit(e);
     }
-  };
+  }, [handleSubmit]);
 
   return (
     <>
@@ -114,20 +153,26 @@ export function Chat({ conversationId, initialMessages, conversationTitle, docum
           className="flex-1 overflow-y-auto px-4 py-4"
           style={{ overflowAnchor: "none" }}
         >
-          <Messages messages={messages} isLoading={isLoading} />
+          <Messages
+            messages={messages}
+            isLoading={isLoading}
+            onRegenerateLastMessage={handleRegenerateLastMessage}
+          />
           <div ref={messagesEndRef} className="h-6" />
         </div>
 
         {!isAtBottom && (
           <div className="absolute bottom-28 inset-x-0 flex justify-center z-10 pointer-events-none">
-            <button
+            <Button
+              variant="outline"
+              size="icon"
               aria-label="Rolar para o final"
-              className="rounded-full border bg-background p-2 shadow-lg transition-all hover:bg-muted hover:shadow-xl pointer-events-auto"
+              className="rounded-full shadow-lg transition-all hover:shadow-xl pointer-events-auto"
               onClick={() => scrollToBottom("smooth")}
               type="button"
             >
               <ArrowDown className="h-4 w-4" />
-            </button>
+            </Button>
           </div>
         )}
 
@@ -161,6 +206,7 @@ export function Chat({ conversationId, initialMessages, conversationTitle, docum
               size="icon"
               disabled={!input.trim() || isLoading}
               className="h-[60px] w-[60px] shrink-0"
+              aria-label="Enviar mensagem"
             >
               <Send className="h-5 w-5" />
             </Button>
