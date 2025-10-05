@@ -1,16 +1,57 @@
 import "server-only";
 
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { db } from "../index";
 import { type Conversation, conversations } from "../schema/conversations";
+import { messages } from "../schema/messages";
 
-export async function getConversationsByUserId(userId: string): Promise<Conversation[]> {
+export type ConversationWithLastMessage = Conversation & {
+  lastMessage?: {
+    content: string;
+    createdAt: Date;
+  } | null;
+};
+
+export async function getConversationsByUserId(userId: string): Promise<ConversationWithLastMessage[]> {
   try {
-    return await db
-      .select()
+    const result = await db
+      .select({
+        id: conversations.id,
+        title: conversations.title,
+        userId: conversations.userId,
+        isPinned: conversations.isPinned,
+        createdAt: conversations.createdAt,
+        updatedAt: conversations.updatedAt,
+        lastMessageContent: messages.content,
+        lastMessageCreatedAt: messages.createdAt,
+      })
       .from(conversations)
+      .leftJoin(
+        messages,
+        sql`${messages.conversationId} = ${conversations.id} AND ${messages.id} = (
+          SELECT id FROM messages
+          WHERE conversation_id = ${conversations.id}
+          ORDER BY created_at DESC
+          LIMIT 1
+        )`
+      )
       .where(eq(conversations.userId, userId))
-      .orderBy(desc(conversations.updatedAt));
+      .orderBy(desc(conversations.isPinned), desc(conversations.updatedAt));
+
+    return result.map((row) => ({
+      id: row.id,
+      title: row.title,
+      userId: row.userId,
+      isPinned: row.isPinned,
+      createdAt: row.createdAt,
+      updatedAt: row.updatedAt,
+      lastMessage: row.lastMessageContent
+        ? {
+            content: row.lastMessageContent,
+            createdAt: row.lastMessageCreatedAt!,
+          }
+        : null,
+    }));
   } catch (error) {
     console.error("Failed to get conversations:", error);
     throw new Error("Failed to get conversations");
@@ -64,5 +105,17 @@ export async function updateConversationTitle(id: string, title: string) {
   } catch (error) {
     console.error("Failed to update conversation title:", error);
     throw new Error("Failed to update conversation title");
+  }
+}
+
+export async function toggleConversationPin(id: string, isPinned: boolean) {
+  try {
+    await db
+      .update(conversations)
+      .set({ isPinned, updatedAt: new Date() })
+      .where(eq(conversations.id, id));
+  } catch (error) {
+    console.error("Failed to toggle conversation pin:", error);
+    throw new Error("Failed to toggle conversation pin");
   }
 }

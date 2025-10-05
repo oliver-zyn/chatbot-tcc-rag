@@ -2,7 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { MoreVertical, Trash2, Pencil } from "lucide-react";
+import { MoreVertical, Trash2, Pencil, Pin, PinOff } from "lucide-react";
+import { motion } from "framer-motion";
 import {
   SidebarMenuAction,
   SidebarMenuButton,
@@ -24,12 +25,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { updateConversationTitleAction } from "@/lib/actions/conversations";
-import type { Conversation } from "@/lib/db/schema/conversations";
+import { updateConversationTitleAction, toggleConversationPinAction } from "@/lib/actions/conversations";
+import type { ConversationWithLastMessage } from "@/lib/db/queries/conversations";
 import { toast } from "sonner";
+import { isConversationRecent } from "@/lib/utils/date-grouping";
 
 interface ConversationItemProps {
-  conversation: Conversation;
+  conversation: ConversationWithLastMessage;
   isActive: boolean;
   onDelete: (id: string) => void;
 }
@@ -85,13 +87,29 @@ export function ConversationItem({
     }
   };
 
+  const handleTogglePin = async () => {
+    const result = await toggleConversationPinAction(conversation.id, !conversation.isPinned);
+    if (result.success) {
+      toast.success(conversation.isPinned ? "Conversa desafixada" : "Conversa fixada");
+    } else {
+      toast.error(result.error);
+    }
+  };
+
+  const isRecent = isConversationRecent(conversation.updatedAt);
+
   return (
     <>
-      <SidebarMenuItem>
-        <SidebarMenuButton asChild isActive={isActive} size="lg" className="h-16">
-          {isEditing ? (
-            <div className="flex items-start w-full">
-              <div className="flex flex-col gap-1 flex-1 overflow-hidden">
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -10 }}
+        transition={{ duration: 0.2 }}
+      >
+        <SidebarMenuItem>
+          <SidebarMenuButton asChild isActive={isActive}>
+            {isEditing ? (
+              <div className="flex items-center w-full">
                 <input
                   ref={inputRef}
                   type="text"
@@ -101,59 +119,73 @@ export function ConversationItem({
                   onKeyDown={handleKeyDown}
                   className="font-medium text-sm bg-background rounded px-2 py-0.5 border-none outline-none focus:ring-0 w-full"
                 />
-                <span className="text-xs text-muted-foreground">
-                  {new Date(conversation.updatedAt).toLocaleDateString("pt-BR", {
-                    day: "2-digit",
-                    month: "short",
-                  })}
-                </span>
               </div>
-            </div>
-          ) : (
-            <Link href={`/chat/${conversation.id}`}>
-              <div className="flex flex-col gap-1 flex-1 overflow-hidden">
-                <span className="font-medium text-sm truncate">
-                  {conversation.title}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  {new Date(conversation.updatedAt).toLocaleDateString("pt-BR", {
-                    day: "2-digit",
-                    month: "short",
-                  })}
-                </span>
-              </div>
-            </Link>
-          )}
-        </SidebarMenuButton>
+            ) : (
+              <Link href={`/chat/${conversation.id}`}>
+                <div className="flex items-center gap-1.5 flex-1 overflow-hidden w-full">
+                  {isRecent && (
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="h-2 w-2 rounded-full bg-blue-500 shrink-0"
+                    />
+                  )}
+                  {conversation.isPinned && (
+                    <Pin className="h-3 w-3 text-muted-foreground shrink-0" />
+                  )}
+                  <span className="font-medium text-sm truncate flex-1">
+                    {conversation.title}
+                  </span>
+                </div>
+              </Link>
+            )}
+          </SidebarMenuButton>
 
-        <DropdownMenu modal={false}>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuAction
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-              showOnHover={!isActive}
-            >
-              <MoreVertical />
-              <span className="sr-only">Mais</span>
-            </SidebarMenuAction>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" side="bottom">
-            <DropdownMenuItem
-              className="cursor-pointer"
-              onSelect={() => setIsEditing(true)}
-            >
-              <Pencil className="h-4 w-4" />
-              <span>Renomear</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="cursor-pointer text-destructive focus:bg-destructive/15 focus:text-destructive dark:text-red-500"
-              onSelect={() => setShowDeleteDialog(true)}
-            >
-              <Trash2 className="h-4 w-4" />
-              <span>Deletar</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </SidebarMenuItem>
+          <DropdownMenu modal={false}>
+            <DropdownMenuTrigger asChild>
+              <SidebarMenuAction
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                showOnHover={!isActive}
+              >
+                <MoreVertical />
+                <span className="sr-only">Mais</span>
+              </SidebarMenuAction>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" side="bottom">
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onSelect={handleTogglePin}
+              >
+                {conversation.isPinned ? (
+                  <>
+                    <PinOff className="h-4 w-4" />
+                    <span>Desafixar</span>
+                  </>
+                ) : (
+                  <>
+                    <Pin className="h-4 w-4" />
+                    <span>Fixar</span>
+                  </>
+                )}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onSelect={() => setIsEditing(true)}
+              >
+                <Pencil className="h-4 w-4" />
+                <span>Renomear</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer text-destructive focus:bg-destructive/15 focus:text-destructive dark:text-red-500"
+                onSelect={() => setShowDeleteDialog(true)}
+              >
+                <Trash2 className="h-4 w-4" />
+                <span>Deletar</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </SidebarMenuItem>
+      </motion.div>
 
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>

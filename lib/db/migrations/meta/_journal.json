@@ -15,6 +15,13 @@
       "when": 1759649403335,
       "tag": "0001_quick_dragon_man",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1759650485334,
+      "tag": "0002_talented_hairball",
+      "breakpoints": true
     }
   ]
 }

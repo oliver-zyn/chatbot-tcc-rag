@@ -7,6 +7,7 @@ import {
   createConversation,
   deleteConversation,
   updateConversationTitle,
+  toggleConversationPin,
   getConversationById,
 } from "@/lib/db/queries";
 import {
@@ -98,5 +99,33 @@ export async function updateConversationTitleAction(
   } catch (error) {
     logError(error, { action: "updateConversationTitle", conversationId });
     return actionError("Erro ao atualizar título da conversa");
+  }
+}
+
+export async function toggleConversationPinAction(
+  conversationId: string,
+  isPinned: boolean
+): Promise<ActionResponse<void>> {
+  try {
+    return await withAuth(async (userId) => {
+      const conversationResult = await authorizeResourceAccess(
+        () => getConversationById(conversationId),
+        userId,
+        "Conversa"
+      );
+
+      if (!conversationResult.success) {
+        return conversationResult;
+      }
+
+      await toggleConversationPin(conversationId, isPinned);
+      revalidatePath("/");
+      revalidatePath(`/chat/${conversationId}`);
+
+      return actionSuccess(undefined);
+    });
+  } catch (error) {
+    logError(error, { action: "toggleConversationPin", conversationId });
+    return actionError("Erro ao fixar/desafixar conversa");
   }
 }
