@@ -1,3 +1,5 @@
+import { logError } from "@/lib/errors/logger";
+
 export async function extractTextFromFile(file: File): Promise<string> {
   const fileType = file.type;
 
@@ -35,7 +37,11 @@ async function extractTextFromPdf(file: File): Promise<string> {
 
     return data.text;
   } catch (error) {
-    console.error("Erro ao extrair texto do PDF:", error);
+    logError(error, {
+      action: "extractTextFromPdf",
+      fileName: file.name,
+      fileSize: file.size,
+    });
     throw new Error("Falha ao extrair texto do PDF. Verifique se o arquivo não está corrompido.");
   }
 }
@@ -54,7 +60,11 @@ async function extractTextFromDocx(file: File): Promise<string> {
 
     return result.value;
   } catch (error) {
-    console.error("Erro ao extrair texto do DOCX:", error);
+    logError(error, {
+      action: "extractTextFromDocx",
+      fileName: file.name,
+      fileSize: file.size,
+    });
     throw new Error("Falha ao extrair texto do DOCX. Verifique se o arquivo não está corrompido.");
   }
 }

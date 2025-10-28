@@ -3,22 +3,11 @@
 import { FileText, Trash2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatFileSize, getFileTypeLabel } from "@/lib/constants/documents";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { formatDateReadable } from "@/lib/utils/date-formatter";
+import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
+import { useDeleteAction } from "@/lib/hooks/use-delete-action";
 import type { Document } from "@/lib/db/schema/documents";
-import { toast } from "sonner";
-import { useState, useTransition } from "react";
 import { deleteDocumentAction } from "@/lib/actions/documents";
-import { useRouter } from "next/navigation";
 
 interface DocumentListProps {
   documents: Document[];
@@ -26,30 +15,11 @@ interface DocumentListProps {
 }
 
 export function DocumentList({ documents, currentUserId }: DocumentListProps) {
-  const router = useRouter();
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
-
-  const handleDelete = async (id: string) => {
-    setDeletingId(id);
-
-    try {
-      const result = await deleteDocumentAction(id);
-
-      if (result.success) {
-        toast.success("Documento deletado com sucesso");
-        startTransition(() => {
-          router.refresh();
-        });
-      } else {
-        toast.error(result.error);
-      }
-    } catch (error) {
-      toast.error("Erro ao deletar documento");
-    } finally {
-      setDeletingId(null);
-    }
-  };
+  const { deletingId, handleDelete } = useDeleteAction({
+    deleteAction: deleteDocumentAction,
+    successMessage: "Documento deletado com sucesso",
+    errorMessage: "Erro ao deletar documento",
+  });
 
   if (documents.length === 0) {
     return (
@@ -83,19 +53,13 @@ export function DocumentList({ documents, currentUserId }: DocumentListProps) {
                   <span>•</span>
                   <span>{formatFileSize(doc.fileSize)}</span>
                   <span>•</span>
-                  <span>
-                    {new Date(doc.createdAt).toLocaleDateString("pt-BR", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    })}
-                  </span>
+                  <span>{formatDateReadable(doc.createdAt)}</span>
                 </div>
               </div>
             </div>
             {doc.userId === currentUserId ? (
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
+              <DeleteConfirmationDialog
+                trigger={
                   <Button
                     variant="ghost"
                     size="icon"
@@ -108,25 +72,11 @@ export function DocumentList({ documents, currentUserId }: DocumentListProps) {
                       <Trash2 className="h-4 w-4 text-destructive" />
                     )}
                   </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Deletar documento</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Tem certeza que deseja deletar este documento? Esta ação não pode ser desfeita.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={() => handleDelete(doc.id)}
-                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                    >
-                      Deletar
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+                }
+                title="Deletar documento"
+                description="Tem certeza que deseja deletar este documento? Esta ação não pode ser desfeita."
+                onConfirm={() => handleDelete(doc.id)}
+              />
             ) : (
               <div className="w-10" />
             )}

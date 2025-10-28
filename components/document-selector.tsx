@@ -4,6 +4,7 @@ import * as React from "react";
 import { FileText, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getFileTypeLabel } from "@/lib/constants/documents";
+import { formatDate } from "@/lib/utils/date-formatter";
 import {
   Popover,
   PopoverContent,
@@ -109,7 +110,7 @@ export function DocumentSelector({
                           {getFileTypeLabel(document.fileType)}
                         </Badge>
                         <span className="text-xs text-muted-foreground">
-                          {new Date(document.createdAt).toLocaleDateString("pt-BR")}
+                          {formatDate(document.createdAt, false)}
                         </span>
                       </div>
                     </div>

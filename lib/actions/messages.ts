@@ -7,6 +7,8 @@ import {
   checkRateLimit,
   incrementUsage,
   getDocumentById,
+  getMessagesByConversationId,
+  updateConversationTitle,
 } from "@/lib/db/queries";
 import { sendMessageSchema } from "@/lib/validations/message";
 import { generateRAGResponse } from "@/lib/ai/generate-response";
@@ -60,6 +62,9 @@ export async function sendMessage(
         contextDocumentName = document?.fileName;
       }
 
+      const existingMessages = await getMessagesByConversationId(conversationId);
+      const isFirstMessage = existingMessages.length === 0;
+
       const userMessage = await createMessage(
         conversationId,
         "user",
@@ -68,6 +73,25 @@ export async function sendMessage(
         undefined,
         contextDocumentName
       );
+
+      if (isFirstMessage) {
+        try {
+          const trimmedContent = content.trim();
+          const title = trimmedContent.length > 80
+            ? trimmedContent.substring(0, 77) + "..."
+            : trimmedContent;
+
+          if (title.length > 0) {
+            await updateConversationTitle(conversationId, title);
+          }
+        } catch (error) {
+          logError(error, {
+            action: "autoUpdateConversationTitle",
+            conversationId,
+            contentLength: content.length,
+          });
+        }
+      }
 
       await incrementUsage(userId);
 
@@ -81,6 +105,7 @@ export async function sendMessage(
       );
 
       revalidatePath(`/chat/${conversationId}`);
+      revalidatePath("/");
 
       return actionSuccess({
         userMessage,

@@ -103,7 +103,6 @@ export function Chat({ conversationId, initialMessages, conversationTitle, docum
   const handleRegenerateLastMessage = useCallback(async () => {
     if (isLoading || messages.length < 2) return;
 
-    // Find last user message
     const lastUserMessage = [...messages]
       .reverse()
       .find((m) => m.role === "user");
@@ -121,7 +120,6 @@ export function Chat({ conversationId, initialMessages, conversationTitle, docum
       );
 
       if (result.success) {
-        // Append both user and assistant messages to show the resend
         setMessages((prev) => [
           ...prev,
           result.data.userMessage,

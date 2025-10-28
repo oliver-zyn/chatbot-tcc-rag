@@ -27,7 +27,6 @@ export async function createOrUpdateVote(
     const existingVote = await getVoteByMessageId(messageId, userId);
 
     if (existingVote) {
-      // Update existing vote
       const [updatedVote] = await db
         .update(votes)
         .set({ isUpvoted, updatedAt: new Date() })
@@ -36,7 +35,6 @@ export async function createOrUpdateVote(
 
       return updatedVote;
     } else {
-      // Create new vote
       const [newVote] = await db
         .insert(votes)
         .values({

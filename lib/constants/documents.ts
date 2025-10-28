@@ -50,3 +50,16 @@ export function getFileTypeLabel(fileType: string): string {
   if (type === "txt") return "TXT";
   return fileType.toUpperCase();
 }
+
+/**
+ * Retorna o nome do ícone Lucide para cada tipo de arquivo
+ * @param fileType - Tipo do arquivo (pdf, docx, txt)
+ * @returns Nome do ícone correspondente
+ */
+export function getFileTypeIconName(fileType: string): "FileType" | "FileText" | "File" {
+  const type = fileType.toLowerCase();
+  if (type === "pdf") return "FileType";
+  if (type === "docx" || type === "doc") return "FileText";
+  if (type === "txt") return "File";
+  return "File";
+}

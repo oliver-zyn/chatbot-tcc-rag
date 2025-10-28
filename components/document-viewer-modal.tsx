@@ -71,7 +71,6 @@ export function DocumentViewerModal({
   const [chunksOpen, setChunksOpen] = React.useState(false);
   const [contentOpen, setContentOpen] = React.useState(false);
 
-  // Reset state quando trocar de documento
   React.useEffect(() => {
     setChunks([]);
     setChunksOpen(false);
@@ -114,7 +113,6 @@ export function DocumentViewerModal({
 
         <div className="flex-1 overflow-hidden">
           <ScrollArea className="h-[calc(90vh-200px)] pr-4">
-            {/* Metadados */}
             <div className="space-y-3 mb-6">
               <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
                 Metadados
@@ -147,7 +145,6 @@ export function DocumentViewerModal({
 
             <Separator className="my-6" />
 
-            {/* Conteúdo */}
             <Collapsible open={contentOpen} onOpenChange={setContentOpen}>
               <CollapsibleTrigger asChild>
                 <Button variant="ghost" className="w-full justify-between p-0 h-auto mb-3">
@@ -172,7 +169,6 @@ export function DocumentViewerModal({
 
             <Separator className="my-6" />
 
-            {/* Chunks Gerados */}
             <Collapsible open={chunksOpen} onOpenChange={setChunksOpen}>
               <CollapsibleTrigger asChild>
                 <Button variant="ghost" className="w-full justify-between p-0 h-auto">

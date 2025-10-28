@@ -30,7 +30,6 @@ export function MessageActions({
   const [vote, setVote] = useState<Vote | null>(null);
   const [isVoting, setIsVoting] = useState(false);
 
-  // Load vote on mount
   useEffect(() => {
     async function loadVote() {
       const result = await getVote(messageId);
@@ -59,7 +58,6 @@ export function MessageActions({
 
     setIsVoting(true);
     try {
-      // If clicking the same vote, remove it
       if (vote && vote.isUpvoted === isUpvoted) {
         const result = await removeVote(messageId);
         if (result.success) {
@@ -67,7 +65,6 @@ export function MessageActions({
           toast.success("Voto removido");
         }
       } else {
-        // Otherwise, create or update vote
         const result = await voteMessage(messageId, isUpvoted);
         if (result.success) {
           setVote({ ...vote, isUpvoted, messageId } as Vote);

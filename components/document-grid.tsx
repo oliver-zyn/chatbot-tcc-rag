@@ -6,7 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { formatFileSize, getFileTypeLabel } from "@/lib/constants/documents";
+import { formatFileSize, getFileTypeLabel, getFileTypeIconName } from "@/lib/constants/documents";
+import { formatDate } from "@/lib/utils/date-formatter";
 import {
   Select,
   SelectContent,
@@ -14,71 +15,39 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
+import { useDeleteAction } from "@/lib/hooks/use-delete-action";
 import type { Document } from "@/lib/db/schema/documents";
 import { DocumentViewerModal } from "./document-viewer-modal";
 import { deleteDocumentAction } from "@/lib/actions/documents";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 interface DocumentGridProps {
   documents: Document[];
   currentUserId: string;
 }
 
-const getFileIcon = (fileType: string) => {
-  const type = fileType.toLowerCase();
-  if (type === "pdf") return FileType;
-  if (type === "docx" || type === "doc") return FileText;
-  if (type === "txt") return File;
-  return File;
+const iconMap = {
+  FileType,
+  FileText,
+  File,
 };
 
-const formatDate = (date: Date): string => {
-  return new Intl.DateTimeFormat("pt-BR", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  }).format(new Date(date));
+const getFileIcon = (fileType: string) => {
+  const iconName = getFileTypeIconName(fileType);
+  return iconMap[iconName];
 };
 
 export function DocumentGrid({ documents, currentUserId }: DocumentGridProps) {
-  const router = useRouter();
   const [selectedDocument, setSelectedDocument] = React.useState<Document | null>(null);
-  const [deletingId, setDeletingId] = React.useState<string | null>(null);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [fileTypeFilter, setFileTypeFilter] = React.useState<string>("all");
   const [ownerFilter, setOwnerFilter] = React.useState<string>("all");
 
-  const handleDelete = async (document: Document, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setDeletingId(document.id);
-
-    try {
-      const result = await deleteDocumentAction(document.id);
-
-      if (result.success) {
-        toast.success("Documento deletado com sucesso");
-        router.refresh();
-      } else {
-        toast.error(result.error);
-      }
-    } catch (error) {
-      toast.error("Erro ao deletar documento");
-    } finally {
-      setDeletingId(null);
-    }
-  };
+  const { deletingId, handleDelete } = useDeleteAction({
+    deleteAction: deleteDocumentAction,
+    successMessage: "Documento deletado com sucesso",
+    errorMessage: "Erro ao deletar documento",
+  });
 
   const filteredDocuments = React.useMemo(() => {
     return documents.filter((doc) => {
@@ -146,7 +115,6 @@ export function DocumentGrid({ documents, currentUserId }: DocumentGridProps) {
             />
           </div>
 
-          {/* Filtro por tipo */}
           <Select value={fileTypeFilter} onValueChange={setFileTypeFilter}>
             <SelectTrigger>
               <SelectValue placeholder="Tipo de arquivo" />
@@ -223,8 +191,8 @@ export function DocumentGrid({ documents, currentUserId }: DocumentGridProps) {
                       {getFileTypeLabel(document.fileType)}
                     </Badge>
                     {isOwner && (
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
+                      <DeleteConfirmationDialog
+                        trigger={
                           <Button
                             variant="ghost"
                             size="icon"
@@ -234,26 +202,12 @@ export function DocumentGrid({ documents, currentUserId }: DocumentGridProps) {
                           >
                             <Trash2 className="h-3.5 w-3.5" />
                           </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent onClick={(e) => e.stopPropagation()}>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Deletar documento?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Esta ação não pode ser desfeita. O documento &ldquo;{document.fileName}&rdquo; será
-                              permanentemente removido.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={(e) => handleDelete(document, e)}
-                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                            >
-                              Deletar
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                        }
+                        title="Deletar documento?"
+                        description={`Esta ação não pode ser desfeita. O documento "${document.fileName}" será permanentemente removido.`}
+                        onConfirm={() => handleDelete(document.id)}
+                        stopPropagation
+                      />
                     )}
                   </div>
                 </div>

@@ -1,6 +1,7 @@
 import { openai } from '@ai-sdk/openai';
 import { generateText } from 'ai';
 import { findRelevantContent } from './embedding';
+import { logError } from '@/lib/errors/logger';
 
 export async function generateRAGResponse(
   userQuestion: string,
@@ -32,7 +33,7 @@ export async function generateRAGResponse(
     const sources = [...new Set(relevantChunks.map(chunk => chunk.documentName))];
 
     const { text } = await generateText({
-      model: openai('gpt-4o-mini'),
+      model: openai('gpt-5-nano'),
       system: `Você é um assistente útil que responde perguntas baseado APENAS nas informações fornecidas no contexto.
 
 REGRAS IMPORTANTES:
@@ -64,7 +65,12 @@ Responda a pergunta usando apenas as informações do contexto acima. Use format
       sources,
     };
   } catch (error) {
-    console.error('Erro ao gerar resposta RAG:', error);
+    logError(error, {
+      action: 'generateRAGResponse',
+      userQuestion,
+      documentId,
+      similarityThreshold,
+    });
     return {
       content: 'Desculpe, ocorreu um erro ao processar sua pergunta. Por favor, tente novamente.',
       confidenceScore: 0,
