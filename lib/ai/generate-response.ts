@@ -2,6 +2,8 @@ import { openai } from '@ai-sdk/openai';
 import { generateText } from 'ai';
 import { findRelevantContent } from './embedding';
 import { logError } from '@/lib/errors/logger';
+import { extractTicketNumber } from '@/lib/utils/ticket';
+import { appConfig } from '@/lib/config/app-config';
 import type { Document } from '@/lib/db/schema/documents';
 
 interface SimilarTicket {
@@ -37,24 +39,19 @@ export async function generateRAGResponse(
     // Prepara contexto de tickets similares (se houver)
     let similarTicketsContext = '';
     if (similarTickets && similarTickets.length > 0) {
-      const extractTicketNumber = (fileName: string): string => {
-        const match = fileName.match(/ticket[_-]?(\d+)/i);
-        return match ? match[1] : 'desconhecido';
-      };
-
       similarTicketsContext = '\n\n--- TICKETS RELACIONADOS ---\n\n' +
         'Os seguintes tickets têm problemas ou soluções semelhantes:\n\n' +
         similarTickets
           .map((item) => {
             const ticketNumber = extractTicketNumber(item.document.fileName);
             const similarityPercent = Math.round(item.similarity * 100);
-            return `TICKET #${ticketNumber} (${similarityPercent}% similar):\n${item.document.content.substring(0, 1200)}`;
+            return `TICKET #${ticketNumber} (${similarityPercent}% similar):\n${item.document.content.substring(0, appConfig.tickets.maxContentPreview)}`;
           })
           .join('\n\n---\n\n');
     }
 
     const { text } = await generateText({
-      model: openai('gpt-5-nano'),
+      model: openai(appConfig.llm.model),
       system: `Você é um assistente útil que responde perguntas baseado APENAS nas informações fornecidas no contexto.
 
 REGRAS IMPORTANTES:

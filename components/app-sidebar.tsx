@@ -31,7 +31,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import type { ConversationWithLastMessage } from "@/lib/db/queries/conversations";
-import { groupConversationsByDate } from "@/lib/utils/date-grouping";
+import { groupConversationsByDate } from "@/lib/utils/date";
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   user: {

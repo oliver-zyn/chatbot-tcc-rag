@@ -4,7 +4,7 @@ import * as React from "react";
 import { FileText, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getFileTypeLabel } from "@/lib/constants/documents";
-import { formatDate } from "@/lib/utils/date-formatter";
+import { formatDate } from "@/lib/utils/date";
 import {
   Popover,
   PopoverContent,

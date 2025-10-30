@@ -12,7 +12,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import type { ConversationWithLastMessage } from "@/lib/db/queries/conversations";
-import { groupConversationsByDate } from "@/lib/utils/date-grouping";
+import { groupConversationsByDate } from "@/lib/utils/date";
 
 interface ConversationSearchDialogProps {
   conversations: ConversationWithLastMessage[];

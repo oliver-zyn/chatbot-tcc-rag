@@ -20,6 +20,7 @@ import {
 import { withAuth, authorizeResourceAccess } from "./utils";
 import { logError } from "@/lib/errors/logger";
 import { RateLimitError } from "@/lib/errors";
+import { appConfig } from "@/lib/config/app-config";
 
 type SendMessageResponse = {
   userMessage: Awaited<ReturnType<typeof createMessage>>;
@@ -77,8 +78,8 @@ export async function sendMessage(
       if (isFirstMessage) {
         try {
           const trimmedContent = content.trim();
-          const title = trimmedContent.length > 80
-            ? trimmedContent.substring(0, 77) + "..."
+          const title = trimmedContent.length > appConfig.conversation.maxTitleLength
+            ? trimmedContent.substring(0, appConfig.conversation.titleTruncateLength) + "..."
             : trimmedContent;
 
           if (title.length > 0) {

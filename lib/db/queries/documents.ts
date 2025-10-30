@@ -4,6 +4,7 @@ import { desc, eq, sql } from "drizzle-orm";
 import { db } from "../index";
 import { type Document, documents } from "../schema/documents";
 import { embeddings } from "../schema/embeddings";
+import { appConfig } from "@/lib/config/app-config";
 
 export async function getDocumentsByUserId(userId: string): Promise<Document[]> {
   try {
@@ -136,8 +137,8 @@ export async function findDocumentByTicketNumber(ticketNumber: string): Promise<
  */
 export async function findSimilarTickets(
   documentId: string,
-  limit: number = 3,
-  minSimilarity: number = 0.7  // Threshold mais alto para relevância
+  limit: number = appConfig.tickets.maxSimilarTickets,
+  minSimilarity: number = appConfig.tickets.similarityThreshold
 ): Promise<Array<{ document: Document; similarity: number }>> {
   try {
     // Busca embeddings do documento de origem

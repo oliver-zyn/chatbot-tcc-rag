@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { formatFileSize, getFileTypeLabel, getFileTypeIconName } from "@/lib/constants/documents";
-import { formatDate } from "@/lib/utils/date-formatter";
+import { formatDate } from "@/lib/utils/date";
 import {
   Select,
   SelectContent,
@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
-import { useDeleteAction } from "@/lib/hooks/use-delete-action";
+import { useDeleteAction } from "@/hooks/use-delete-action";
 import type { Document } from "@/lib/db/schema/documents";
 import { DocumentViewerModal } from "./document-viewer-modal";
 import { deleteDocumentAction } from "@/lib/actions/documents";
