@@ -9,7 +9,6 @@ export const messages = pgTable("messages", {
     .references(() => conversations.id, { onDelete: "cascade" }),
   role: text("role", { enum: ["user", "assistant"] }).notNull(),
   content: text("content").notNull(),
-  confidenceScore: integer("confidence_score"),
   sources: json("sources").$type<string[]>(),
   contextDocument: text("context_document"),
   createdAt: timestamp("created_at").notNull().defaultNow(),

@@ -1,0 +1,80 @@
+TICKET #109283
+Data: 28/01/2025
+Prioridade: Crítica
+Status: Resolvido
+
+PROBLEMA:
+Sistema de embeddings falhando ao processar documentos PDF grandes (>10MB). Usuários recebiam erro "Failed to process document" e o documento não era salvo no banco.
+
+Impacto:
+- 15 usuários afetados nas últimas 24h
+- Documentos importantes não podendo ser indexados
+- Timeout no servidor após 30 segundos
+
+Logs do erro:
+```
+Error: generateEmbeddings timeout
+at OpenAIAPI.createEmbedding (embedding.ts:45)
+Error: Failed to process document. Não foi possível gerar embeddings do conteúdo.
+```
+
+ANÁLISE:
+O problema tinha múltiplas causas:
+
+1. Chunking inadequado:
+   - Documentos grandes eram divididos em chunks muito grandes (>8000 tokens)
+   - API da OpenAI tem limite de 8191 tokens por request
+   - Não havia retry em caso de falha
+
+2. Timeout:
+   - Servidor configurado com timeout de 30s
+   - Processamento de PDF grande + geração de embeddings levava ~45s
+   - Transação do banco era revertida por timeout
+
+3. Memória:
+   - Extração de texto carregava PDF inteiro na memória
+   - PDFs de 10MB geravam strings de 5+ milhões de caracteres
+
+SOLUÇÃO IMPLEMENTADA:
+1. Melhorias no chunking (lib/ai/embedding.ts):
+   - Implementamos split recursivo com limite de 1000 tokens por chunk
+   - Overlap de 200 tokens entre chunks para manter contexto
+   - Validação de tamanho antes de enviar para API
+
+2. Processamento assíncrono:
+   - Removemos geração de embeddings do upload inicial
+   - Implementamos worker/queue para processar em background
+   - Status do documento: "processing" → "completed"
+
+3. Streaming e otimização de memória:
+   - Processamento de PDF em streaming quando possível
+   - Limpeza de memória após cada chunk
+   - Limite de 20MB por arquivo
+
+4. Retry logic:
+   - Até 3 tentativas com backoff exponencial (1s, 2s, 4s)
+   - Tratamento específico para rate limit da OpenAI
+
+Código modificado:
+```typescript
+// lib/ai/embedding.ts
+const MAX_TOKENS = 1000;
+const OVERLAP_TOKENS = 200;
+
+async function chunkText(text: string) {
+  // Split com limite de tokens
+  const chunks = recursiveSplit(text, MAX_TOKENS, OVERLAP_TOKENS);
+  return chunks;
+}
+```
+
+RESULTADO:
+- 100% de sucesso no processamento de PDFs grandes
+- Tempo médio de processamento: 2-3 minutos (assíncrono)
+- Usuários podem continuar usando a aplicação enquanto processa
+- Feedback visual de progresso
+
+MELHORIAS FUTURAS:
+- Considerar usar modelo de embeddings mais eficiente
+- Implementar processamento paralelo de chunks
+- Cache de embeddings para documentos similares

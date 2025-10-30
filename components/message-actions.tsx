@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Copy, ThumbsUp, ThumbsDown, RefreshCw, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,13 +10,14 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip";
 import { toast } from "sonner";
-import { voteMessage, removeVote, getVote } from "@/lib/actions/votes";
+import { voteMessage, removeVote } from "@/lib/actions/votes";
 import type { Vote } from "@/lib/db/schema/votes";
 
 interface MessageActionsProps {
   messageId: string;
   content: string;
   role: "user" | "assistant";
+  initialVote: Vote | null;
   onRegenerate?: () => void;
 }
 
@@ -24,23 +25,12 @@ export function MessageActions({
   messageId,
   content,
   role,
+  initialVote,
   onRegenerate,
 }: MessageActionsProps) {
   const [copied, setCopied] = useState(false);
-  const [vote, setVote] = useState<Vote | null>(null);
+  const [vote, setVote] = useState<Vote | null>(initialVote);
   const [isVoting, setIsVoting] = useState(false);
-
-  useEffect(() => {
-    async function loadVote() {
-      const result = await getVote(messageId);
-      if (result.success && result.data) {
-        setVote(result.data);
-      }
-    }
-    if (role === "assistant") {
-      loadVote();
-    }
-  }, [messageId, role]);
 
   const handleCopy = async () => {
     try {

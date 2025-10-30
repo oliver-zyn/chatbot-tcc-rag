@@ -1,6 +1,6 @@
 import "server-only";
 
-import { eq, and } from "drizzle-orm";
+import { eq, and, inArray } from "drizzle-orm";
 import { db } from "../index";
 import { votes } from "../schema/votes";
 
@@ -15,6 +15,22 @@ export async function getVoteByMessageId(messageId: string, userId: string) {
   } catch (error) {
     console.error("Failed to get vote:", error);
     return null;
+  }
+}
+
+export async function getVotesByMessageIds(messageIds: string[], userId: string) {
+  try {
+    if (messageIds.length === 0) return [];
+
+    const userVotes = await db
+      .select()
+      .from(votes)
+      .where(and(inArray(votes.messageId, messageIds), eq(votes.userId, userId)));
+
+    return userVotes;
+  } catch (error) {
+    console.error("Failed to get votes:", error);
+    return [];
   }
 }
 

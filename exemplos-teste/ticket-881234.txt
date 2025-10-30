@@ -1,0 +1,195 @@
+TICKET #881234
+Data: 18/02/2025
+Prioridade: Alta
+Status: Resolvido
+
+PROBLEMA:
+Aplicação ficando extremamente lenta após 30 minutos de uso contínuo. Memory leak identificado causando uso progressivo de RAM até o tab do navegador crashar.
+
+Sintomas:
+- Uso de memória aumentando de 150MB → 2GB+ em 30 minutos
+- UI congelando progressivamente
+- Tab crashando com "Out of Memory" error
+- Afeta principalmente usuários que mantêm o chat aberto por períodos longos
+
+Contexto:
+- Relatado por 15+ usuários
+- Ocorre independente do navegador (Chrome, Firefox, Safari)
+- Mais evidente em conversas longas com muitas mensagens
+
+ANÁLISE:
+
+Identificamos 3 fontes principais de memory leak:
+
+1. **Event listeners não removidos:**
+```typescript
+// components/chat.tsx - PROBLEMÁTICO
+useEffect(() => {
+  window.addEventListener('scroll', handleScroll);
+  // ❌ Faltava cleanup!
+}, []);
+```
+
+2. **Referências circulares em closures:**
+```typescript
+// Closure capturando referência infinita
+const [messages, setMessages] = useState([]);
+
+useEffect(() => {
+  const interval = setInterval(() => {
+    // ❌ Closure mantém todas as versões antigas de messages
+    setMessages(prev => [...prev, newMessage]);
+  }, 1000);
+}, []);
+```
+
+3. **Componentes não desmontados corretamente:**
+```typescript
+// Messages component rerenderizando tudo a cada nova mensagem
+function Messages({ messages }) {
+  return messages.map(msg => (
+    <MessageCard key={msg.id} {...msg} /> // ❌ Sem React.memo
+  ));
+}
+```
+
+SOLUÇÃO IMPLEMENTADA:
+
+1. **Cleanup de event listeners:**
+```typescript
+useEffect(() => {
+  window.addEventListener('scroll', handleScroll);
+
+  return () => {
+    window.removeEventListener('scroll', handleScroll); // ✅ Cleanup
+  };
+}, [handleScroll]);
+```
+
+2. **Otimização de state updates:**
+```typescript
+// Usar useCallback para evitar closures desnecessárias
+const addMessage = useCallback((newMessage: Message) => {
+  setMessages(prev => {
+    // Limitar histórico a 100 mensagens
+    const updated = [...prev, newMessage];
+    return updated.length > 100 ? updated.slice(-100) : updated;
+  });
+}, []);
+
+// Memoizar handlers
+const handleScroll = useCallback(() => {
+  if (!containerRef.current) return;
+  const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+  setIsAtBottom(scrollHeight - scrollTop - clientHeight < 50);
+}, []);
+```
+
+3. **Memoização de componentes:**
+```typescript
+// Memoizar componente pesado
+const MessageCard = React.memo(({ message }: { message: Message }) => {
+  return (
+    <div className="message">
+      <Markdown content={message.content} />
+      <VoteButtons messageId={message.id} />
+    </div>
+  );
+}, (prev, next) => {
+  // Re-render apenas se mensagem mudou
+  return prev.message.id === next.message.id &&
+         prev.message.content === next.message.content;
+});
+
+// Virtualização de lista
+import { useVirtualizer } from '@tanstack/react-virtual';
+
+function MessageList({ messages }: { messages: Message[] }) {
+  const parentRef = useRef<HTMLDivElement>(null);
+
+  const virtualizer = useVirtualizer({
+    count: messages.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 100,
+    overscan: 5,
+  });
+
+  return (
+    <div ref={parentRef} style={{ height: '600px', overflow: 'auto' }}>
+      <div style={{ height: `${virtualizer.getTotalSize()}px` }}>
+        {virtualizer.getVirtualItems().map(virtualItem => (
+          <div
+            key={virtualItem.key}
+            data-index={virtualItem.index}
+            ref={virtualizer.measureElement}
+          >
+            <MessageCard message={messages[virtualItem.index]} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+4. **Cleanup de intervals e timeouts:**
+```typescript
+useEffect(() => {
+  const interval = setInterval(() => {
+    checkForUpdates();
+  }, 5000);
+
+  return () => clearInterval(interval); // ✅ Sempre limpar
+}, []);
+```
+
+5. **Garbage collection de dados antigos:**
+```typescript
+// Limitar cache de embeddings
+const embeddingCache = new Map();
+const MAX_CACHE_SIZE = 100;
+
+function cacheEmbedding(key: string, value: number[]) {
+  if (embeddingCache.size >= MAX_CACHE_SIZE) {
+    // Remove entrada mais antiga
+    const firstKey = embeddingCache.keys().next().value;
+    embeddingCache.delete(firstKey);
+  }
+  embeddingCache.set(key, value);
+}
+```
+
+FERRAMENTAS USADAS:
+- Chrome DevTools Memory Profiler
+- React DevTools Profiler
+- `why-did-you-render` library para debug
+
+RESULTADO:
+- Uso de memória estável em ~200MB mesmo após horas de uso
+- Nenhum memory leak detectado em testes de 2 horas
+- Performance melhorou significativamente
+- FPS estável em 60 fps durante uso prolongado
+
+MÉTRICAS:
+Antes:
+- Memória inicial: 150MB
+- Memória após 30min: 2GB+
+- Tempo para crash: ~45 minutos
+
+Depois:
+- Memória inicial: 180MB (ligeiramente maior por memoização)
+- Memória após 30min: 220MB
+- Tempo para crash: Não ocorre mais
+
+ARQUIVOS MODIFICADOS:
+- components/chat.tsx (múltiplas otimizações)
+- components/messages.tsx (virtualização + memoização)
+- components/message-card.tsx (React.memo)
+- hooks/use-scroll.ts (cleanup de listeners)
+- lib/cache/embedding-cache.ts (limite de tamanho)
+
+PREVENÇÃO:
+- ESLint rule: `react-hooks/exhaustive-deps` ativada
+- Code review checklist com item de memory leaks
+- Testes de performance em CI (limite de 500MB)
+- Documentação sobre cleanup de effects

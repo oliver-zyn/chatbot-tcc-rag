@@ -1,0 +1,163 @@
+TICKET #223905
+Data: 15/02/2025
+Prioridade: Crítica
+Status: Resolvido
+
+PROBLEMA:
+Sistema quebrando ao processar datas de documentos históricos (antes do ano 2000). Erro de "Invalid Date" ao tentar processar documentos legados com timestamps antigos.
+
+Erro:
+```
+TypeError: Invalid Date
+at formatHistoricalDate (date-formatter.ts:78)
+at DocumentCard.render (document-grid.tsx:145)
+
+Stack trace mostra erro ao processar:
+- document-1998.pdf (createdAt: 1998-03-15)
+- relatorio-1995.docx (createdAt: 1995-11-20)
+```
+
+Contexto:
+- Cliente migrou arquivos históricos (1990-2000)
+- 250+ documentos afetados
+- Interface travando ao tentar exibir biblioteca de documentos
+- Console cheio de erros
+
+ANÁLISE:
+Múltiplos problemas relacionados a datas antigas:
+
+1. **Problema com Date.parse():**
+```typescript
+// Código problemático
+const timestamp = Date.parse("1998-03-15"); // ❌ Retorna NaN em alguns navegadores antigos
+```
+
+2. **Validação incorreta:**
+```typescript
+// Validação assumia ano >= 2000
+if (date.getFullYear() < 2000) {
+  throw new Error("Invalid date"); // ❌ Rejeita datas válidas
+}
+```
+
+3. **Formatação relativa quebrada:**
+```typescript
+// "Há 27 anos" sendo calculado incorretamente
+function getRelativeTime(date: Date): string {
+  const diff = Date.now() - date.getTime();
+  if (diff < 0) return "Invalid"; // ❌ Bug na comparação
+  // ...
+}
+```
+
+SOLUÇÃO IMPLEMENTADA:
+
+1. **Parse robusto de datas:**
+```typescript
+export function parseDate(dateInput: string | Date): Date | null {
+  try {
+    if (dateInput instanceof Date) {
+      return isValidDate(dateInput) ? dateInput : null;
+    }
+
+    // Tenta múltiplos formatos
+    const date = new Date(dateInput);
+
+    if (isValidDate(date)) {
+      return date;
+    }
+
+    // Fallback: parse manual para formatos ISO
+    const isoMatch = dateInput.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (isoMatch) {
+      const [, year, month, day] = isoMatch;
+      return new Date(+year, +month - 1, +day);
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function isValidDate(date: Date): boolean {
+  return date instanceof Date &&
+         !isNaN(date.getTime()) &&
+         date.getFullYear() >= 1970 && // Unix epoch mínimo
+         date.getFullYear() <= 2100;   // Máximo razoável
+}
+```
+
+2. **Formatação relativa melhorada:**
+```typescript
+export function getRelativeTime(date: Date): string {
+  if (!isValidDate(date)) return "Data inválida";
+
+  const now = Date.now();
+  const then = date.getTime();
+  const diffMs = Math.abs(now - then); // ✅ abs() evita negativos
+  const diffYears = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 365));
+
+  // Para datas muito antigas, mostra apenas o ano
+  if (diffYears > 10) {
+    return date.getFullYear().toString();
+  }
+
+  // Para datas recentes, mostra formatação completa
+  return formatRelative(date);
+}
+```
+
+3. **Validação de range atualizada:**
+```typescript
+// Remove limite inferior de ano
+const MIN_YEAR = 1970; // Unix epoch
+const MAX_YEAR = 2100; // Limite superior razoável
+
+export function isValidDateRange(date: Date): boolean {
+  const year = date.getFullYear();
+  return year >= MIN_YEAR && year <= MAX_YEAR;
+}
+```
+
+4. **Fallback gracioso na UI:**
+```tsx
+// components/document-card.tsx
+function DocumentDate({ date }: { date: Date | string }) {
+  const parsedDate = parseDate(date);
+
+  if (!parsedDate) {
+    return <span className="text-muted-foreground">Data não disponível</span>;
+  }
+
+  return (
+    <time dateTime={parsedDate.toISOString()}>
+      {formatDate(parsedDate)}
+    </time>
+  );
+}
+```
+
+RESULTADO:
+- Sistema agora processa datas de 1970-2100 sem erros
+- Documentos históricos sendo exibidos corretamente
+- Formatação apropriada para datas antigas ("1998" ao invés de "Há 27 anos")
+- Fallback gracioso para datas inválidas
+
+TESTES REALIZADOS:
+- Datas de 1970, 1990, 1995, 1998, 2000 (limites)
+- Datas futuras (2025-2100)
+- Datas inválidas (null, undefined, strings malformadas)
+- Performance com 1000+ documentos históricos
+
+ARQUIVOS MODIFICADOS:
+- lib/utils/date-formatter.ts (refatorado completamente)
+- lib/utils/date-validator.ts (criado)
+- components/document-card.tsx (tratamento de erro)
+- lib/constants/date.ts (constantes MIN_YEAR, MAX_YEAR)
+
+LIÇÕES APRENDIDAS:
+- Sempre usar `Math.abs()` em cálculos de diferença de tempo
+- Validar ranges de datas de forma flexível
+- Fornecer fallbacks graciosos na UI
+- Testar com datas nos extremos (muito antigas e futuras)

@@ -4,9 +4,9 @@ import { User, FileText, Brain } from "lucide-react";
 import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { ConfidenceBadge } from "@/components/confidence-badge";
 import { MessageActions } from "@/components/message-actions";
 import type { Message } from "@/lib/db/schema/messages";
+import type { Vote } from "@/lib/db/schema/votes";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 
@@ -14,6 +14,7 @@ interface MessagesProps {
   messages: Message[];
   isLoading: boolean;
   onRegenerateLastMessage?: () => void;
+  votesMap: Map<string, Vote>;
 }
 
 const ThinkingText = () => {
@@ -39,7 +40,7 @@ const ThinkingText = () => {
   );
 };
 
-export function Messages({ messages, isLoading, onRegenerateLastMessage }: MessagesProps) {
+export function Messages({ messages, isLoading, onRegenerateLastMessage, votesMap }: MessagesProps) {
   if (messages.length === 0 && !isLoading) {
     return (
       <motion.div
@@ -167,9 +168,6 @@ export function Messages({ messages, isLoading, onRegenerateLastMessage }: Messa
                     ))}
                   </div>
                 )}
-                {message.confidenceScore !== null && (
-                  <ConfidenceBadge score={message.confidenceScore} />
-                )}
               </div>
             )}
 
@@ -177,6 +175,7 @@ export function Messages({ messages, isLoading, onRegenerateLastMessage }: Messa
               messageId={message.id}
               content={message.content}
               role={message.role}
+              initialVote={votesMap.get(message.id) || null}
               onRegenerate={
                 isLastAssistantMessage && onRegenerateLastMessage
                   ? onRegenerateLastMessage

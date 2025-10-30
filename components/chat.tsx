@@ -8,9 +8,12 @@ import { Messages } from "@/components/messages";
 import { PageHeader } from "@/components/page-header";
 import { DocumentSelector } from "@/components/document-selector";
 import { SimilarityControl } from "@/components/similarity-control";
+import { TicketNumberInput } from "@/components/ticket-number-input";
+import { findDocumentByTicketNumberAction, findSimilarTicketsAction } from "@/lib/actions/documents";
 import { sendMessage } from "@/lib/actions/messages";
 import type { Message } from "@/lib/db/schema/messages";
 import type { Document } from "@/lib/db/schema/documents";
+import type { Vote } from "@/lib/db/schema/votes";
 import { toast } from "sonner";
 
 interface ChatProps {
@@ -18,15 +21,17 @@ interface ChatProps {
   initialMessages: Message[];
   conversationTitle: string;
   documents: Document[];
+  initialVotes: Map<string, Vote>;
 }
 
-export function Chat({ conversationId, initialMessages, conversationTitle, documents }: ChatProps) {
+export function Chat({ conversationId, initialMessages, conversationTitle, documents, initialVotes }: ChatProps) {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isAtBottom, setIsAtBottom] = useState(true);
   const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(null);
   const [similarityThreshold, setSimilarityThreshold] = useState(0.3);
+  const [ticketNumber, setTicketNumber] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
@@ -64,14 +69,38 @@ export function Chat({ conversationId, initialMessages, conversationTitle, docum
     }
     setIsLoading(true);
 
-    const selectedDocument = documents.find(doc => doc.id === selectedDocumentId);
+    let documentIdToUse = selectedDocumentId;
+    let similarTickets = undefined;
+
+    // Se um número de ticket foi especificado, busca o documento correspondente
+    if (ticketNumber) {
+      const result = await findDocumentByTicketNumberAction(ticketNumber);
+      if (!result.success || !result.data) {
+        toast.error(`Ticket #${ticketNumber} não encontrado`);
+        setIsLoading(false);
+        return;
+      }
+      documentIdToUse = result.data.id;
+
+      // Busca tickets similares (apenas se houver similaridade alta)
+      try {
+        const similarResult = await findSimilarTicketsAction(result.data.id);
+        if (similarResult.success && similarResult.data.length > 0) {
+          similarTickets = similarResult.data;
+        }
+      } catch (error) {
+        // Não bloqueia o fluxo se falhar a busca de similares
+        console.error('Failed to find similar tickets:', error);
+      }
+    }
+
+    const selectedDocument = documents.find(doc => doc.id === documentIdToUse);
 
     const tempUserMessage: Message = {
       id: `temp-${Date.now()}`,
       conversationId,
       role: "user",
       content: userMessage,
-      confidenceScore: null,
       sources: null,
       contextDocument: selectedDocument?.fileName || null,
       createdAt: new Date(),
@@ -80,7 +109,13 @@ export function Chat({ conversationId, initialMessages, conversationTitle, docum
     setMessages((prev) => [...prev, tempUserMessage]);
 
     try {
-      const result = await sendMessage(conversationId, userMessage, selectedDocumentId, similarityThreshold);
+      const result = await sendMessage(
+        conversationId,
+        userMessage,
+        documentIdToUse,
+        similarityThreshold,
+        similarTickets
+      );
 
       if (result.success) {
         setMessages((prev) => [
@@ -98,7 +133,7 @@ export function Chat({ conversationId, initialMessages, conversationTitle, docum
     } finally {
       setIsLoading(false);
     }
-  }, [input, isLoading, conversationId, selectedDocumentId, similarityThreshold, documents]);
+  }, [input, isLoading, conversationId, selectedDocumentId, similarityThreshold, documents, ticketNumber]);
 
   const handleRegenerateLastMessage = useCallback(async () => {
     if (isLoading || messages.length < 2) return;
@@ -155,6 +190,7 @@ export function Chat({ conversationId, initialMessages, conversationTitle, docum
             messages={messages}
             isLoading={isLoading}
             onRegenerateLastMessage={handleRegenerateLastMessage}
+            votesMap={initialVotes}
           />
           <div ref={messagesEndRef} className="h-6" />
         </div>
@@ -175,11 +211,29 @@ export function Chat({ conversationId, initialMessages, conversationTitle, docum
         )}
 
         <div className="sticky bottom-0 z-1 mx-auto flex w-full max-w-3xl flex-col gap-3 border-t bg-background px-4 py-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            <TicketNumberInput
+              ticketNumber={ticketNumber}
+              onTicketNumberChange={(ticket) => {
+                setTicketNumber(ticket);
+                // Se selecionar ticket, limpa documento
+                if (ticket) {
+                  setSelectedDocumentId(null);
+                }
+              }}
+              disabled={!!selectedDocumentId}
+            />
             <DocumentSelector
               documents={documents}
               selectedDocumentId={selectedDocumentId}
-              onSelectDocument={setSelectedDocumentId}
+              onSelectDocument={(docId) => {
+                setSelectedDocumentId(docId);
+                // Se selecionar documento, limpa ticket
+                if (docId) {
+                  setTicketNumber(null);
+                }
+              }}
+              disabled={!!ticketNumber}
             />
             <SimilarityControl
               value={similarityThreshold}
@@ -192,7 +246,9 @@ export function Chat({ conversationId, initialMessages, conversationTitle, docum
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder={
-                selectedDocumentId
+                ticketNumber
+                  ? `Faça uma pergunta sobre o ticket #${ticketNumber}...`
+                  : selectedDocumentId
                   ? "Faça uma pergunta sobre este documento..."
                   : "Faça uma pergunta sobre seus documentos..."
               }

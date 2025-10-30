@@ -22,7 +22,6 @@ export async function createMessage(
   conversationId: string,
   role: "user" | "assistant",
   content: string,
-  confidenceScore?: number,
   sources?: string[],
   contextDocument?: string
 ) {
@@ -33,7 +32,6 @@ export async function createMessage(
         conversationId,
         role,
         content,
-        confidenceScore,
         sources,
         contextDocument,
       })

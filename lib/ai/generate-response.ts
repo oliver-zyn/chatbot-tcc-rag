@@ -2,14 +2,20 @@ import { openai } from '@ai-sdk/openai';
 import { generateText } from 'ai';
 import { findRelevantContent } from './embedding';
 import { logError } from '@/lib/errors/logger';
+import type { Document } from '@/lib/db/schema/documents';
+
+interface SimilarTicket {
+  document: Document;
+  similarity: number;
+}
 
 export async function generateRAGResponse(
   userQuestion: string,
   documentId?: string | null,
-  similarityThreshold?: number
+  similarityThreshold?: number,
+  similarTickets?: SimilarTicket[]
 ): Promise<{
   content: string;
-  confidenceScore: number;
   sources: string[];
 }> {
   try {
@@ -18,19 +24,34 @@ export async function generateRAGResponse(
     if (relevantChunks.length === 0) {
       return {
         content: "Não encontrei informações suficientes nos documentos carregados para responder esta pergunta. Por favor, certifique-se de que os documentos relevantes foram carregados no sistema.",
-        confidenceScore: 0,
         sources: [],
       };
     }
-
-    const avgSimilarity = relevantChunks.reduce((sum, chunk) => sum + chunk.similarity, 0) / relevantChunks.length;
-    const confidenceScore = Math.round(avgSimilarity * 100);
 
     const context = relevantChunks
       .map((chunk) => chunk.content)
       .join('\n\n---\n\n');
 
     const sources = [...new Set(relevantChunks.map(chunk => chunk.documentName))];
+
+    // Prepara contexto de tickets similares (se houver)
+    let similarTicketsContext = '';
+    if (similarTickets && similarTickets.length > 0) {
+      const extractTicketNumber = (fileName: string): string => {
+        const match = fileName.match(/ticket[_-]?(\d+)/i);
+        return match ? match[1] : 'desconhecido';
+      };
+
+      similarTicketsContext = '\n\n--- TICKETS RELACIONADOS ---\n\n' +
+        'Os seguintes tickets têm problemas ou soluções semelhantes:\n\n' +
+        similarTickets
+          .map((item) => {
+            const ticketNumber = extractTicketNumber(item.document.fileName);
+            const similarityPercent = Math.round(item.similarity * 100);
+            return `TICKET #${ticketNumber} (${similarityPercent}% similar):\n${item.document.content.substring(0, 1200)}`;
+          })
+          .join('\n\n---\n\n');
+    }
 
     const { text } = await generateText({
       model: openai('gpt-5-nano'),
@@ -50,18 +71,20 @@ REGRAS IMPORTANTES:
   * Use \`código\` para termos técnicos ou comandos
   * Use ### para subtítulos quando necessário
   * Use > para citações diretas do documento
-- Organize a resposta de forma clara e estruturada quando houver múltiplos pontos`,
+- Organize a resposta de forma clara e estruturada quando houver múltiplos pontos
+- Se houver TICKETS RELACIONADOS no contexto, inclua uma seção no final com:
+  ### 🎫 Tickets Relacionados
+  Liste cada ticket com: número, problema principal e solução (máximo 2 linhas cada)`,
       prompt: `Contexto dos documentos:
-${context}
+${context}${similarTicketsContext}
 
 Pergunta do usuário: ${userQuestion}
 
-Responda a pergunta usando apenas as informações do contexto acima. Use formatação Markdown para tornar a resposta mais clara e organizada.`,
+Responda a pergunta usando apenas as informações do contexto acima. Use formatação Markdown para tornar a resposta mais clara e organizada.${similarTickets && similarTickets.length > 0 ? '\n\nAo final da resposta, inclua uma seção "🎫 Tickets Relacionados" resumindo os tickets similares de forma concisa.' : ''}`,
     });
 
     return {
       content: text,
-      confidenceScore,
       sources,
     };
   } catch (error) {
@@ -73,7 +96,6 @@ Responda a pergunta usando apenas as informações do contexto acima. Use format
     });
     return {
       content: 'Desculpe, ocorreu um erro ao processar sua pergunta. Por favor, tente novamente.',
-      confidenceScore: 0,
       sources: [],
     };
   }

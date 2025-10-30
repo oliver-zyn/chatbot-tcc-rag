@@ -10,6 +10,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Document } from "@/lib/db/schema/documents";
@@ -19,16 +25,23 @@ interface DocumentSelectorProps {
   documents: Document[];
   selectedDocumentId: string | null;
   onSelectDocument: (documentId: string | null) => void;
+  disabled?: boolean;
 }
 
 export function DocumentSelector({
   documents,
   selectedDocumentId,
   onSelectDocument,
+  disabled = false,
 }: DocumentSelectorProps) {
   const [open, setOpen] = React.useState(false);
 
-  const selectedDocument = documents.find(doc => doc.id === selectedDocumentId);
+  // Filtra apenas documentos que NÃO sejam tickets
+  const nonTicketDocuments = documents.filter(doc =>
+    !doc.fileName.toLowerCase().includes('ticket')
+  );
+
+  const selectedDocument = nonTicketDocuments.find(doc => doc.id === selectedDocumentId);
 
   const handleSelect = (documentId: string) => {
     onSelectDocument(documentId === selectedDocumentId ? null : documentId);
@@ -40,22 +53,28 @@ export function DocumentSelector({
     onSelectDocument(null);
   };
 
-  if (documents.length === 0) {
+  if (nonTicketDocuments.length === 0) {
     return null;
   }
 
   return (
     <div className="flex items-center gap-2">
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant={selectedDocument ? "secondary" : "outline"}
-            size="sm"
-            className={cn(
-              "h-8 gap-2 text-xs",
-              selectedDocument && "pr-1"
-            )}
-          >
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="inline-flex">
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={selectedDocument ? "secondary" : "outline"}
+                    size="sm"
+                    disabled={disabled}
+                    className={cn(
+                      "h-8 gap-2 text-xs",
+                      selectedDocument && "pr-1",
+                      disabled && "opacity-50 cursor-not-allowed"
+                    )}
+                  >
             <FileText className="h-3.5 w-3.5" />
             {selectedDocument ? (
               <>
@@ -86,12 +105,12 @@ export function DocumentSelector({
           <div className="flex items-center justify-between border-b px-3 py-2">
             <p className="text-sm font-medium">Documentos disponíveis</p>
             <p className="text-xs text-muted-foreground">
-              {documents.length} {documents.length === 1 ? "documento" : "documentos"}
+              {nonTicketDocuments.length} {nonTicketDocuments.length === 1 ? "documento" : "documentos"}
             </p>
           </div>
           <ScrollArea className="h-[300px]">
             <div className="p-2 space-y-1">
-              {documents.map((document) => {
+              {nonTicketDocuments.map((document) => {
                 const isSelected = document.id === selectedDocumentId;
                 return (
                   <button
@@ -138,13 +157,16 @@ export function DocumentSelector({
             </div>
           )}
         </PopoverContent>
-      </Popover>
-
-      {selectedDocument && (
-        <p className="text-xs text-muted-foreground hidden sm:block">
-          Perguntas serão baseadas apenas neste documento
-        </p>
-      )}
+            </Popover>
+            </span>
+          </TooltipTrigger>
+          {disabled && (
+            <TooltipContent>
+              <p>Desative o ticket para selecionar documento</p>
+            </TooltipContent>
+          )}
+        </Tooltip>
+      </TooltipProvider>
     </div>
   );
 }

@@ -9,5 +9,4 @@ export const createMessageSchema = z.object({
   conversationId: z.string().uuid("ID de conversa inválido"),
   role: z.enum(["user", "assistant"]),
   content: z.string().min(1),
-  confidenceScore: z.number().min(0).max(100).optional(),
 });

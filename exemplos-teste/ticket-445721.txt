@@ -1,0 +1,83 @@
+TICKET #445721
+Data: 10/02/2025
+Prioridade: Alta
+Status: Resolvido
+
+PROBLEMA:
+Aplicação exibindo datas incorretas no fuso horário. Usuários do Brasil reportaram que todas as datas estavam sendo exibidas com 3 horas de diferença (GMT ao invés de GMT-3).
+
+Contexto:
+- Afeta todas as páginas que exibem timestamps
+- Mais crítico em: histórico de mensagens, logs de auditoria, datas de criação de documentos
+- Começou após deploy da versão 2.1.0
+
+Exemplo do problema:
+```
+Data real: 14/02/2025 15:30 (horário de Brasília)
+Exibido: 14/02/2025 18:30
+```
+
+ANÁLISE:
+Identificamos que o problema estava na conversão de Date para string no frontend:
+
+1. Backend estava retornando timestamps em UTC corretamente
+2. Frontend estava usando `new Date(timestamp)` mas exibindo sem conversão de timezone
+3. Função `formatDate()` não estava considerando o timezone do usuário
+
+Código problemático:
+```typescript
+// lib/utils/date-formatter.ts
+export function formatDate(date: Date): string {
+  return date.toLocaleDateString('pt-BR'); // ❌ Ignora timezone
+}
+```
+
+SOLUÇÃO IMPLEMENTADA:
+1. Atualizada função formatDate para usar `Intl.DateTimeFormat`:
+```typescript
+export function formatDate(date: Date, includeTime: boolean = true): string {
+  const options: Intl.DateTimeFormatOptions = {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  };
+
+  if (includeTime) {
+    options.hour = '2-digit';
+    options.minute = '2-digit';
+  }
+
+  return new Intl.DateTimeFormat('pt-BR', options).format(date);
+}
+```
+
+2. Adicionada detecção automática de timezone:
+```typescript
+export function getUserTimezone(): string {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone;
+}
+```
+
+3. Atualizado todos os componentes que exibem datas para usar a nova função
+
+ARQUIVOS MODIFICADOS:
+- lib/utils/date-formatter.ts (refatorado)
+- components/messages.tsx (atualizado)
+- components/document-grid.tsx (atualizado)
+- lib/constants/date.ts (criado)
+
+RESULTADO:
+- Datas agora são exibidas corretamente no timezone do usuário
+- Funciona automaticamente para qualquer região
+- Mantém consistência entre backend (UTC) e frontend (timezone local)
+
+TESTES:
+- Testado com timezones: GMT-3 (Brasil), GMT+0 (Portugal), GMT-5 (EUA)
+- Todos os formatos funcionando corretamente
+- Nenhum regression em outras funcionalidades
+
+PREVENÇÃO:
+- Documentada convenção: backend sempre retorna UTC, frontend converte
+- Adicionados testes unitários para conversão de timezone
+- Code review checklist atualizado com verificação de datas

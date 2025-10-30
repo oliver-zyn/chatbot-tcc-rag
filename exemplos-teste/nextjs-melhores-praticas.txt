@@ -1,0 +1,445 @@
+NEXT.JS - MELHORES PRÁTICAS E PADRÕES
+
+Este documento consolida as melhores práticas para desenvolvimento com Next.js 14+ (App Router).
+
+## Estrutura de Pastas
+
+```
+app/
+├── (auth)/              # Route groups (não afeta URL)
+│   ├── login/
+│   └── register/
+├── (chat)/
+│   ├── chat/[id]/
+│   └── documents/
+├── api/                 # API Routes
+│   ├── auth/
+│   └── documents/
+├── layout.tsx           # Root layout
+└── page.tsx             # Home page
+
+components/
+├── ui/                  # Componentes primitivos (shadcn)
+├── messages.tsx         # Componentes de feature
+└── chat.tsx
+
+lib/
+├── actions/             # Server Actions
+├── db/                  # Database queries
+├── ai/                  # AI/ML logic
+└── utils/               # Utilidades
+```
+
+## Server vs Client Components
+
+### Use Server Components (padrão) para:
+- Fetch de dados
+- Acesso direto ao banco
+- Secrets/API keys
+- Código que deve rodar no servidor
+- Reduzir bundle JavaScript do cliente
+
+```tsx
+// app/page.tsx (Server Component)
+import { getDocuments } from '@/lib/db/queries';
+
+export default async function Page() {
+  const docs = await getDocuments();
+  return <div>{docs.length} documentos</div>;
+}
+```
+
+### Use Client Components ("use client") para:
+- Interatividade (onClick, onChange, etc)
+- Hooks do React (useState, useEffect, etc)
+- Event listeners
+- Browser APIs (localStorage, window, etc)
+
+```tsx
+"use client";
+
+import { useState } from 'react';
+
+export function Counter() {
+  const [count, setCount] = useState(0);
+  return <button onClick={() => setCount(count + 1)}>{count}</button>;
+}
+```
+
+## Server Actions
+
+Melhor forma de fazer mutations no Next.js 14+:
+
+```typescript
+"use server";
+
+import { revalidatePath } from 'next/cache';
+
+export async function createDocument(formData: FormData) {
+  // Validação
+  const file = formData.get('file') as File;
+  if (!file) {
+    return { success: false, error: 'No file' };
+  }
+
+  // Lógica
+  const doc = await db.insert(documents).values({...});
+
+  // Revalidação
+  revalidatePath('/documents');
+
+  return { success: true, data: doc };
+}
+```
+
+Uso no cliente:
+```tsx
+"use client";
+
+import { createDocument } from '@/lib/actions/documents';
+
+export function UploadForm() {
+  async function handleSubmit(formData: FormData) {
+    const result = await createDocument(formData);
+    if (result.success) {
+      toast.success('Upload concluído');
+    }
+  }
+
+  return <form action={handleSubmit}>...</form>;
+}
+```
+
+## Data Fetching
+
+### Cache por Padrão
+```tsx
+// Cached por padrão (até revalidar)
+async function getData() {
+  const res = await fetch('https://api.example.com/data');
+  return res.json();
+}
+```
+
+### Sem Cache (sempre fresh)
+```tsx
+async function getData() {
+  const res = await fetch('https://api.example.com/data', {
+    cache: 'no-store'
+  });
+  return res.json();
+}
+```
+
+### Revalidação Periódica
+```tsx
+async function getData() {
+  const res = await fetch('https://api.example.com/data', {
+    next: { revalidate: 3600 } // revalidar a cada hora
+  });
+  return res.json();
+}
+```
+
+## Streaming e Suspense
+
+```tsx
+import { Suspense } from 'react';
+
+async function SlowComponent() {
+  const data = await fetchSlowData();
+  return <div>{data}</div>;
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <SlowComponent />
+    </Suspense>
+  );
+}
+```
+
+## Loading States
+
+```tsx
+// app/chat/[id]/loading.tsx
+export default function Loading() {
+  return <Spinner />;
+}
+```
+
+## Error Handling
+
+```tsx
+// app/chat/[id]/error.tsx
+"use client";
+
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error;
+  reset: () => void;
+}) {
+  return (
+    <div>
+      <h2>Algo deu errado!</h2>
+      <button onClick={reset}>Tentar novamente</button>
+    </div>
+  );
+}
+```
+
+## Metadata e SEO
+
+```tsx
+// app/layout.tsx
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: {
+    default: 'Meu App',
+    template: '%s | Meu App'
+  },
+  description: 'Descrição do app',
+};
+```
+
+## Otimização de Imagens
+
+```tsx
+import Image from 'next/image';
+
+export function Avatar() {
+  return (
+    <Image
+      src="/avatar.jpg"
+      alt="Avatar"
+      width={40}
+      height={40}
+      priority // Para imagens above-the-fold
+    />
+  );
+}
+```
+
+## Route Handlers (API Routes)
+
+```typescript
+// app/api/documents/route.ts
+import { NextResponse } from 'next/server';
+
+export async function GET(request: Request) {
+  const docs = await getDocuments();
+  return NextResponse.json({ documents: docs });
+}
+
+export async function POST(request: Request) {
+  const body = await request.json();
+  const doc = await createDocument(body);
+  return NextResponse.json(doc, { status: 201 });
+}
+```
+
+## Middleware
+
+```typescript
+// middleware.ts
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+export function middleware(request: NextRequest) {
+  const token = request.cookies.get('token');
+
+  if (!token) {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ['/chat/:path*', '/documents/:path*'],
+};
+```
+
+## Performance
+
+### 1. Lazy Loading de Componentes
+```tsx
+import dynamic from 'next/dynamic';
+
+const HeavyComponent = dynamic(() => import('./HeavyComponent'), {
+  loading: () => <Spinner />,
+  ssr: false, // Desabilitar SSR se necessário
+});
+```
+
+### 2. Bundle Analyzer
+```bash
+npm install @next/bundle-analyzer
+```
+
+```js
+// next.config.js
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
+module.exports = withBundleAnalyzer({
+  // config
+});
+```
+
+```bash
+ANALYZE=true npm run build
+```
+
+### 3. Evitar Client-Side JavaScript Desnecessário
+- Prefira Server Components sempre que possível
+- Use "use client" apenas onde necessário
+- Extraia lógica de servidor para Server Actions
+
+## TypeScript
+
+### Tipos de Props
+```tsx
+interface ButtonProps {
+  children: React.ReactNode;
+  onClick?: () => void;
+  variant?: 'primary' | 'secondary';
+}
+
+export function Button({ children, onClick, variant = 'primary' }: ButtonProps) {
+  return <button onClick={onClick}>{children}</button>;
+}
+```
+
+### Server Actions Tipados
+```typescript
+export async function createDocument(
+  formData: FormData
+): Promise<ActionResponse<Document>> {
+  // implementação
+}
+
+type ActionResponse<T> =
+  | { success: true; data: T }
+  | { success: false; error: string };
+```
+
+## Validação com Zod
+
+```typescript
+import { z } from 'zod';
+
+const documentSchema = z.object({
+  fileName: z.string().min(1).max(255),
+  fileType: z.enum(['pdf', 'txt', 'docx']),
+  fileSize: z.number().max(20 * 1024 * 1024), // 20MB
+});
+
+export async function uploadDocument(formData: FormData) {
+  const validation = documentSchema.safeParse({
+    fileName: formData.get('fileName'),
+    // ...
+  });
+
+  if (!validation.success) {
+    return { success: false, error: validation.error.issues[0].message };
+  }
+
+  // Proceder com dados validados
+  const data = validation.data;
+}
+```
+
+## Environment Variables
+
+```typescript
+// lib/env.ts
+import { z } from 'zod';
+
+const envSchema = z.object({
+  DATABASE_URL: z.string().url(),
+  OPENAI_API_KEY: z.string().min(1),
+  NEXTAUTH_SECRET: z.string().min(32),
+});
+
+export const env = envSchema.parse(process.env);
+```
+
+## Evitar Erros Comuns
+
+### 1. Não Importar Server-Only em Client Components
+```tsx
+// ❌ ERRADO
+"use client";
+import { db } from '@/lib/db'; // db usa "server-only"
+
+// ✅ CORRETO
+"use client";
+import { getDocuments } from '@/lib/actions/documents'; // Server Action
+```
+
+### 2. Usar Cookies/Headers Corretamente
+```tsx
+// Server Component
+import { cookies } from 'next/headers';
+
+async function Page() {
+  const cookieStore = cookies();
+  const token = cookieStore.get('token');
+}
+```
+
+### 3. Revalidação Após Mutations
+```typescript
+"use server";
+
+import { revalidatePath } from 'next/cache';
+
+export async function deleteDocument(id: string) {
+  await db.delete(documents).where(eq(documents.id, id));
+  revalidatePath('/documents'); // Importante!
+}
+```
+
+## Testes
+
+```tsx
+// __tests__/components/Button.test.tsx
+import { render, screen } from '@testing-library/react';
+import { Button } from '@/components/Button';
+
+describe('Button', () => {
+  it('renders children', () => {
+    render(<Button>Click me</Button>);
+    expect(screen.getByText('Click me')).toBeInTheDocument();
+  });
+});
+```
+
+## Deploy
+
+### Variáveis de Ambiente na Vercel
+- Adicione no dashboard da Vercel
+- Separe por ambiente (Development, Preview, Production)
+- Use `NEXT_PUBLIC_` prefix para variáveis públicas
+
+### Build Otimizado
+```json
+{
+  "scripts": {
+    "build": "next build",
+    "start": "next start -p $PORT"
+  }
+}
+```
+
+## Recursos
+
+- Documentação oficial: https://nextjs.org/docs
+- Exemplos: https://github.com/vercel/next.js/tree/canary/examples
+- shadcn/ui: https://ui.shadcn.com
