@@ -14,11 +14,11 @@ export async function getUser(email: string): Promise<User[]> {
   }
 }
 
-export async function createUser(email: string, password: string) {
+export async function createUser(name: string, email: string, password: string) {
   const hashedPassword = generateHashedPassword(password);
 
   try {
-    return await db.insert(user).values({ email, password: hashedPassword });
+    return await db.insert(user).values({ name, email, password: hashedPassword });
   } catch (error) {
     console.error("Failed to create user:", error);
     throw new Error("Failed to create user");

@@ -9,11 +9,13 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
+      name: string;
     } & DefaultSession["user"];
   }
 
   interface User {
     id?: string;
+    name?: string;
     email?: string | null;
   }
 }
@@ -21,6 +23,7 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
   interface JWT extends DefaultJWT {
     id: string;
+    name: string;
   }
 }
 
@@ -58,6 +61,7 @@ export const {
 
         return {
           id: user.id,
+          name: user.name,
           email: user.email,
         };
       },
@@ -67,12 +71,14 @@ export const {
     jwt({ token, user }) {
       if (user) {
         token.id = user.id as string;
+        token.name = user.name as string;
       }
       return token;
     },
     session({ session, token }) {
       if (session.user) {
         session.user.id = token.id;
+        session.user.name = token.name;
       }
       return session;
     },

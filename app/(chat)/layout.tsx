@@ -22,7 +22,7 @@ export default async function ChatLayout({
       <div className="flex h-full w-full">
         <AppSidebarWrapper
           user={{
-            name: session.user.email || "Usuário",
+            name: session.user.name || "Usuário",
             email: session.user.email || "",
           }}
           conversations={conversations}

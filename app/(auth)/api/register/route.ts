@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createUser, getUser } from "@/lib/db/queries";
 
 const registerSchema = z.object({
+  name: z.string().min(2, { message: "Nome deve ter no mínimo 2 caracteres" }),
   email: z.string().email({ message: "Email inválido" }),
   password: z
     .string()
@@ -23,7 +24,7 @@ export async function POST(request: Request) {
       );
     }
 
-    await createUser(validatedData.email, validatedData.password);
+    await createUser(validatedData.name, validatedData.email, validatedData.password);
 
     return NextResponse.json(
       { message: "Usuário criado com sucesso" },
