@@ -41,7 +41,7 @@ export const appConfig = {
   tickets: {
     similarityThreshold: 0.7,
     maxSimilarTickets: 3,
-    maxContentPreview: 1200, // Caracteres do conteúdo do ticket a incluir no contexto
+    maxContentPreview: -1, // -1 = sem limite (envia conteúdo completo), ou número de caracteres
   },
 
   /**
@@ -65,9 +65,36 @@ export const appConfig = {
   session: {
     maxAge: 7 * 24 * 60 * 60, // 7 dias em segundos
   },
+
+  /**
+   * Configurações de Upload de Documentos
+   */
+  documents: {
+    maxFileSize: 10 * 1024 * 1024, // 10MB em bytes
+    acceptedFileTypes: [
+      "text/plain",
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ] as const,
+    acceptedFileExtensions: {
+      "text/plain": [".txt"],
+      "application/pdf": [".pdf"],
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
+    } as const,
+  },
 } as const;
 
 /**
  * Type helper para extrair tipos do config
  */
 export type AppConfig = typeof appConfig;
+
+/**
+ * Helper para gerar string de extensões aceitas para input de arquivo
+ * @returns String no formato ".txt,.pdf,.docx"
+ */
+export function getAcceptedExtensionsString(): string {
+  return Object.values(appConfig.documents.acceptedFileExtensions)
+    .flat()
+    .join(",");
+}

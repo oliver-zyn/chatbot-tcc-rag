@@ -34,7 +34,6 @@ export async function findRelevantContent(
   similarityThreshold: number = appConfig.retrieval.defaultSimilarityThreshold
 ) {
   const userQueryEmbedded = await generateEmbedding(userQuery);
-
   const embeddingString = `[${userQueryEmbedded.join(',')}]`;
 
   const { documents } = await import('../db/schema/documents');
@@ -52,7 +51,6 @@ export async function findRelevantContent(
     .where(sql`1 - (${embeddings.embedding} <=> ${embeddingString}::vector) > ${similarityThreshold}`)
     .$dynamic();
 
-  // Se um documentId foi fornecido, filtra apenas por esse documento
   if (documentId) {
     query = query.where(sql`${embeddings.documentId} = ${documentId}`);
   }

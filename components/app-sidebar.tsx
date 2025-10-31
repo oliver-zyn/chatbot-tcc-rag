@@ -94,7 +94,7 @@ export function AppSidebar({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Link href="/">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-[#006cff]s text-sidebar-primary-foreground">
                   <Brain className="size-4" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">

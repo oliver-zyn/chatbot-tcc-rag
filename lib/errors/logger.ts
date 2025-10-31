@@ -25,13 +25,6 @@ export function logError(error: unknown, context: ErrorContext = {}) {
   // Em produção, enviar para serviço de monitoramento
   if (env.NODE_ENV === "production") {
     // TODO: Integrar com serviço de monitoramento (Sentry, DataDog, etc)
-    // Exemplo com Sentry:
-    // Sentry.captureException(error, {
-    //   extra: context,
-    //   tags: {
-    //     timestamp,
-    //   },
-    // });
   }
 }
 

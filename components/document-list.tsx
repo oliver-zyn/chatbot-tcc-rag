@@ -2,7 +2,7 @@
 
 import { FileText, Trash2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { formatFileSize, getFileTypeLabel } from "@/lib/constants/documents";
+import { formatFileSize, getFileTypeLabel } from "@/lib/utils/format";
 import { formatDateReadable } from "@/lib/utils/date";
 import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
 import { useDeleteAction } from "@/hooks/use-delete-action";

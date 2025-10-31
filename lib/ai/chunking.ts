@@ -1,7 +1,3 @@
-/**
- * Estratégias de chunking de documentos para processamento RAG
- */
-
 import { appConfig } from '../config/app-config';
 
 /**

@@ -31,8 +31,7 @@ export async function sendMessage(
   conversationId: string,
   content: string,
   documentId?: string | null,
-  similarityThreshold?: number,
-  similarTickets?: Array<{ document: any; similarity: number }>
+  similarityThreshold?: number
 ): Promise<ActionResponse<SendMessageResponse>> {
   try {
     const validation = sendMessageSchema.safeParse({ conversationId, content });
@@ -96,7 +95,7 @@ export async function sendMessage(
 
       await incrementUsage(userId);
 
-      const ragResponse = await generateRAGResponse(content, documentId, similarityThreshold, similarTickets);
+      const ragResponse = await generateRAGResponse(content, documentId, similarityThreshold);
       const assistantMessage = await createMessage(
         conversationId,
         "assistant",

@@ -7,7 +7,7 @@ export default function HomePage() {
       <PageHeader />
       <div className="flex h-[calc(100vh-3.5rem)] items-center justify-center">
         <div className="flex flex-col items-center gap-4 text-center">
-          <div className="flex size-16 items-center justify-center rounded-2xl bg-primary/10">
+          <div className="flex size-16 items-center justify-center rounded-2xl bg-[#006cff]">
             <Brain className="size-8 text-primary" />
           </div>
           <div className="space-y-2">

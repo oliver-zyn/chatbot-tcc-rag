@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { formatFileSize, getFileTypeLabel, getFileTypeIconName } from "@/lib/constants/documents";
+import { formatFileSize, getFileTypeLabel, getFileTypeIconName } from "@/lib/utils/format";
 import { formatDate } from "@/lib/utils/date";
 import {
   Select,

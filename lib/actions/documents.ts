@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createDocument, deleteDocument, getDocumentById, findDocumentByTicketNumber, findSimilarTickets } from "@/lib/db/queries";
+import { createDocument, deleteDocument, getDocumentById } from "@/lib/db/queries";
 import { extractTextFromFile } from "@/lib/documents/extract-text";
 import { actionError, actionSuccess, type ActionResponse } from "@/lib/types/action-response";
 import { uploadDocumentSchema, deleteDocumentSchema } from "@/lib/validations/document";
@@ -10,7 +10,6 @@ import { db } from "@/lib/db";
 import { embeddings as embeddingsTable } from "@/lib/db/schema/embeddings";
 import { withAuth, authorizeResourceAccess } from "./utils";
 import { logError } from "@/lib/errors/logger";
-import type { Document } from "@/lib/db/schema/documents";
 
 export async function uploadDocumentAction(
   formData: FormData
@@ -101,41 +100,5 @@ export async function deleteDocumentAction(
   } catch (error) {
     logError(error, { action: "deleteDocument", documentId });
     return actionError("Erro ao deletar documento");
-  }
-}
-
-export async function findDocumentByTicketNumberAction(
-  ticketNumber: string
-): Promise<ActionResponse<Document | null>> {
-  try {
-    if (!ticketNumber || ticketNumber.trim().length === 0) {
-      return actionError("Número do ticket é obrigatório");
-    }
-
-    return await withAuth(async () => {
-      const document = await findDocumentByTicketNumber(ticketNumber);
-      return actionSuccess(document);
-    });
-  } catch (error) {
-    logError(error, { action: "findDocumentByTicketNumber", ticketNumber });
-    return actionError("Erro ao buscar documento por número de ticket");
-  }
-}
-
-export async function findSimilarTicketsAction(
-  documentId: string
-): Promise<ActionResponse<Array<{ document: Document; similarity: number }>>> {
-  try {
-    if (!documentId || documentId.trim().length === 0) {
-      return actionError("ID do documento é obrigatório");
-    }
-
-    return await withAuth(async () => {
-      const similarTickets = await findSimilarTickets(documentId, 2);
-      return actionSuccess(similarTickets);
-    });
-  } catch (error) {
-    logError(error, { action: "findSimilarTickets", documentId });
-    return actionError("Erro ao buscar tickets similares");
   }
 }

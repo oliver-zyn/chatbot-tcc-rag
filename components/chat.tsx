@@ -9,7 +9,7 @@ import { PageHeader } from "@/components/page-header";
 import { DocumentSelector } from "@/components/document-selector";
 import { SimilarityControl } from "@/components/similarity-control";
 import { TicketNumberInput } from "@/components/ticket-number-input";
-import { findDocumentByTicketNumberAction, findSimilarTicketsAction } from "@/lib/actions/documents";
+import { findDocumentByTicketNumberAction } from "@/lib/actions/tickets";
 import { sendMessage } from "@/lib/actions/messages";
 import type { Message } from "@/lib/db/schema/messages";
 import type { Document } from "@/lib/db/schema/documents";
@@ -70,7 +70,6 @@ export function Chat({ conversationId, initialMessages, conversationTitle, docum
     setIsLoading(true);
 
     let documentIdToUse = selectedDocumentId;
-    let similarTickets = undefined;
 
     // Se um número de ticket foi especificado, busca o documento correspondente
     if (ticketNumber) {
@@ -81,17 +80,6 @@ export function Chat({ conversationId, initialMessages, conversationTitle, docum
         return;
       }
       documentIdToUse = result.data.id;
-
-      // Busca tickets similares (apenas se houver similaridade alta)
-      try {
-        const similarResult = await findSimilarTicketsAction(result.data.id);
-        if (similarResult.success && similarResult.data.length > 0) {
-          similarTickets = similarResult.data;
-        }
-      } catch (error) {
-        // Não bloqueia o fluxo se falhar a busca de similares
-        console.error('Failed to find similar tickets:', error);
-      }
     }
 
     const selectedDocument = documents.find(doc => doc.id === documentIdToUse);
@@ -113,8 +101,7 @@ export function Chat({ conversationId, initialMessages, conversationTitle, docum
         conversationId,
         userMessage,
         documentIdToUse,
-        similarityThreshold,
-        similarTickets
+        similarityThreshold
       );
 
       if (result.success) {

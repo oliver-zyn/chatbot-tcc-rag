@@ -3,7 +3,7 @@ import "server-only";
 import { eq } from "drizzle-orm";
 import { db } from "../index";
 import { type User, user } from "../schema/users";
-import { generateHashedPassword } from "../utils";
+import { generateHashedPassword } from "@/lib/utils/crypto";
 
 export async function getUser(email: string): Promise<User[]> {
   try {
