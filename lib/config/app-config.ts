@@ -41,7 +41,6 @@ export const appConfig = {
   tickets: {
     similarityThreshold: 0.7,
     maxSimilarTickets: 3,
-    maxContentPreview: -1, // -1 = sem limite (envia conteúdo completo), ou número de caracteres
   },
 
   /**
