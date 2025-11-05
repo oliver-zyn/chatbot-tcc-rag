@@ -63,6 +63,7 @@ export async function uploadDocumentAction(
       }
 
       revalidatePath("/documents");
+      revalidatePath("/documents/library");
 
       return actionSuccess({ id: document.id });
     });
@@ -94,6 +95,7 @@ export async function deleteDocumentAction(
 
       await deleteDocument(documentId);
       revalidatePath("/documents");
+      revalidatePath("/documents/library");
 
       return actionSuccess(undefined);
     });

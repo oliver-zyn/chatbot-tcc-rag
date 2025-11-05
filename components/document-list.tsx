@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText, Trash2, Loader2 } from "lucide-react";
+import { FileText, Trash2, Loader2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatFileSize, getFileTypeLabel } from "@/lib/utils/format";
 import { formatDateReadable } from "@/lib/utils/date";
@@ -8,6 +8,7 @@ import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialo
 import { useDeleteAction } from "@/hooks/use-delete-action";
 import type { Document } from "@/lib/db/schema/documents";
 import { deleteDocumentAction } from "@/lib/actions/documents";
+import Link from "next/link";
 
 interface DocumentListProps {
   documents: Document[];
@@ -35,7 +36,15 @@ export function DocumentList({ documents, currentUserId }: DocumentListProps) {
 
   return (
     <div className="space-y-3">
-      <h2 className="text-lg font-semibold">Documentos processados</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold">Documentos recentes</h2>
+        <Button variant="ghost" size="sm" asChild>
+          <Link href="/documents/library" className="flex items-center gap-2">
+            Ver todos
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </Button>
+      </div>
       <div className="space-y-2">
         {documents.map((doc) => (
           <div

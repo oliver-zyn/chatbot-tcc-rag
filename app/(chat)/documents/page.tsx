@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/app/(auth)/auth";
-import { getAllDocuments } from "@/lib/db/queries";
+import { getRecentDocuments } from "@/lib/db/queries";
 import { DocumentUpload } from "@/components/document-upload";
 import { DocumentList } from "@/components/document-list";
 import { PageHeader } from "@/components/page-header";
@@ -12,7 +12,7 @@ export default async function DocumentsPage() {
     redirect("/login");
   }
 
-  const documents = await getAllDocuments();
+  const documents = await getRecentDocuments(8);
 
   return (
     <>

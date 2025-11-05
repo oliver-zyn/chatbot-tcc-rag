@@ -30,6 +30,19 @@ export async function getAllDocuments(): Promise<Document[]> {
   }
 }
 
+export async function getRecentDocuments(limit: number = 10): Promise<Document[]> {
+  try {
+    return await db
+      .select()
+      .from(documents)
+      .orderBy(desc(documents.createdAt))
+      .limit(limit);
+  } catch (error) {
+    console.error("Failed to get recent documents:", error);
+    throw new Error("Failed to get recent documents");
+  }
+}
+
 export async function getDocumentById(id: string): Promise<Document | null> {
   try {
     const [document] = await db
