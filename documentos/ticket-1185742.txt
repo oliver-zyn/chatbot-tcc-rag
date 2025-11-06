@@ -1,0 +1,23 @@
+TICKET: 1185742
+
+### INFORMAÇÕES GERAIS
+* Data: 05/11/2025
+* Status: Resolvido
+
+### PROBLEMA
+Cobranças do tipo "Recorrência Sponte Pay" que foram originadas a partir do "Link de Pagamento Sponte Pay" apresentavam um comportamento incorreto.
+
+No "Contas a Receber", a parcela ficava travada com o status "Em processamento", impedindo o usuário de realizar qualquer edição ou alteração.
+
+Para tentar resolver isso, o usuário acessava o `Financeiro -> Integração Sponte Pay -> Log de Recorrência`, onde encontrava o registro da recorrência com erro.
+
+No entanto, ao tentar usar a ação "Cancelar / Estornar" nesse registro, o sistema exibia o erro: `Erro:5 Mensagem:Parâmetro Inválido Detalhes:"Pagamento_Id" inválido`.
+
+### SOLUÇÃO
+A análise identificou que o erro `Pagamento_Id inválido` ocorria ao tentar estornar uma recorrência que, de fato, **nunca chegou a ser gerada corretamente** (devido a um erro anterior), e por isso não possuía um `pagamentoID` válido para a operação de estorno.
+
+A correção foi aplicada na rotina de "Cancelar/Estornar" (do `Log de Recorrência`):
+1. O sistema agora verifica se a recorrência possui um `pagamentoID` válido.
+2. Se o `pagamentoID` for inválido (ou 0, pois a cobrança falhou na geração), o sistema executa uma rotina de exclusão para remover os vínculos da parcela com as tabelas do Link de Pagamento (especificamente `FaturasSpontePay` e `FaturasSpontePayDetalhes`).
+3. Ao remover esses vínculos, a parcela no "Contas a Receber" retorna corretamente ao status "Pendente".
+4. Isso libera a parcela para que o usuário possa editá-la, cancelá-la ou gerar uma nova cobrança, resolvendo o travamento.

@@ -1,0 +1,48 @@
+Chargeback Sponte Pay (Pagar.me)
+
+🛠 1. O que é Chargeback?
+
+Chargeback é a contestação de uma compra, feita pelo portador (cliente) junto ao emissor do cartão (banco)[cite: 3928]. Na prática, significa que o comprador pediu ao banco o seu dinheiro de volta[cite: 3929].
+
+Isso pode ocorrer por vários motivos[cite: 3930]:
+* Desacordo comercial: O produto recebido não condiz com o anunciado (cor, qualidade, etc.) [cite: 3931-3932].
+* Fraude deliberada: Um fraudador utiliza dados de outra pessoa [cite: 3934-3935].
+* Auto fraude: O cliente simula um desacordo ou fraude para cancelar o pagamento [cite: 3937-3938].
+* Fraude amigável: O cliente não reconhece uma compra legítima (ex: feita por um parente) [cite: 3939-3940].
+* Erro de processamento: Cobrança em duplicidade [cite: 3941-3942].
+
+Quando um chargeback ocorre, o valor da venda é devolvido ao cliente e debitado do lojista (escola)[cite: 3944].
+
+🛠 2. Chargeback vs. Estorno: Qual a diferença?
+
+* Chargeback: É a **contestação** da compra, iniciada pelo cliente junto ao banco[cite: 3949].
+* Estorno: É o pedido de **cancelamento amigável**, feito pelo cliente diretamente ao lojista (escola)[cite: 3949].
+
+Um estorno é melhor, pois é amigável, não influencia negativamente o índice de chargeback da loja e ajuda no bom relacionamento com o cliente [cite: 3954-3955].
+
+🛠 3. Processo de Chargeback no Sponte (Ciclo 1)
+
+O Ciclo 1 significa que a transação virou um chargeback e o valor **será devolvido** ao cliente.
+
+1. O Pagar.me envia um postback (notificação) sinalizando o Chargeback[cite: 3974].
+2. O Sponte (ERP) recebe esta notificação e **estorna a parcela automaticamente**, marcando-a com o Status "Chargeback"[cite: 3974].
+3. A parcela volta a ficar "Pendente" no Contas a Receber, permitindo uma nova cobrança ou recebimento[cite: 4071].
+4. O sistema exibe um aviso na "Central de Avisos" para todos os usuários com permissão ao `Financeiro > Integração Sponte Pay`[cite: 4004].
+5. O cliente final (portador do cartão) também recebe um e-mail do Pagar.me informando que a "Assinatura foi cancelada" [cite: 3958-3966].
+
+Onde o Chargeback (Ciclo 1) aparece no Sponte:
+* `Financeiro >> Integração Sponte Pay >> Log de Recorrência`: O Status da Cobrança mudará para "Chargeback" (em amarelo), e a coluna "Mensagens" exibirá o `Chargeback-reason-code` [cite: 3975, 4030-4033].
+* `Financeiro >> Controle de créditos` (para crédito parcelado): O Status mudará para "Estornado", e a coluna "Observações" exibirá o `Chargeback-reason-code` [cite: 3989, 3995-4001].
+* `Financeiro >> Contas a Receber`: A parcela estornada voltará a ficar "Pendente"[cite: 4071].
+* `Dashboard Pagar.me`: O motivo detalhado (ex: "Fraude - ambiente de cartão ausente Código 83") pode ser consultado no painel do Pagar.me, menu "Transações"[cite: 4073, 4105].
+
+🛠 4. Processo de Chargeback no Sponte (Ciclo 2)
+
+O Ciclo 2 (raro) indica que um chargeback (que era Ciclo 1) foi reapresentado pela escola e **negado pelo banco**, ou seja, o valor **será recebido novamente** pela escola[cite: 3972, 4108].
+
+Como o ERP já havia estornado a parcela no Ciclo 1 (e perdido o vínculo), o processo no Ciclo 2 é de notificação e ação manual:
+1. O Sponte recebe o postback do Ciclo 2[cite: 4109].
+2. O sistema exibe um aviso na "Central de Avisos" (ex: "Sponte Pay - Chargeback negado") [cite: 4110-4111, 4120].
+3. A parcela **não** é quitada automaticamente[cite: 4109].
+4. O administrador deve **localizar a parcela no Contas a Receber (que está "Pendente") e quitá-la manualmente**, pois o valor será recebido[cite: 4109, 4174].
+5. No `Log de Recorrência` (se for recorrência), o status mudará para "Chargeback" (em verde), indicando que foi revertido a favor da escola [cite: 4138-4139].

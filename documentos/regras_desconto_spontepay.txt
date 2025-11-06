@@ -1,0 +1,55 @@
+Regras de Cálculo de Desconto (Sponte Pay / Pagar.me)
+
+Este documento descreve como os descontos (Bolsa Curso, Bolsa Plano e Desconto Manual) são combinados e calculados para boletos Sponte Pay (API Pagar.me).
+
+🛠 1. Os Três Tipos de Desconto
+
+Existem três fontes principais de desconto que podem ser aplicadas a uma Conta a Receber:
+* Desconto Curso (Bolsa): Configurado no cadastro do curso (ex: 10% 10 dias antes, 6% 5 dias antes)[cite: 76, 131, 160].
+* Desconto Plano (Bolsa): Configurado no plano financeiro do aluno (ex: 14% 15 dias antes)[cite: 30, 48, 77, 132, 161].
+* Desconto Manual: Um desconto (ex: 10%) aplicado manualmente na Conta a Receber, geralmente "Até o Vencimento"[cite: 19, 32, 58, 80, 107, 162].
+
+🛠 2. Regra Principal: A Soma (Dias Iguais)
+
+A regra de cálculo mais importante é: **Se os descontos (Curso, Plano e Manual) possuem datas de vencimento iguais (ex: "15 dias antes"), seus valores são SOMADOS**[cite: 150].
+
+* Exemplo (Cenário 6):
+    * Desconto Curso: 16% (15 dias antes) [cite: 131]
+    * Desconto Plano: 14% (15 dias antes) [cite: 135]
+    * Resultado: 30% de desconto (15 dias antes)[cite: 137].
+
+* Exemplo (Cenário 7 - "Megazord"):
+    * Desconto Curso: 16% (15 dias antes) [cite: 160]
+    * Desconto Plano: 14% (15 dias antes) [cite: 161]
+    * Desconto Manual: 10% (Até o vencimento, que se aplica a todos os dias) [cite: 162]
+    * Resultado: 40% de desconto (15 dias antes)[cite: 164, 166].
+
+🛠 3. Regra "Top 3" (Dias Diferentes)
+
+Se os descontos (Curso e Plano) possuem dias de vencimento *diferentes*, o sistema considera apenas os **"top 3 descontos mais distantes"** do vencimento[cite: 251].
+
+* Exemplo (Cenário 10):
+    * Curso: 16% (15d), 12% (11d), 6% (5d) [cite: 244, 245]
+    * Plano: 15% (15d), 9% (10d), 5% (6d) [cite: 246, 247, 248]
+    * Os 3 dias mais distantes são 15d, 11d e 10d. Os outros são ignorados[cite: 251].
+    * O sistema então aplica a "Regra da Soma" (Regra 1) aos "Top 3":
+    * Info 1 (15d): 16% (Curso) + 15% (Plano) = 31%[cite: 253, 254].
+    * Info 2 (11d): 12% (Curso) = 12%[cite: 258].
+    * Info 3 (10d): 9% (Plano) = 9%[cite: 262].
+
+* Exceção (Cenário 12 e 13): Se houver apenas *um* tipo de desconto (só Curso ou só Plano), a regra do "Top 3" não se aplica; o sistema apenas ordena todos os descontos por data[cite: 292, 317].
+
+🛠 4. Regras Especiais e Exceções
+
+* Regra do "Desconto 0 dias": Um desconto configurado como "0 dias antes do vencimento" age exatamente como um "Desconto Manual", ou seja, ele se soma a todos os outros descontos e se aplica "Até o Vencimento"[cite: 195, 205, 222, 230, 236].
+* Regra do "Checkbox Lançar com desconto": Há um checkbox "Lançar parcelas com o desconto da bolsa"[cite: 81]. Se esta opção for marcada:
+    1. O desconto é aplicado *diretamente* no valor da parcela e "não indo para Pagar.me"[cite: 81].
+    2. (Cenário 5) Se a checkbox estiver marcada *e* o plano tiver múltiplos descontos (ex: 10d e 5d), o sistema ignora a soma e considera **apenas o primeiro desconto** (o mais próximo do vencimento, ex: 5d)[cite: 109, 110].
+
+🛠 5. Limitações da API Pagar.me (Conversão e Arredondamento)
+
+* Regra da Conversão (R$ para %): A API Pagar.me aceita descontos **apenas em percentual (%)**[cite: 333].
+    * Se um desconto é lançado em Reais (R$) no Sponte (ex: R$ 50,00), o sistema primeiro o converte para percentual (ex: R$ 50,00 / R$ 200,00 = 25%) e envia os 25% para a Pagar.me [cite: 335-343].
+* Regra do Arredondamento (Centavos): A API Pagar.me tem uma limitação de **2 casas decimais** para o percentual de desconto[cite: 357].
+    * Isso pode causar um **truncamento**. Ex: um desconto de R$ 200,00 em R$ 1200,00 é 16,6666...%[cite: 367]. O sistema trunca para 16,66%[cite: 364].
+    * Ao aplicar 16,66% em R$ 1200,00, o desconto final será de R$ 199,92 (e não R$ 200,00)[cite: 369, 350, 351]. Essa variação de centavos é esperada[cite: 357].

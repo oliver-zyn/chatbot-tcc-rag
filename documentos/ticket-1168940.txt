@@ -1,0 +1,32 @@
+TICKET: 1168940
+
+### INFORMAÇÕES GERAIS
+* Data: 29/09/2025
+* Status: Resolvido
+* Título: Link de Pagamento Sponte Pay - Link com Pix Expirado Sendo Apresentado como Processado, Impossibilitando o Cancelamento
+
+### PROBLEMA
+* Local: Financeiro → Integração Sponte Pay → Link de Pagamento Sponte Pay (antigo Faturas Sponte Pay)
+
+Uma parcela de aluno (ex: "Gabriella Pereira Santana") fica travada no `Contas a Receber` com o status "Em processamento".
+
+Isso ocorre porque a parcela está vinculada a um "Link de Pagamento Sponte Pay" (Fatura Sponte Pay) que, por sua vez, está associado a um PIX que já foi expirado ou cancelado.
+
+Sintomas no menu `Link de Pagamento Sponte Pay`:
+* O link de pagamento (fatura) NÃO aparece na primeira aba (Faturas a processar).
+* O link de pagamento (fatura) aparece incorretamente na segunda aba (Faturas processadas).
+
+O problema impede o usuário de cancelar ou gerenciar a parcela, pois ela está "presa" a um link de pagamento que não pode ser processado.
+
+### SOLUÇÃO
+O problema foi resolvido em casos anteriores (ex: ticket 1160609) executando um script SQL para desvincular as parcelas dos links de pagamento "órfãos" (associados a PIX cancelados).
+
+O script localiza os `PlanoStoneID`s na tabela `pixspontepaycancelados` (com data de cancelamento recente) e usa esses IDs para deletar os registros correspondentes nas tabelas `faturasspontepaydetalhes` e `faturasspontepay`.
+
+SCRIPT DE CORREÇÃO (Referência Ticket 1160609):
+
+insert into log select getdate(), 'FaturasSpontePay', faturaspontepayid, 3,'Removido por cancelamento de pix conforme ticket 1160609',0,ce from faturasspontepay where planostoneid in(select planostoneid from pixspontepaycancelados where datacancelamento > '2025-09-09')
+
+delete from faturasspontepaydetalhes where faturaspontepayid in(select faturaspontepayid from faturasspontepay where planostoneid in(select planostoneid from pixspontepaycancelados where datacancelamento > '2025-09-09' AND PlanoStoneID>0 ))
+
+delete from faturasspontepay where planostoneid in(select planostoneid from pixspontepaycancelados where datacancelamento > '2025-09-09' AND PlanoStoneID>0 )

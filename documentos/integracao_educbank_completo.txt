@@ -1,0 +1,134 @@
+Integração Educbank - Manual Completo
+
+O Educbank é um ecossistema financeiro que faz a negociação/compra do faturamento da escola e recebe os valores das mensalidades dos alunos.
+
+🛠 1. Setup e Configuração (Monitor de Pagamentos - Admin)
+
+O primeiro passo é cadastrar a escola no monitor de pagamentos (uma tela de administração, separada do ERP do dia-a-dia).
+
+Acesso ao Menu: `Integração Educbank >> Escolas >> Cadastro`.
+
+Após a escola formalizar a parceria, ela receberá um **Tenant e Token** do Educbank. Esses dados, junto com o CodCliSponte e CNPJ, devem ser preenchidos no cadastro da escola.
+
+* Para escolas com mais de um CNPJ, deve ser feito um cadastro para cada CNPJ.
+* Para escolas com um CNPJ compartilhado por vários CodCliSponte, deve ser feito um cadastro para cada CodCliSponte usando o mesmo CNPJ.
+
+Após o cadastro, a URL de webhook é sincronizada automaticamente. Para ativar a integração no ERP, use o botão "Habilitar Educbank no ERP".
+
+🛠 2. Permissões de Usuário (ERP)
+
+Para que um usuário possa gerenciar a integração Educbank no ERP Sponte, ele precisa de permissões específicas (Menu `Utilitários >> Usuários >> Cadastro >> Permissões`):
+
+* **Aba Cobrança/Recebimento:**
+    * `Fatura Educbank`: Permite ao usuário lançar novos planos financeiros com esta forma de cobrança.
+* **Aba Menu:**
+    * `Financeiro -> Faturas Educbank`: Permite ao usuário acessar a tela principal de geração e acompanhamento de faturas.
+* **Aba Outras Permissões:**
+    * `Fatura Educbank -> Cancelar Fatura`: Permite cancelar faturas que ainda não foram pagas.
+    * `Fatura Educbank -> Faturas Canceladas`: Permite acessar o controle de faturas que foram canceladas mas pagas mesmo assim.
+    * `Fatura Educbank -> Histórico`: Permite consultar o histórico de eventos de todas as faturas.
+
+🛠 3. Lançamento de Plano Financeiro (ERP)
+
+O lançamento do plano financeiro (ex: no `Financeiro >> Contas a Receber`) é onde a cobrança é iniciada.
+
+1. Ao criar o plano, defina a "Forma de Cobrança" como "Fatura Educbank".
+2. Preencha os dados (valor, vencimento, etc.) e selecione a "Conta a creditar" e o "CNPJ Educbank" (se houver mais de um).
+3. Ao salvar, o sistema validará os dados obrigatórios do responsável financeiro: **CPF e Endereço completo (Rua, Nº, CEP, Cidade e Bairro)**. Se faltar, o sistema pedirá para informá-los.
+
+* Dica (Multi-CNPJ): Para evitar erros, é possível definir um CNPJ padrão por categoria de receita. Acesse `Financeiro -> Planos de Contas >> Cadastro de Receitas` e vincule o "CNPJ Educbank" à categoria (ex: "Mensalidade").
+
+🛠 4. Geração e Acompanhamento de Faturas (ERP)
+
+Acesso ao Menu: `Financeiro -> Faturas Educbank`.
+Esta tela é dividida em abas: "Geração de Faturas", "Faturas Liquidadas" e "Relatório".
+
+Aba: Geração de Faturas
+
+* **Configurações:** No botão "Configurações", você pode definir:
+    * `Gerar Faturas automaticamente com X dias de antecedência` (ex: 10 dias).
+    * `Enviar notificação... de Faturas cancelados que foram liquidadas`.
+    * `Agrupar valor das parcelas selecionadas do mês para o mesmo sacado`.
+    * `Multa por atraso (%)` (Máx 2%) e `Mora diária (% ao mês)` (Máx 1%).
+    * `Conta a creditar` (Conta Caixa padrão).
+* **Rotina Automática:** A rotina de envio automático (se habilitada) é executada duas vezes ao dia, às **4h** e às **20h**.
+* **Agrupamento:**
+    * No **Envio Automático**, o sistema *só* agrupa parcelas com o **mesmo dia de vencimento**.
+    * Na **Geração Manual** (clicando no botão "Gerar Fatura" no rodapé), o sistema agrupa parcelas do **mesmo mês**, mesmo com dias de vencimento diferentes. A fatura gerada terá o vencimento da *primeira* parcela do grupo.
+* **Validação de Dados:** Se um sacado tiver dados cadastrais incompletos (CPF, Cidade), um ícone de erro (!) aparecerá, e nenhuma ação estará disponível até que os dados sejam corrigidos.
+* **Envio:** A fatura é enviada ao e-mail do responsável. O envio é feito pela plataforma Sendgrid (e-mail `nao-responda@sponte.com.br`), mas exibe os dados de contato da escola no rodapé.
+* **Ações (Após Gerar):**
+    * `Copiar link da Fatura`.
+    * `Visualizar Fatura` (Abre o link do Educbank, onde o cliente pode pagar via Pix ou Boleto).
+    * `Enviar Fatura pelo WhatsApp` (requer WhatsApp Web logado).
+    * `Reenviar fatura por e-mail`.
+    * `Consultar situação da Fatura` (força uma atualização de status com a API).
+    * `Cancelar` (Cancela faturas pendentes).
+
+Aba: Faturas Liquidadas
+Lista faturas já pagas, com filtros por período de liquidação.
+
+Aba: Relatório
+Permite gerar relatórios "Sintético" e "Detalhado" de faturas Geradas ou Liquidadas, com exportação para PDF e Excel.
+
+🛠 5. Gerenciamento de Faturas Canceladas (Inconsistências)
+
+Se um cliente pagar uma fatura que já foi cancelada (ex: pagou o boleto no intervalo da conciliação):
+1. O responsável financeiro (definido em `Utilitários >> Opções >> Opções Financeiras`) é notificado, se a configuração estiver ativa.
+2. Acesse `Financeiro -> Faturas Educbank -> Geração de Faturas` e clique no botão "Faturas Canceladas".
+3. O sistema abrirá o assistente de "Inconsistências".
+4. Você tem duas opções:
+    * **"Estornar o valor no caixa"**: Lança uma entrada e uma saída no Caixa Sponte para registro.
+    * **"Quitar outras parcelas com o valor"**: Permite usar o valor pago indevidamente para quitar outras parcelas pendentes daquele sacado.
+
+🛠 6. Edição de Faturas Geradas (Sem Cancelar)
+
+É possível editar (Bolsa, Desconto, Valor, Vencimento, Categoria) uma fatura já gerada no Educbank sem precisar cancelá-la. As alterações são feitas no ERP Sponte e atualizadas automaticamente no Educbank.
+
+* **Alterar Bolsa ou Desconto Manual (em `Financeiro >> Contas a Receber >> Cadastro Plano`):**
+    * Se o plano foi lançado *sem* desconto, adicione nos campos "Bolsa do Plano" ou "Percentual / Motivo Desconto Manual".
+    * Se o plano *já tinha* desconto, use o botão "Alterar Desconto(s)".
+* **Alterar Valor, Vencimento ou Categoria (em `Financeiro >> Contas a Receber >> Cadastro Plano >> Aba Parcelas`):**
+    * Você deve selecionar a parcela e clicar no botão "Editar".
+    * Na tela "Parcela Contas a Receber", altere os campos e "Salvar".
+
+Ao salvar, o sistema avisa que a fatura será atualizada no Educbank. O link da fatura não muda, mas um novo e-mail é enviado ao responsável.
+
+* **Regra de Juros na Edição:** Se você alterar a data de vencimento para o futuro, o Sponte calculará a multa e mora (definidas nas Configurações) até o novo vencimento e enviará o valor total (com juros) para o Educbank.
+
+**ATENÇÃO SOBRE CANCELAMENTO VS. EDIÇÃO:**
+O CANCELAMENTO DE FATURAS DEVE SER EFETUADO APENAS SE A ESCOLA NÃO PRETENDE MAIS RECEBER O VALOR DO ALUNO.
+O CANCELAMENTO DE UMA FATURA ONDE O VALOR JÁ FOI REPASSADO PARA A ESCOLA PELO EDUCBANK, PODE GERAR COBRANÇAS DE TAXAS DO EDUCBANK PARA A ESCOLA.
+SEMPRE ORIENTAR O CLIENTE A UTILIZAR A **EDIÇÃO** EM CASO DE AJUSTES DE VALORES, VENCIMENTO OU DESCONTOS DE UMA FATURA GERADA.
+
+🛠 7. Recebimento Manual (Exceção)
+
+Se a escola precisar fazer um recebimento manual (ex: o aluno pagou em dinheiro na secretaria):
+1. Vá em `Financeiro -> Faturas Educbank` e use a ação "Recebimento manual".
+2. O Sponte avisará que a baixa será efetuada e o Educbank comunicado (pois a escola terá que repassar esse valor ao Educbank).
+3. **Restrição de 7 dias:** O Educbank só permite o recebimento manual na escola com data retroativa de, no máximo, 7 dias.
+4. Para datas retroativas maiores que 7 dias, é preciso abrir um chamado no Educbank.
+
+⚠️ **Bloqueio:** Não é possível quitar uma "Fatura Educbank" pelo `Contas a Receber`. O sistema bloqueará a ação e avisará que a operação deve ser feita pelo controle `Faturas Educbank`.
+
+🛠 8. Monitor de Pagamentos (Suporte/Admin)
+
+Acesso ao Menu: `Integração Educbank >> Faturas`.
+Esta tela é um controle de alto nível (diferente do `Financeiro -> Faturas Educbank`) que permite a consulta de todas as faturas geradas, com filtros avançados.
+
+Ao clicar em "Detalhes" de uma fatura, o administrador pode:
+* **Reconsultar status na API do Educbank**: Atualiza o status no Sponte caso esteja diferente do Educbank.
+* **Forçar reenvio de postback para o ERP**: Força o reenvio do status atual da fatura para a URL de webhook do Sponte.
+* **Aba Webhooks**: Permite ao suporte ver os retornos recebidos do Educbank sem precisar acessar a base do cliente.
+
+🛠 9. Filtros Adicionais (ERP)
+
+A integração adiciona novos filtros em telas existentes do Sponte:
+* Em `Financeiro >> Contas a Receber >> Aba Filtros Avançados`, são adicionados os filtros "Nº Fatura Educbank" e "Código Educbank".
+* Em `Relatórios >> Relatórios Financeiros >> Contas a Receber >> Aba Parcelas`, os mesmos filtros "Nº Fatura Educbank" e "Código Educbank" são adicionados.
+
+🛠 10. Portal do Aluno (Visão do Cliente)
+
+A integração adapta o Portal do Aluno:
+* O menu "2º Via de Boletos" é renomeado para "2ª Via de Boletos e Faturas".
+* As parcelas são exibidas agrupadas por fatura, e o cliente pode clicar em "Visualizar Fatura" para acessar o link de pagamento do Educbank.

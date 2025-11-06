@@ -1,0 +1,21 @@
+TICKET: 1185837
+
+### INFORMAÇÕES GERAIS
+* Data: 06/11/2025
+* Status: Em Aberto
+* Título: Boletos Automatizados (Zoop) - Impossibilidade de Cancelar Boletos Expirados (Tratativa para os Casos Retroativos)
+
+### PROBLEMA
+Local: Financeiro → Boletos Automatizados
+
+A unidade possui 189 boletos Zoop antigos (com vencimento em 2023 e 2024) que ainda constam como PENDENTES no Sponte (Situação=0), embora já estejam expirados na Zoop (mais de 60 dias pós-vencimento).
+
+Query de identificação:
+SELECT COUNT(*) FROM ContasReceberParcelas with(NOLOCK) WHERE Situacao=0 AND NumeroBoletoAutomatizado>0 AND YEAR(DataVencimento) IN (2023,2024)
+
+Ao tentar cancelar esses boletos no Sponte, a API da Zoop recusa a operação (pois já estão expirados), e o Sponte exibe o erro: "Ocorreu erro na solicitação de cancelamento de um ou mais boletos. Tente novamente mais tarde."
+
+Solicitação: Desvincular esses registros das parcelas PENDENTES para permitir o tratamento manual, visto que o cancelamento via API não é mais possível.
+
+### SOLUÇÃO
+(Ticket em aberto. Aguardando definição da tratativa retroativa.)
