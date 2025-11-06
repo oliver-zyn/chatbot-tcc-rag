@@ -1,0 +1,38 @@
+Configurações Iniciais - Link de Pagamento Sponte Pay
+
+Quais configurações preciso fazer para trabalhar com o link de pagamento?
+
+🛠 Configurações - Link de Pagamento Sponte Pay
+Para iniciarmos a utilização do módulo de Link de Pagamento do Sponte Pay, antes precisamos acessar o sistema Sponte e realizar algumas configurações e padronizações iniciais, através do menu, Utilitários ➩ Opções ➩ Opções Financeiras, assim conseguimos padronizar e configurar a ferramenta para que ela funcione de forma correta.
+
+1 - Em Utilitários ➩ Opções ➩ Opções Financeiras, vamos buscar pelo quadro "Sponte Pay".
+
+2 - Inicialmente, vamos definir quais serão os meios de pagamentos que estarão disponíveis para os clientes finais realizarem o pagamento via "Link de Pagamento Sponte Pay".
+
+As opções disponíveis são:
+* Recebimento com Recorrência Sponte Pay
+* Recebimento com Boleto Sponte Pay
+* Recebimento com Pix Sponte Pay
+* Recebimento com Crédito Sponte Pay
+
+Iremos habilitar aqui, as opções que desejamos disponibilizar para seleção no momento do pagamento da fatura, ao menos dois tipos de recebimentos devem estar habilitados!
+
+⚠️Obs: Estarão disponíveis apenas as opções dos serviços que sua unidade contratou!
+
+3 - Posteriormente, vamos definir a configuração do Crédito Parcelado, ou seja, quantas parcelas deixaremos disponíveis para seleção, caso o responsável pelo pagamento escolha o crédito parcelado como opção (e também caso esteja disponível).
+
+📍Selecione o número máximo de parcelas em que o sacado poderá parcelar via Crédito Sponte Pay. O número de parcelas será baseado no valor da cobranças, onde o valor mínimo de cada parcela deve ser de 10 Reais.
+
+⚠️Obs: Inicialmente aconselhamos a configuração de no máximo 12 parcelas, pois alguns emissores de cartões e bancos não permitem um parcelamento maior que 12x.
+
+4 - Para finalizarmos as configurações deste card, vamos agora definir informações de Cores e Logo que serão exibidas ao sacado no momento do pagamento.
+
+Realize a permissão da forma que desejar, mas atente-se para configurar opções que facilitem a visualização do cliente final:
+
+5 - Ainda em Utilitários ➩ Opções ➩ Opções Financeiras, vamos buscar pelo quadro "Processamento Automático".
+
+Aqui vamos definir através do campo "Baixar créditos na data de repasse", se o sistema irá baixar parcelas de forma automática na data de repasse definida.
+
+⚠️Essa opção permite que pagamentos feitos via cartão de crédito ou recorrência, tenham suas baixas feitas de forma correta no Sponte (na data de repasse), caso contrário, as baixas precisarão ser feitas sempre de forma manual!
+
+⚠️Lembre sempre de clicar no botão "Salvar", para aplicar as configurações definidas.

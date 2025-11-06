@@ -1,0 +1,117 @@
+Como realizar o pagamento - Link de Pagamento Sponte Pay
+
+Como realizar o pagamento da cobrança que foi gerada?
+
+🛠 Como realizar o pagamento - Link de Pagamento Sponte Pay
+Assim que realizarmos a geração da cobrança, ela já poderá ser paga pelo aluno ou responsável.
+Inicialmente ele irá receber um E-mail com as informações da cobrança, e o link do pagamento:
+
+No e-mail estarão as principais informações, como nome do aluno ou responsável, valores e data de vencimento.
+
+Assim que ele receber, será necessário clicar em "Seguir para pagamento", para ir até o checkout.
+
+⚠️Caso o responsável pelo pagamento não tenha recebido o e-mail (verifique primeiro se o e-mail cadastrado está correto), você poderá reenviar esta cobrança:
+
+No Sponte, vá até o menu, Financeiro -> Integração Sponte Pay -> Link de Pagamento Sponte Pay, busque pela parcela/cobrança que deseja reenviar, e na coluna de ações no canto direito da tela, as seguintes opções estarão disponíveis para reenvio:
+
+* Copiar link da cobrança e enviar novamente ao sacado.
+* Permite o envio da cobrança via WhatsApp (verifique se o número para envio está correto).
+* Reenviar o link via E-mail (verifique se o e-mail para envio está correto).
+
+A Tela de Checkout (Seleção da Forma de Pagamento)
+
+A Cobrança será exibida com as informações da escola/unidade, informações do sacado, valores, vencimentos, e informações de categoria, para que fique bem claro o que está sendo pago naquele momento.
+
+⚠️Obs: Caso os dados da escola estejam incorretos, vá no Sponte até o menu, Cadastros -> Dados da Empresa, e realize as atualizações necessárias.
+
+Também será exibida nessa tela, as opção de pagamento que configuramos no Sponte (Utilitários -> Opções -> Opções Financeiras -> Sponte Pay).
+
+O responsável inicialmente terá a opção de realizar o pagamento via:
+* Pix Sponte Pay (Será gerado um QR Code e chave Pix para pagamento);
+* Boleto Sponte Pay (Será gerado um boleto para pagamento);
+* Recorrência Sponte Pay (O usuário irá cadastrar o cartão de crédito para ser cobrado mês a mês);
+* Cartão de Crédito (O usuário irá cadastrar o cartão de crédito para realizar um pagamento parcelado);
+
+⚠️Obs: Estarão disponíveis para seleção, apenas os tipos de pagamento que sua unidade contratou e habilitou no menu citado acima!
+
+⚠️Antes de definir a forma de pagamento, é necessário validar se todas as informações das parcelas estão OK, como por exemplo, valores, datas, categorias...
+
+📍Como realizar o pagamento via Pix Sponte Pay
+
+1 - Na tela do link de pagamento, vamos selecionar a opção "Pix", e clicar em "Prosseguir para Pagamento":
+
+⚠️Será exibida então uma mensagem de aviso, que após a seleção da forma de pagamento, não será possível alterar. Caso seja necessário alterar, a unidade/escola precisa cancelar a cobrança atual, e gerar uma nova!
+
+Caso a forma de pagamento esteja correta, vamos em "Prosseguir".
+
+2 - Vamos então ser redirecionados a tela de pagamento, onde estarão disponíveis o QR Code e a Chave Pix para pagamento. Também serão exibidas, as informações de juros e multa configurados pela unidade/escola.
+
+Simultaneamente, o responsável pelo pagamento irá receber em seu e-mail, um resumo da cobrança, onde também estarão disponíveis o QR Code e a Chave Pix.
+
+✅Assim que o responsável pelo pagamento concluir o processo, será exibida a mensagem de confirmação.
+
+✅No Sponte então, poderemos visualizar o pagamento e a baixa da parcela, através do menu, Financeiro -> Integração Sponte Pay -> Pix Sponte Pay. Lá estarão listados todos os pagamentos concluídos, Pix que ainda estão pendentes, e também temos a possibilidade de realizar o estorno de algum pagamento.
+
+📍Como realizar o pagamento via Boleto Sponte Pay
+
+1 - Na tela do link de pagamento, vamos selecionar a opção "Boleto", e clicar em "Prosseguir para Pagamento":
+
+⚠️Será exibida a mensagem de aviso de que não será possível alterar a forma de pagamento.
+
+2 - Vamos então ser redirecionados a tela de pagamento, onde estarão disponíveis o Código de barras do boleto e o Boleto para pagamento ou impressão (Clique em "Ver Boleto"). Também serão exibidas, as informações de juros e multa.
+
+⚠️Obs: Lembre-se que o valor mínimo para gerar uma cobrança em boleto, é 20 Reais!
+
+Simultaneamente, o responsável pelo pagamento irá receber em seu e-mail, um resumo da cobrança, onde também estarão disponíveis o Código de Barras e o Boleto.
+
+✅Assim que o responsável pelo pagamento concluir o processo, será exibida a mensagem de confirmação.
+
+✅No Sponte então, poderemos visualizar o pagamento e a baixa da parcela, através do menu, Financeiro -> Integração Sponte Pay -> Boletos Sponte Pay. Lá estarão listados todos os pagamentos concluídos e boletos que ainda estão pendentes.
+
+📍Como realizar o pagamento via Recorrência Sponte Pay
+
+1 - Na tela do link de pagamento, vamos selecionar a opção "Cartão Recorrente", e clicar em "Prosseguir para pagamento":
+
+⚠️Será exibida a mensagem de aviso de que não será possível alterar a forma de pagamento.
+
+2 - Vamos então ser redirecionados a tela de pagamento.
+
+Caso esse aluno ou responsável, ainda não tenha um cartão cadastrado em seu nome no sistema, a tela de pagamento irá solicitar o cadastramento de um cartão válido! Se já existe um cartão cadastrado, basta realizar a verificação dos dados, e seguir com o pagamento!
+
+💳Para cadastrar um novo cartão, clique em "Cadastrar Cartão". O responsável será direcionado para uma tela segura e criptografada para a confirmação dos dados.
+
+O responsável pelo pagamento então será direcionado para esta tela, informando inicialmente o cartão cadastrado, e que a cobrança está em processamento!
+
+⚠️Caso o responsável já tenha um cartão cadastrado, ele será direcionado diretamente para esta tela. Caso necessário, ele poderá realizar a troca do cartão antes de realizar o processamento da cobrança.
+
+✅Assim que o responsável pelo pagamento concluir o processo, a cobrança entrará em processamento, e será enviada ao cartão selecionado, seguindo as regras configuradas.
+
+✅No Sponte então, poderemos visualizar os pagamentos e as baixas de parcelas, através do menu, Financeiro -> Integração Sponte Pay -> Recorrência Sponte Pay.
+
+📍Como realizar o pagamento via Cartão de Crédito Sponte Pay (Crédito Parcelado)
+
+1 - Na tela do link de pagamento, vamos selecionar a opção "Cartão de Crédito", e clicar em "Prosseguir para Pagamento":
+
+⚠️Será exibida a mensagem de aviso de que não será possível alterar a forma de pagamento.
+
+2 - Vamos então ser redirecionados a tela de pagamento.
+
+Caso esse aluno ou responsável, ainda não tenha um cartão cadastrado, a tela irá solicitar o cadastramento de um cartão válido! Se já existe um cartão cadastrado, basta realizar a verificação dos dados.
+
+💳Para cadastrar um novo cartão, clique em "Cadastrar Cartão". O responsável será direcionado para uma tela segura para o preenchimento dos dados.
+
+📍Após o cadastramento, o responsável irá visualizar a tela de informações da cobrança, com uma visualização inicial do cartão cadastrado!
+
+⚠️Caso o responsável já tenha um cartão cadastrado, ele será direcionado diretamente para esta tela.
+
+📍Com o cartão já preenchido, escolha o parcelamento.
+
+⚠️O número de parcelas será baseado no valor da cobrança (valor mínimo de R$ 10,00 por parcela) e no limite configurado em Utilitários -> Opções -> Opções Financeiras (Sponte Pay).
+
+⚠️Obs: Lembre-se que o valor mínimo para gerar uma cobrança em cartão de crédito, é 10 reais!
+
+✅Vamos selecionar então o número de parcelas desejadas, e posteriormente clicar em "Efetuar Pagamento".
+
+✅Assim que o responsável pelo pagamento concluir o processo, será exibida a mensagem de confirmação.
+
+✅No Sponte então, poderemos visualizar o pagamento e a baixa da parcela, através do menu, Financeiro -> Integração Sponte Pay -> Crédito Sponte Pay.

@@ -1,0 +1,81 @@
+Acompanhamento de Cobranças Geradas - Recorrência Sponte Pay
+Como acompanhar e realizar ações nas cobranças geradas?
+
+Com todas as configurações, permissões e planos financeiros lançados, podemos avançar para o controle das recorrências.
+
+Vamos então até o menu, Financeiro ➩ Integração Sponte Pay ➩ Recorrência Sponte Pay.
+
+1 - Aba "Log de Recorrência" (Acompanhamento Principal)
+
+Inicialmente irá abrir a aba "Log de Recorrência". É aqui que vamos acompanhar todos os pagamentos onde a forma selecionada foi a "Recorrência Sponte Pay" (seja por lançamento individual ou via Link de Pagamento).
+
+Aqui poderemos realizar filtros de datas, sacados, status, etc., para buscar pelas cobranças e realizar o acompanhamento.
+
+⚠️⚠️⚠️Muito importante: Para que as cobranças apareçam aqui, o plano financeiro precisa ter sido gerado com o tipo de cobrança "Recorrência Sponte Pay". Lembre-se também, de cadastrar ou solicitar o cadastramento do cartão.
+
+2 - Ações disponíveis no Log de Recorrência
+
+Ao lado direito de cada parcela, teremos as opções de Ações:
+* Inserir dados do cartão: Abre a janela para inserir os dados do cartão no próprio sistema.
+* Solicitar por E-mail: Envia um e-mail ao responsável com o link para cadastrar o cartão.
+* Solicitar por SMS: Envia um SMS ao responsável com o link para cadastrar o cartão.
+* Copiar link: Permite copiar o link de cadastro do cartão para enviar por WhatsApp ou outro meio.
+* Enviar via WhatsApp: Envia uma nova solicitação de cadastramento do cartão via WhatsApp.
+* Reenviar Cobrança: O sistema fará o reenvio da cobrança ao cartão cadastrado. (Use após trocar um cartão ou para tentar novamente uma cobrança que falhou).
+* Plano: Permite a edição do plano financeiro vinculado (apenas parcelas pendentes).
+* Cancelar / Estornar: Cancela cobranças ainda não processadas ou estorna cobranças já realizadas.
+* Consultar Status: Faz uma nova consulta ao Status da cobrança buscando a posição atual.
+
+💡Dica: Uma das principais necessidades de usar essas funções será quando a cobrança retornar com status "Erro" (ex: falta de dados do cartão, sem limite). Você pode usar as ações para solicitar um novo cartão e, após o cadastro, clicar em "Reenviar Cobrança".
+
+3 - Entendendo os Status da Recorrência
+
+As cobranças processadas (com status "Paga") serão quitadas automaticamente no Sponte e lançadas no menu Financeiro ➣ Controle de Créditos. O repasse ocorre em 29 dias + 2 dias úteis + frequência programada (semanal/mensal).
+
+Os possíveis status de retorno são:
+* Enviada: A parcela foi enviada para cobrança no cartão.
+* Pendente: A parcela está aguardando a data de cobrança.
+* Autorizada: A cobrança foi autorizada no cartão, aguardando repasse.
+* Paga: O valor da parcela foi repassado com sucesso.
+* Cancelada: A parcela foi cancelada no sistema.
+* Estornada: A cobrança foi realizada, mas foi estornada.
+* Não Enviada: Por algum motivo, a parcela não foi enviada.
+* Chargeback: Contestação da compra pelo portador do cartão (ver detalhes abaixo).
+* Recusada: Localize a parcela, clique em “Cancelar / Estornar”. A parcela voltará a ficar "Pendente" no Contas a Receber, permitindo alterar data, valor ou forma de cobrança para uma nova tentativa.
+* Erro: Pode ser limite insuficiente, cartão inválido, etc. Após identificar o motivo (ex: solicitar novo cartão), clique em “Reenviar Cobrança”.
+
+4 - Aba "Controle de Créditos" (Visão Alternativa)
+
+No Sponte, também é possível controlar os lançamentos em crédito recorrente, através do menu, Financeiro -> Controle de Créditos.
+
+Aqui será possível visualizar os lançamentos, além de informações de valores, datas de repasse e baixa. Através dos botões de "Ações", também será possível visualizar detalhes e realizar estornos.
+
+5 - Como realizar Cancelamento ou Estorno
+
+Acesse Financeiro ➣ Integração Sponte Pay ➣ Log de Recorrência.
+Selecione as parcelas e clique em "Cancelar/Estornar".
+
+* ⇨ Importante: Se a parcela está com status “Erro/Recusada”, esta ação faz a parcela voltar a ficar "Pendente" no plano financeiro, permitindo que você atualize data, valor ou forma de cobrança.
+* ⚠️Atenção: Se a parcela está "Paga", esta ação fará a devolução (estorno) do valor ao cliente. O estorno no cartão de crédito acontece geralmente em até 24 horas, mas depende da operadora do cartão.
+
+6 - Cancelamento de parcelas (Encerramento de Contrato)
+
+⚠️Se o cliente encerrou o contrato, é necessário cancelar as parcelas futuras para que não sejam mais geradas na recorrência.
+Acesse o menu Financeiro ➣ Contas a Receber, filtre as parcelas, selecione-as e clique em Cancelar. As parcelas ficarão sinalizadas em amarelo (canceladas) e não serão mais cobradas.
+
+7 - Como funciona o "Chargeback" do Sponte Pay
+
+Chargeback é a contestação de uma compra feita pelo portador do cartão.
+⚠️Caso isso ocorra, a unidade/escola será comunicada via sistema, e-mail e telefone/WhatsApp.
+
+* Ação 1: Contate o cliente e entre em um acordo. Acesse Financeiro ➣ Contas a Receber, encontre a parcela que está como Chargeback, edite-a alterando o vencimento (ex: para o dia seguinte). O sistema tentará a cobrança novamente às 07:00hs.
+* Ação 2: Caso não haja acordo, a escola tem 10 dias (a partir da data do chargeback) para reapresentar o caso com documentos que comprovem a venda.
+
+8 - Aba "Planos sem cartão cadastrado"
+
+Esta aba (Financeiro ➣ Integração Sponte Pay ➣ Planos sem cartão cadastrado) lista todos os alunos que estão em planos de recorrência mas que ainda não informaram o cartão de crédito.
+
+Aqui será possível:
+* Cadastrar um cartão.
+* Solicitar o cadastramento do cartão por E-mail, WhatsApp ou SMS.
+* Visualizar o link de atualização dos dados do Cartão.

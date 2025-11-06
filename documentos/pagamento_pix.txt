@@ -1,0 +1,40 @@
+Como realizar o pagamento - Pix Sponte Pay
+
+Este manual descreve o pagamento de cobranças lançadas diretamente como "Pix Sponte Pay".
+
+🛠 Fluxo 1: Pagamento pelo Cliente (Checkout)
+
+Assim que realizarmos a geração da cobrança, o aluno ou responsável irá receber um E-mail com as informações da cobrança e o link do pagamento [cite: 3-4].
+
+No e-mail estarão as principais informações, como nome do aluno ou responsável, valores e data de vencimento[cite: 6].
+
+1- Assim que ele receber, será necessário clicar em "Ver QR Code e chave do Pix", para ir até o checkout[cite: 10].
+
+A cobrança será exibida com as informações da escola/unidade, sacado, valores, vencimentos e categorias[cite: 12]. Também serão exibidas informações de juros e multa[cite: 15].
+
+⚠️Obs: Caso os dados da escola estejam incorretos, vá no Sponte até o menu, Cadastros -> Dados da Empresa, e realize as atualizações necessárias .
+
+Nesta modalidade de pagamento, o sistema aceita pagamento tanto no QR Code, como na Chave Pix [cite: 17-18].
+
+Assim que o responsável pelo pagamento concluir o processo, será exibida a mensagem de confirmação [cite: 20-21]. ✅Neste momento, o pagamento foi realizado com sucesso![cite: 22].
+
+✅Logo após, o aluno ou responsável irá receber a notificação da cobrança em seu dispositivo (aplicativo do banco, e-mail, etc.) [cite: 23-24].
+
+🛠 Fluxo 2: Reenvio da Cobrança pelo Admin
+
+Caso o responsável pelo pagamento não tenha recebido o e-mail (verifique primeiro se o e-mail cadastrado está correto), você poderá reenviar esta cobrança [cite: 27-28]:
+
+1 - No Sponte, vá até o menu, Financeiro -> Integração Sponte Pay -> Pix Sponte Pay.
+2 - Busque pela parcela/cobrança que deseja reenviar.
+3 - As seguintes opções estarão disponíveis para reenvio[cite: 31]:
+* Copiar link da cobrança, e enviar novamente ao sacado[cite: 32].
+* Permite o envio da cobrança via WhatsApp (verifique se o número para envio está correto)[cite: 33].
+* Reenviar o link da cobrança via E-mail (verifique se o e-mail para envio está correto)[cite: 34].
+
+🛠 Fluxo 3: Acompanhamento da Cobrança pelo Admin
+
+Ainda no Sponte (Financeiro -> Integração Sponte Pay -> Pix Sponte Pay), vá até a aba "Pix Liquidados" para conferir as informações do pagamento da cobrança [cite: 37-38].
+
+Nesta tela ainda, será possível visualizar os detalhes da cobrança, e realizar o Estorno caso necessário (ambas estão disponíveis na coluna de Ações) [cite: 39-40].
+
+✅Após realizar todo o processo de pagamento, a cobrança será concluída, e a parcela será quitada no Sponte [cite: 42-43].

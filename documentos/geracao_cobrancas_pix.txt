@@ -1,0 +1,91 @@
+Como gerar as cobranças - Pix Sponte Pay
+
+Com todas as configurações finalizadas, permissões de usuários liberadas e planos financeiros lançados no Sponte[cite: 1], podemos avançar para a geração de cobranças.
+
+Vamos então até o menu, Financeiro ➩ Integração Sponte Pay ➩ Pix Sponte Pay.
+
+1 - Configurações Iniciais da Geração
+
+Vamos então até o botão "Configurações".
+
+Nele vamos encontrar as seguintes opções:
+* Gerar Pix automaticamente com X dias de antecedência - O sistema gera as cobranças de forma automática de acordo com a quantidade de dias que forem configurados[cite: 10].
+* Enviar notificação ao responsável financeiro da escola de Pix cancelados que foram liquidados.
+* Agrupar valor das parcelas selecionadas do mês para o mesmo sacado - O sistema faz o agrupamento para que o sacado faça apenas um pagamento para parcelas daquele mês[cite: 12].
+* Agrupar valor das parcelas selecionadas do mês para o mesmo responsável financeiro (CPF/CNPJ) - O sistema faz o agrupamento para que o responsável faça apenas um pagamento para parcelas daquele mês[cite: 13].
+
+Defina também a Conta a Creditar, ou seja, onde os valores irão cair dentro do Sponte (qual conta/caixa) após terem sido quitados.
+
+Recomendamos que opção de geração automática se mantenha ativa por ao menos 10 dias de antecedência[cite: 18].
+
+⚠️Obs: Caso tenhamos configurado um número X de dias na primeira opção, e o vencimento da primeira parcela do plano já tenha passado desse período, a primeira geração deverá ser feita de forma manual[cite: 20].
+⚠️Obs 2: Ao selecionarmos a opção de geração automática de parcelas, o sistema passa a não considerar para agrupamento parcelas do mesmo mês, e sim apenas do mesmo dia[cite: 22].
+⚠️Obs 3: Parcelas com grupos de split diferentes não serão agrupadas[cite: 23].
+⚠️Não esqueça de Salvar! [cite: 24]
+
+2 - Buscando Parcelas para Geração
+
+Finalizada a configuração, vamos para a geração[cite: 25].
+Você pode utilizar os filtros da tela para buscar pelo aluno ou responsável (sacado), situação e data de vencimento[cite: 27].
+
+3 - Verificando os Dados Antes de Gerar
+
+Após o sistema exibir as parcelas, será possível tomar algumas ações[cite: 29]:
+* Utilize a opção do "Plano", para visualizar as parcelas lançadas para o sacado neste plano[cite: 31].
+* Utilize a opção do "Cadastro", para visualizar as informações cadastrais do sacado[cite: 35].
+
+⚠️Caso esteja faltando alguma informação importante no cadastro do sacado, o sistema irá avisar com um ponto de exclamação ao lado do nome do sacado[cite: 38].
+
+4 - Gerando a Cobrança
+
+Feita a confirmação de todas as informações (valores, datas, categorias), marque a checkbox da parcela e clique em "Gerar/Enviar Pix" (no canto direito em "Ações", ou no canto inferior esquerdo) [cite: 40-42].
+
+⚠️Obs: Lembre-se que, caso a configuração de geração automática esteja habilitada, e a parcela se encaixe no período, essa geração manual não precisa ser feita[cite: 43].
+⚠️Obs 2: Para agrupar parcelas do mesmo mês (em geração manual), basta marcar a checkbox de todas as parcelas que você deseja agrupar[cite: 45].
+
+Neste primeiro momento antes da geração, a situação ainda estará como "Não Gerado!"[cite: 48].
+
+5 - Verificando o Status Pós-Geração
+
+Após a geração realizada com sucesso, basta realizar a atualização da página[cite: 50].
+
+Feita a nova consulta, verifique que alguns campos foram atualizados[cite: 52]:
+* Nº do Pix - A parcela recebe um número de cobrança[cite: 53].
+* Data de Geração - Será exibido a data em que a cobrança foi gerada[cite: 54].
+* Data de Expiração - (Coluna disponível)[cite: 55].
+* Situação - A situação será alterada para "Pix Gerado"[cite: 56].
+
+6 - Ações Pós-Geração
+
+Novas opções de ações também estarão disponíveis[cite: 57]:
+(Ações Individuais, na coluna da parcela) [cite: 63]
+* Copiar link do Pix[cite: 58].
+* Detalhes do Pix (Chave e QR Code)[cite: 59].
+* Permite o envio do Pix via WhatsApp[cite: 60].
+* Reenviar o Pix via E-mail[cite: 61].
+* Cancelar o Pix[cite: 62].
+
+(Ações em Massa, no rodapé da tela) [cite: 64]
+* Gera e envia o Pix das parcelas selecionadas[cite: 65].
+* Reenviar o e-mail com a cobrança via Pix para as parcelas selecionadas[cite: 66].
+* Permite o cancelamento dos Pix selecionados e já geradas[cite: 67].
+* Consulta e atualiza a situação das parcelas selecionadas[cite: 68].
+* Exibe Pix que foram cancelados no Sponte, mas mesmo assim foram quitados pelo cliente (Botão "Inconsistências")[cite: 69, 76].
+* Permite visualizar o histórico de tudo o que já foi gerado nesta tela (Botão "Histórico")[cite: 70, 81].
+
+A opção de "Cancelar Pix" nos permite realizar o cancelamento de uma cobrança já gerada[cite: 73].
+A opção de "Inconsistências" nos permite visualizar Pix de cobranças que foram canceladas, mas mesmo assim foram liquidadas. Aqui, é possível estornar o pagamento no caixa ou realizar a baixa de outra parcela com esse valor [cite: 76-78].
+
+7 - Acompanhando Pagamentos (Pix Liquidados)
+
+✅ Após a geração, é necessário que o sacado realize o pagamento[cite: 84].
+Para que possamos acompanhar os pagamentos, vamos até a aba "Pix Liquidados".
+
+Nesta tela estarão informações da cobrança, como datas de vencimento e pagamento, valores originais e valores pagos[cite: 87].
+Nesta tela também é possível visualizar os detalhes da cobrança e realizar o estorno (ambas na coluna "Ações")[cite: 89].
+
+Para realizar o estorno de uma cobrança, vamos utilizar o botão de estorno[cite: 91].
+Selecionando o "OK", o valor será estornado ao responsável pelo pagamento[cite: 95].
+No menu de geração de cobranças, a parcela será exibida na situação "Pix Estornado", onde será possível realizar alterações e uma nova geração[cite: 98].
+
+✅Agora que você já gerou a cobrança, basta aguardar o pagamento por parte do sacado, e acompanhar o andamento através da tela inicial de Geração de Cobranças no Pix, e também na tela de Pix Liquidados. [cite: 102]

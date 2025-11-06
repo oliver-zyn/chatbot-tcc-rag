@@ -1,0 +1,93 @@
+Como gerar as cobranças - Crédito Sponte Pay
+
+Com todas as configurações finalizadas, permissões de usuários liberadas e planos financeiros lançados no Sponte, podemos avançar para a geração de cobranças.
+
+Vamos então até o menu, Financeiro ➩ Integração Sponte Pay ➩ Crédito Sponte Pay.
+
+1 - Configurações Iniciais da Geração
+
+Vamos então até o botão "Configurações":
+
+Nele vamos encontrar as seguintes opções:
+* Gerar cobrança automaticamente com X dias de antecedência - O sistema gera as cobranças de forma automática de acordo com a quantidade de dias que forem configurados.
+* Agrupar valor das parcelas selecionadas do mês para o mesmo sacado - O sistema faz o agrupamento para que o sacado faça apenas um pagamento para parcelas daquele mês.
+* Agrupar valor das parcelas selecionadas do mês para o mesmo responsável financeiro (CPF/CNPJ) - O sistema faz o agrupamento para que o responsável faça apenas um pagamento para parcelas daquele mês.
+
+Marque as opções em que deseja padronizar. Recomendamos que opção de geração automática se mantenha ativa por ao menos 10 dias de antecedência.
+
+⚠️Obs: Caso tenhamos configurado um número X de dias na primeira opção, e o vencimento da primeira parcela do plano já tenha passado desse período, a primeira geração deverá ser feita de forma manual.
+⚠️Obs 2: Ao selecionarmos a opção de geração automática de parcelas, o sistema passa a não considerar para agrupamento parcelas do mesmo mês, e sim apenas do mesmo dia.
+⚠️Obs 3: Parcelas com grupos de split diferentes não serão agrupadas.
+⚠️Não esqueça de Salvar!
+
+2 - Buscando Parcelas para Geração
+
+Finalizada a configuração, vamos para a geração.
+Você pode utilizar os filtros da tela para buscar pelo aluno ou responsável (sacado), situação e data de vencimento.
+
+3 - Verificando os Dados Antes de Gerar
+
+Após o sistema exibir as parcelas, será possível tomar algumas ações:
+* Utilize a opção do "Plano", para visualizar as parcelas lançadas para o sacado neste plano.
+* Utilize a opção do "Cadastro", para visualizar as informações cadastrais do sacado.
+
+⚠️Caso esteja faltando alguma informação importante no cadastro do sacado, o sistema irá avisar com um ponto de exclamação ao lado do nome do sacado.
+
+4 - Gerando a Cobrança
+
+Feita a confirmação de todas as informações (valores, datas, categorias), marque a checkbox da parcela e clique em "Gerar/Enviar Cobrança" (no canto direito em "Ações", ou no canto inferior esquerdo).
+
+⚠️Obs: Lembre-se que, caso a configuração de geração automática esteja habilitada, e a parcela se encaixe no período, essa geração manual não precisa ser feita.
+⚠️Obs 2: Para agrupar parcelas do mesmo mês (em geração manual), basta marcar a checkbox de todas as parcelas que você deseja agrupar.
+⚠️Lembre-se que, o valor mínimo da parcela para que a cobrança seja gerada, é 10,00 Reais.
+
+Neste primeiro momento antes da geração, a situação ainda estará como "Não Gerado!"
+
+5 - Verificando o Status Pós-Geração
+
+Após a geração realizada com sucesso, atualize a página ou clique em "Consultar Situação".
+
+Feita a nova consulta, verifique que alguns campos foram atualizados:
+* Nº da Cobrança - A parcela recebe um número de cobrança.
+* Data de Geração - Será exibido a data em que a cobrança foi gerada.
+* Situação - A situação será alterada para "Cobrança Gerada".
+
+6 - Ações Pós-Geração
+
+Novas opções de ações também estarão disponíveis:
+(Ações Individuais, na coluna da parcela)
+* Copiar link da cobrança.
+* Visualizar cobrança (detalhes).
+* Permite o envio da cobrança via WhatsApp.
+* Reenviar o link da cobrança via E-mail.
+* Consultar e atualizar situação da cobrança.
+* Cancelar a cobrança.
+
+(Ações em Massa, no rodapé da tela)
+* Gera e envia a cobrança das parcelas selecionadas.
+* Reenviar o e-mail com a cobrança para as parcelas selecionadas.
+* Consulta e atualiza a situação das parcelas selecionadas.
+* Permite o cancelamento de cobranças selecionadas.
+* Permite visualizar o histórico de tudo o que já foi gerado nesta tela.
+
+A opção de "Cancelar Cobrança" permite o cancelamento de uma cobrança já gerada. Após o cancelamento, você poderá realizar alterações manuais na parcela e gerar uma nova cobrança.
+
+A opção "Histórico" nos permite visualizar um histórico completo de eventos relacionados ao crédito Sponte Pay (geradas, liquidadas, canceladas).
+
+7 - Acompanhando Pagamentos (Liquidações)
+
+✅ Após a geração, é necessário que o sacado realize o pagamento.
+Para que possamos acompanhar os pagamentos, vamos até a aba "Liquidações".
+
+Nesta tela estarão informações da cobrança, como datas de vencimento e pagamento, valores, bandeira do cartão, etc.
+Nesta tela também é possível visualizar os detalhes da cobrança e realizar o estorno.
+
+Para realizar o estorno de uma cobrança, vamos utilizar o botão de estorno na coluna "Ações".
+Será exibida uma tela para selecionar o "Motivo do Estorno" (cadastrados em Cadastros -> Cadastros Gerais -> Financeiro -> Motivos de Estorno) e a data do estorno.
+Após clicar em "Estornar", o estorno será realizado ao cartão do responsável.
+
+8 - Acompanhando Estornos
+
+Na aba "Estornos/Chargebacks", será possível acompanhar e visualizar cobranças que tenham sido estornadas ou que o chargeback tenha sido solicitado.
+
+✅Agora que você já gerou a cobrança, basta aguardar o pagamento por parte do sacado, e acompanhar o andamento através da tela inicial de Geração de Cobranças no crédito, e também na tela de Liquidações.

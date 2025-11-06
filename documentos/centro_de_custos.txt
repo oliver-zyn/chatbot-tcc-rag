@@ -1,0 +1,87 @@
+Centro de Custos Educacional
+
+O que é o Centro de Custo?
+
+O Centro de Custo é uma área dentro de um Departamento da empresa, como por exemplo, o departamento de Vendas ou o departamento Financeiro.
+
+A utilização do Centro de Custos é para realizar rateios de Receitas e Despesas ao quitar parcelas e dividi-los em Centros de Custos no sistema. É possível separar através de porcentagem (%) o valor que será rateado, para ter controle e organização sobre cada setor.
+
+Configurações para Automatização
+
+Para configurar a automatização do Centro de Custos, acesse o menu:
+Utilitários ➩ Opções ➩ Opções Financeiras.
+
+Nesta tela, você pode habilitar as seguintes opções:
+
+* Ao cadastrar uma nova turma, criar automaticamente seu centro de custo: Com essa opção habilitada, o sistema, no momento em que realizar a criação de uma nova Turma e salvar, criará automaticamente o Centro de Custo dessa turma.
+
+* Gravar lançamentos automaticamente no centro de custos relacionados ao plano de contas ao quitar parcelas a receber/pagar: Essa opção habilitada vai permitir que o sistema grave automaticamente, ao realizar a quitação de uma parcela a Receber/Pagar, os lançamentos do Centro de Custos com relação ao Plano de Contas referente à parcela quitada.
+
+* Marcar opção 'Mostrar centro de custos do lançamento' ao quitar parcelas a receber/pagar e ao lançar saída/entrada no caixa: Essa opção habilitada vai permitir que o sistema, ao realizar a quitação de parcelas, mostre o Centro de Custo daquela determinada parcela que foi quitada ou recém lançada no Caixa.
+
+Após as opções serem habilitadas, clique em "Salvar" no final da tela para que o sistema reconheça essas automatizações.
+
+Cadastro e Vínculo do Centro de Custos
+
+1.  Criação do Centro de Custo:
+    Acesse o menu Financeiro ➩ Plano de Contas ➩ aba Centro de Custos.
+    Nesta tela, você pode Incluir, Editar e Excluir um Centro de Custos por turma e Categorias associadas ao Centro de Custo.
+
+2.  Vinculando o Centro de Custo a uma Categoria:
+    Após realizar a inclusão de um novo Centro de Custos, volte para a guia "Plano de Contas".
+    Selecione e edite uma categoria (ex: "Mensalidades").
+    Mude para a aba "Centro de Custos" dentro da categoria e selecione o centro que foi criado.
+
+Casos de Uso: Rateio de Receitas e Despesas
+
+Caso 1: Rateio de Contas a Receber (Ex: Mensalidades)
+
+1.  Acesse o menu Financeiro ➩ Contas a Receber.
+2.  Selecione uma parcela "Pendente" com a Categoria que foi vinculada (ex: "Mensalidades").
+3.  Realize a Quitação da parcela.
+4.  Após a quitação (e confirmação do comprovante), a tela de Centro de Custos será carregada automaticamente, com o lançamento já gravado no Centro que selecionamos na categoria.
+
+Caso 2: Rateio de Contas a Pagar (Ex: Despesas de Serviço)
+
+O mesmo processo pode ser feito para Despesas.
+
+1.  Acesse Financeiro ➩ Plano de Contas ➩ aba Plano de Contas.
+2.  Selecione a categoria relacionada às Despesas onde o Centro de Custo será vinculado.
+3.  Vincule o Centro de Custo e salve.
+4.  Acesse o menu Financeiro ➩ Contas a Pagar.
+5.  Realize a quitação da Despesa (ex: Despesa de Serviço). O rateio será aplicado automaticamente, assim como nas receitas.
+
+Caso 3: Rateio Múltiplo (Mais de um Centro de Custo)
+
+É possível utilizar mais de um Centro de Custos na mesma Parcela a Receber/Pagar, possibilitando o rateio dividido para cada setor específico.
+
+Ao quitar a parcela, na tela de rateio, é possível adicionar outros Centros de Custo e dividir o valor (ex: por porcentagem). Isso é útil quando um serviço é geral e envolve mais de um setor.
+
+Relatórios de Centro de Custos
+
+Para visualizar os resultados dos rateios (Receitas (+) e Despesas (-)), o sistema oferece relatórios gerenciais.
+
+Acesso ao Relatório:
+Relatórios ➩ Relatórios Gerenciais ➩ Centro de Custos.
+
+Filtros do Relatório:
+
+Ao acessar, existem duas guias de filtros: "Centro de Custos" e "Receitas e Despesas por Centro de Custos".
+
+Guia "Centro de Custos":
+* Centro de Custos: Permite selecionar um ou todos os centros. Se deixar como (Selecione), trará todos.
+* Período de Lançamento: Permite filtrar por data (ex: ano inteiro).
+* Relatório Detalhado (Opção): Ao habilitar, permite selecionar categorias e agrupar por Centro de Custos ou Plano de Contas.
+* Exportação: Na parte inferior, é possível selecionar a exportação para Excel, XML e Excel sem formatação.
+
+Guia "Receitas e Despesas por Centro de Custos":
+* Tipo de Lançamento: Entradas ou Saídas.
+* Período.
+* Exportação: Por padrão, já vem marcada a exportação para Excel sem formatação.
+
+Visualizando o Relatório:
+
+Após preencher os filtros, clique em "Visualizar".
+
+* Relatório Padrão (Agrupado): O sistema traz todos os Centros de Custos que sofreram rateios e separa os valores por Receitas, Despesas e Saldo.
+* Relatório Detalhado (Agrupado por Plano de Contas): Mostra as informações detalhadas por categoria.

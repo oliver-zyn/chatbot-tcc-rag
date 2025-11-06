@@ -1,0 +1,40 @@
+Como realizar o pagamento - Boleto Sponte Pay
+
+Este manual descreve o pagamento de cobranças lançadas diretamente como "Boleto Sponte Pay".
+
+🛠 Fluxo 1: Pagamento pelo Cliente (Checkout)
+
+Assim que realizarmos a geração da cobrança, o aluno ou responsável irá receber um E-mail com as informações da cobrança e o link do pagamento [cite: 3-4].
+
+No e-mail estarão as principais informações, como nome do aluno ou responsável, valores e data de vencimento.
+
+1- Assim que ele receber, será necessário clicar em "Ver Código de barras" para ir até o checkout, ou em "Ver Boleto", para visualizar o boleto.
+
+A cobrança será exibida com as informações da escola/unidade, sacado, valores, vencimentos e categorias. Também serão exibidas informações de juros e multa [cite: 12, 15-16].
+
+⚠️Obs: Caso os dados da escola estejam incorretos, vá no Sponte até o menu, Cadastros -> Dados da Empresa, e realize as atualizações necessárias .
+
+Nesta modalidade, o sistema aceita pagamento copiando o Código do boleto, ou Visualizando/imprimindo o boleto para pagamento (em dispositivo móvel, caixa eletrônico ou lotérica) [cite: 18-20].
+
+Assim que o responsável pelo pagamento concluir o processo, será exibida a seguinte mensagem de confirmação [cite: 22-23]. ✅Neste momento, o pagamento foi realizado com sucesso!
+
+🛠 Fluxo 2: Reenvio da Cobrança pelo Admin
+
+Caso o responsável pelo pagamento não tenha recebido o e-mail (verifique primeiro se o e-mail cadastrado está correto), você poderá reenviar esta cobrança [cite: 26-27]:
+
+1 - No Sponte, vá até o menu, Financeiro -> Integração Sponte Pay -> Boletos Sponte Pay.
+2 - Busque pela parcela/cobrança que deseja reenviar.
+3 - As seguintes opções estarão disponíveis para reenvio:
+* Copiar link do Boleto.
+* Visualizar Boleto.
+* Detalhes do Boleto/Código de barras.
+* Permite o envio do Boleto via WhatsApp (verifique se o número para envio está correto).
+* Reenviar o Boleto via E-mail (verifique se o e-mail para envio está correto).
+
+🛠 Fluxo 3: Acompanhamento da Cobrança pelo Admin
+
+Ainda no Sponte (Financeiro -> Integração Sponte Pay -> Boletos Sponte Pay), vá até a aba "Boletos Liquidados" para conferir as informações do pagamento da cobrança.
+
+Nesta tela ainda, será possível visualizar os detalhes da cobrança, além de visualizar o boleto impresso (ambas estão disponíveis na coluna de Ações) [cite: 41-42].
+
+✅Após realizar todo o processo de pagamento, aguarde o processo de compensação bancária, então a cobrança será concluída, e a parcela será quitada no Sponte [cite: 45-46].

@@ -1,0 +1,76 @@
+Lançamento de Planos Financeiros - Sponte Pay
+
+Para que as parcelas sejam cobradas via Sponte Pay, precisamos realizar o lançamento dos planos financeiros. Isso pode ser feito via Contrato ou via Contas a Receber.
+
+💡 Método 1: Como lançar o plano financeiro via Contrato
+
+1 - Vamos acessar o menu, Pedagógico ➩ Contratos, e buscar pelo aluno que desejamos lançar o plano.
+
+2 - Dê dois cliques no contrato do aluno, e após a abertura, vá até a aba "Financeiro".
+
+3 - É possível realizar o lançamento de 2 formas dentro do contrato:
+
+1ª - Lançamento do plano padrão do curso.
+Se você já cadastrou um plano padrão para o curso (em Pedagógico -> Cadastros -> Cursos -> Financeiro), basta selecionar a "Categoria" (ex: "Mensalidades") e clicar em "Lançar Plano do Curso".
+
+O plano padrão será lançado. Após isso, clique em "Editar" para ajustar a Forma de Cobrança.
+
+2ª - Lançamento de plano individual no Contrato.
+Ainda na aba "Financeiro", selecione a categoria (ex: "Mensalidade") e clique no botão "Lançar".
+Será aberta a tela de lançamento de plano, onde você define as parcelas, valores, datas e a Forma de Cobrança.
+
+4 - Definindo a Forma de Cobrança e Regras de Negócio (O PASSO MAIS IMPORTANTE)
+
+Ao editar ou lançar um plano, você deve selecionar a "Forma de Cobrança". As regras de negócio de desconto e lançamento mudam para cada opção:
+
+Opção A: "Link de Pagamento Sponte Pay" (Forma Flexível)
+Esta é a forma de cobrança flexível. Ao selecioná-la, o cliente final (sacado) poderá escolher como pagar no checkout (Pix, Boleto, Crédito Parcelado, etc.).
+* ⚠️ Regra de Desconto: Suporta bolsas e descontos de até 90%, válida e exclusivamente para pagamentos por Boletos e Pix!.
+
+Opção B: "Crédito Sponte Pay" (Forma Forçada)
+Esta forma de cobrança força o pagamento *apenas* via Crédito Parcelado.
+* ⚠️ Regra de Desconto: NÃO permite a utilização de bolsas de desconto para essa forma de cobrança.
+
+Opção C: "Pix Sponte Pay" (Forma Forçada)
+Esta forma de cobrança força o pagamento *apenas* via Pix.
+* ⚠️ Regra de Desconto: Suporta bolsas e descontos de até 90% para pagamentos no Pix.
+
+Opção D: "Boleto Sponte Pay" (Forma Forçada)
+Esta forma de cobrança força o pagamento *apenas* via Boleto.
+* ⚠️ Regra de Desconto: Suporta bolsas e descontos de até 90% para pagamentos no Boleto.
+
+Opção E: "Recorrência Sponte Pay" (Forma Forçada)
+Esta forma de cobrança força o pagamento *apenas* via Cartão Recorrente.
+* ⚠️ Regras de Desconto e Lançamento:
+    * NÃO permite a utilização de bolsas de desconto.
+    * NÃO pode conter vencimentos retroativos ou descontos de pontualidade.
+    * NÃO é possível lançar planos de Recorrência com apenas uma parcela.
+
+5 - Após definir a Forma de Cobrança, clique em "Salvar".
+
+6 - Verifique os Dados do Pagador
+
+O próximo passo depende da forma de cobrança escolhida:
+
+* Para Link, Crédito, Pix ou Boleto: Vá até a aba "Dados Sponte Pay". Confira se as informações do cliente (CPF, E-mail, Celular) estão corretas e selecione o grupo de split (CNPJ), se necessário.
+
+* Apenas para Recorrência: Vá até a aba "Dados da Recorrência". Além de conferir os dados e o grupo de split, você DEVE cadastrar o cartão do cliente.
+    * "Novo Cartão": Permite cadastrar o cartão manualmente.
+    * "Solicitar por": Permite enviar um link seguro para o cliente cadastrar o cartão (via E-mail, WhatsApp, SMS ou link copiado).
+    * O pagador será cadastrado automaticamente na plataforma Sponte Pay se tiver CPF/CNPJ, Data de nascimento, E-mail e Telefone válidos.
+
+7 - Salve o cadastro para aplicar as alterações.
+
+⚠️Obs importante: Caso já exista um plano ativo, só será possível alterar a forma de cobrança de parcelas "Pendentes" (que ainda não tiveram cobranças geradas). Utilize a aba "Parcelas" para alteração individual.
+
+💡 Método 2: Como lançar o plano financeiro via Contas a Receber
+
+1 - No Sponte, vamos acessar o menu, Financeiro ➩ Contas a Receber, e clicar em "Incluir".
+
+2 - Na aba "Sacado", busque pelo aluno e preencha todas as informações.
+
+3 - Lembre-se de selecionar a "Forma de Cobrança" e aplicar as regras de negócio corretas, conforme explicado no Passo 4.
+
+4 - Após salvar, vá até a aba "Dados Sponte Pay" ou "Dados da Recorrência" (dependendo da forma de cobrança) para conferir os dados, selecionar o grupo de split e cadastrar o cartão, se necessário.
+
+⚠️Obs importante: Recomendamos que lançamentos relacionados ao contrato (matrículas, mensalidades) sejam feitos diretamente no Contrato (Método 1). Utilize o Contas a Receber apenas para lançamentos pontuais (taxas, itens extras), pois essas parcelas ficam vinculadas apenas ao cadastro do aluno, e não ao contrato.

@@ -1,0 +1,78 @@
+Controle de Caixa
+
+Este manual explica como usar o menu `Financeiro ➩ Caixa`, onde são realizadas entradas, saídas, transferências e o fechamento diário do caixa.
+
+🛠 1. Liberação de Permissão de Acesso
+
+Para que um usuário possa ver ou movimentar um caixa, ele precisa de permissão específica:
+1. Acesse o menu Utilitários ➩ Usuários.
+2. Edite o usuário desejado.
+3. Vá para a aba Permissões ➩ Contas.
+4. O sistema listará todos os caixas cadastrados (ex: Caixa Financeiro, Caixa Secretaria, Banco Itaú).
+5. Marque **apenas** as contas que este usuário pode visualizar e movimentar.
+6. Salve as alterações.
+
+Quando o usuário acessar `Financeiro ➩ Caixa`, ele verá apenas as contas para as quais tem permissão.
+
+🛠 2. O Conceito de Caixa Interno vs. Caixa Banco
+
+É crucial separar os caixas para um controle correto:
+* Caixa Interno (ex: "Caixa Financeiro"): Deve receber valores em Dinheiro. O saldo dele deve bater com a sua gaveta física.
+* Caixa Banco (ex: "Banco Itaú"): Deve receber valores de Cartão, Boleto ou Cheque, pois o valor não está fisicamente na escola.
+
+🛠 3. Ações Principais no Caixa
+
+Acessando `Financeiro ➩ Caixa`, você pode filtrar pela "Conta" que deseja ver. A tela mostrará as entradas (verde) e saídas (vermelho).
+
+Ação: Incluir (Ajuste de Saldo - Entrada)
+Se o saldo do sistema está menor que o saldo real (ex: R$ 3.000 no banco, mas R$ 2.855 no sistema), você deve fazer uma "Inclusão":
+1. Clique em "Incluir".
+2. Selecione a Conta (ex: "Caixa Banco do Itaú").
+3. Defina o Tipo da Movimentação (ex: "Dinheiro").
+4. Selecione uma Categoria (ex: "Ajuste de Caixa").
+5. Informe o valor que falta e salve.
+
+Ação: Saída (Ajuste de Saldo - Saída)
+Se o saldo do sistema está maior que o saldo real (ex: R$ 2.855 no sistema, mas R$ 2.000 no banco), você deve fazer uma "Saída":
+1. Clique em "Saída".
+2. Selecione a Conta (ex: "Caixa Banco do Itaú").
+3. Tipo de Movimentação (ex: "Dinheiro", pois é só ajuste).
+4. Informe o valor a ser retirado (ex: R$ 855,98).
+5. Selecione a Categoria de despesa (ex: "Ajuste de Caixa").
+6. Adicione uma observação (ex: "Ajuste de saldo inicial para migração") e Salve. O saldo será corrigido.
+
+Ação: Transferência
+Usada para mover dinheiro entre contas.
+* Exemplo 1: Sacar do Banco para o Caixa Interno.
+    1. Clique em "Transferência".
+    2. Caixa Origem: "Caixa Banco do Itaú".
+    3. Caixa Destino: "Caixa Financeiro".
+    4. Informe o Valor (ex: R$ 500) e Salve.
+* Exemplo 2: Depositar do Caixa Interno para o Banco (ao fechar o dia).
+    1. Clique em "Transferência".
+    2. Caixa Origem: "Caixa Financeiro".
+    3. Caixa Destino: "Caixa Banco do Itaú".
+    4. Informe o Valor (ex: R$ 2.000) e Salve.
+
+Ação: Excluir
+Se você recebeu um valor com data ou valor errado (e o caixa ainda não foi fechado), você pode selecionar o lançamento e clicar em "Excluir". Isso estorna o lançamento e faz a parcela voltar a ficar "Pendente" no Contas a Receber ou Contas a Pagar.
+
+🛠 4. Fechamento de Caixa
+
+O caixa deve ser fechado diariamente. Se você não fechar, os lançamentos de dias anteriores continuam aparecendo na tela principal, poluindo sua visão.
+
+1. Após fazer todas as movimentações (entradas, saídas, transferências), clique em "Fechar Caixa".
+2. Selecione a Conta que deseja fechar (ex: "Caixa Financeiro").
+3. (Recomendado) Clique em "Previsão de Fechamento". O sistema gerará um relatório mostrando o saldo final que você *deve* ter na sua gaveta (ex: R$ 92,65).
+4. Confira o valor da previsão com o seu caixa físico. Se bater, clique em "Fechar Caixa".
+5. O sistema irá bloquear todos os lançamentos daquele período (eles ganharão um ícone de cadeado). A tela do caixa ficará em branco, pronta para o dia seguinte, mas o saldo será mantido.
+
+Para ver lançamentos antigos, marque o checkbox "Lançamentos Fechados" e filtre.
+
+Para reabrir um caixa fechado, você deve ir na aba "Fechamentos" e usar a senha de gerente/admin.
+
+🛠 5. Conciliação Bancária
+
+Usada para confirmar que os lançamentos do Sponte batem com o extrato do seu banco.
+* Conciliação Automática: Funciona com Itaú, Caixa e Bradesco. Você faz o download do extrato do banco, carrega no Sponte, e o sistema lista as movimentações para você conciliar.
+* Conciliação Manual: Você busca por um período. O sistema lista as entradas/saídas e você marca manualmente o que está "Conciliado" (confirmando que bateu com o extrato do banco).

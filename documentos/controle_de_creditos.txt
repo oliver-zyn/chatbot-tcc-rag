@@ -1,0 +1,69 @@
+Controle de Créditos
+
+Este manual explica como configurar e usar o menu "Controle de Créditos" para gerenciar os repasses de pagamentos de cartão de crédito, débito e recorrência.
+
+🛠 1. Configuração Essencial (Baixa Automática)
+
+Para que o Controle de Créditos funcione automaticamente, uma configuração é essencial:
+1. Acesse o menu Utilitários ➩ Opções ➩ Opções Financeiras.
+2. Na aba "Processamento Automático", marque a opção "Baixar créditos na data de repasse".
+
+Com esta opção marcada, o sistema lançará automaticamente o valor no Caixa quando a data de repasse chegar (ex: 1 dia para débito, 30 dias para crédito). Se desmarcada, você terá que fazer o repasse manualmente.
+
+🛠 2. Fluxo de Quitação (Exemplo)
+
+Quando você quita uma parcela no `Financeiro ➩ Contas a Receber` usando cartão, o sistema não a move imediatamente para o Caixa.
+
+Fluxo da Parcela:
+1. O usuário quita a parcela no `Contas a Receber`.
+2. A parcela muda para a situação "Liquidação Pendente" (bolinha azul).
+3. O lançamento "entra" no `Financeiro ➩ Controle de Créditos` com o status "Pendente".
+4. Quando a data de repasse chega (ex: 1 dia para débito, 30 para crédito), a baixa automática (se configurada) é acionada.
+5. O status no `Controle de Créditos` muda para "Creditado" (bolinha verde).
+6. O status no `Contas a Receber` muda para "Quitada" (bolinha verde).
+7. O valor entra no Caixa (e a taxa é lançada como saída).
+
+🛠 3. Recebimento Misto (Vários Recebimentos)
+
+Ao quitar uma parcela, o sistema pode usar a tela "Vários Recebimentos". Isso é usado quando o aluno paga com mais de uma forma. Ex: R$ 50 em dinheiro e o restante no débito.
+Se for apenas uma forma, você pode usar a tela de "Recebimento Simples".
+
+🛠 4. Quitando no Débito
+
+1. No `Contas a Receber`, selecione a parcela e clique em "Quitar".
+2. Na tela de Recebimento Simples, selecione a "Forma de Recebimento" como "Cartão de Crédito".
+3. Nas opções de parcelamento, selecione a opção de Débito (ex: "uma vez em um dia"). O sistema mostrará a previsão de repasse.
+4. O sistema também mostrará a taxa que será descontada.
+5. Selecione o "Caixa" (o banco) onde o valor deve cair no dia do repasse.
+6. Clique em "Quitar". A parcela ficará como "Liquidação Pendente" (bolinha azul).
+
+🛠 5. Quitando no Crédito (Múltiplas Parcelas)
+
+1. No `Contas a Receber`, selecione *todas* as parcelas que o aluno deseja pagar (ex: 5 parcelas de mensalidade).
+2. Clique em "Quitar". O sistema somará o valor total.
+3. Selecione a "Forma de Recebimento" como "Cartão de Crédito" e a operadora.
+4. Nas opções de parcelamento, selecione em quantas vezes o aluno irá pagar (ex: "em 5 vezes").
+5. O sistema exibirá a previsão de repasse para *cada uma* das 5 parcelas (ex: 30, 60, 90 dias).
+6. Selecione o "Caixa" (o banco) onde os valores devem cair.
+7. Clique em "Quitar". Todas as 5 parcelas ficarão como "Liquidação Pendente".
+
+🛠 6. Acompanhamento e Ações no Controle de Créditos
+
+Acesse `Financeiro ➩ Controle de Créditos`. Aqui ficam listadas todas as previsões de repasse (de Débito e Crédito).
+
+Ações Manuais:
+* Acreditar na Conta (Baixa Manual): Se você fez uma antecipação ou o valor caiu antes, você pode selecionar a parcela "Pendente" e clicar em "Acreditar na Conta". Isso força a entrada do valor no Caixa (e a saída da taxa) antes da data de repasse.
+* Estornar Crédito (Após Baixa): Se uma parcela já foi "Creditada" (bolinha verde), você pode selecioná-la e clicar em "Estornar Crédito". O sistema registra uma saída no Caixa (estorno) e a parcela volta a ficar "Pendente" no Contas a Receber, para ser quitada de outra forma. Fazer isso deixa um histórico de estorno.
+* Lançar Taxa de Antecipação: Se você antecipou valores e a operadora cobrou uma taxa extra, você deve lançar essa taxa manualmente em `Financeiro ➩ Caixa ➩ Incluir` como uma "Saída" (ex: R$ 12,00) na categoria "Taxa de Cartão".
+
+🛠 7. O "Caminho Reverso" (Corrigindo Lançamentos)
+
+Se você precisa corrigir um pagamento de cartão, o fluxo é:
+
+* Se já caiu no Caixa (creditado):
+    1. Vá ao `Financeiro ➩ Caixa` e **exclua** o lançamento (a Entrada e a Saída da taxa).
+    2. A parcela voltará automaticamente para o `Financeiro ➩ Controle de Créditos` como "Pendente".
+
+* Se está no Controle de Créditos (pendente):
+    1. Vá ao `Financeiro ➩ Controle de Créditos` e **exclua** o lançamento.
+    2. A parcela voltará automaticamente para o `Financeiro ➩ Contas a Receber` como "Pendente", pronta para ser quitada da forma correta.

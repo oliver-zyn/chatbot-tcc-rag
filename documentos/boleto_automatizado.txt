@@ -1,0 +1,90 @@
+Boleto Automatizado (Zoop) - Manual Completo
+
+Este documento descreve o fluxo de configuração e geração dos "Boletos Automatizados", que são processados pela Zoop.
+
+🛠 1. Liberação de Permissão de Acesso
+
+Para que a automatização funcione, a permissão de menu deve ser liberada para o usuário.
+1. Acesse o menu Utilitários ➩ Usuários.
+2. Edite o usuário desejado.
+3. Vá para a aba Permissões ➩ Menu.
+4. Dentro da opção "Financeiro", marque a permissão "Boletos Automatizados".
+5. Salve as alterações.
+
+🛠 2. Lançamento do Plano Financeiro (Pré-requisito)
+
+Para que as parcelas apareçam no módulo de Boletos Automatizados, elas devem ser lançadas com a forma de cobrança correta.
+1. Ao criar um plano financeiro (seja em `Pedagógico ➩ Contratos ➩ Financeiro` ou `Financeiro ➩ Contas a Receber`), a "Forma de Cobrança" deve ser definida como "Boletos Automatizados".
+2. Se estiver marcado como "Boleto Bancário", "Dinheiro" ou outra forma, a automatização não funcionará.
+
+🛠 3. Dados Cadastrais Obrigatórios (Resolução de Erros)
+
+Para que a geração do boleto Zoop funcione, os dados do pagador (aluno ou responsável financeiro) devem estar completos.
+Os dados obrigatórios são: Nome, Data de Nascimento, RG, CPF, Endereço Completo (sem faltar informações, exceto complemento), Telefone/Celular e E-mail.
+
+Se os dados estiverem incompletos:
+* Você pode ver um erro como: ‘Erro: O nome do comprador não pode estar vazio’.
+* Na tela de geração, aparecerá um "botãozinho vermelho" indicando quais dados estão inválidos (ex: "e-mail e o celular que estão inválidos").
+
+🛠 4. Configurações do Módulo
+
+Acesse o menu Financeiro ➣ Boletos Automatizados e clique no botão "Configurações".
+
+Aqui você pode definir:
+* Agrupamento de Parcelas:
+    * `Agrupar valor das parcelas selecionadas do mês para o mesmo sacado` (usado quando o aluno é o próprio responsável).
+    * `Agrupar valor das parcelas selecionadas do mês para o mesmo responsável (CPF/CNPJ)` (usado quando há um responsável financeiro).
+    * 💡 Se agrupadas, o sistema junta os valores e o vencimento fica sempre o da primeira parcela.
+* Lançamento de Tarifa:
+    * Marque "Lançar tarifa do Boleto liquidado automaticamente no caixa".
+    * Você deve definir um "Plano de Contas" para onde a tarifa (SAÍDA) será lançada. O valor da ENTRADA (valor total) será lançado normalmente.
+* Configurações do Boleto:
+    * `Imprimir no campo 'Observações' as parcelas que foram cobradas`: Se marcado, o boleto exibe Nome do Aluno, Matrícula, Turma, Parcela, Categoria e Valor.
+    * `Instruções e observações de impressão`.
+    * `Multa por atraso` e `Mora diária dos juros`.
+    * `Mensagem complementar`.
+* Conta:
+    * `Conta a acreditar`: Define qual caixa/banco do Sponte receberá o valor após a quitação.
+
+🛠 5. Geração e Acompanhamento dos Boletos
+
+1. Acesse o menu “Financeiro ➣ Boletos Automatizados”. As parcelas com a forma de cobrança correta aparecerão no filtro (que por padrão é o mês atual).
+2. Selecione as parcelas que deseja emitir. Você pode gerar individualmente (ícone de avião) ou em massa (botão "Gerar Boleto" na parte inferior da tela).
+3. O sistema exibirá a mensagem "Boletos enviados para processamento".
+4. A situação mudará para "Boleto Gerado" e o boleto será enviado ao e-mail do sacado.
+5. ⚠️ Restrição: Boletos não podem ser gerados com datas retroativas (em atraso), sempre com data futura.
+6. Ações Pós-Geração: Após gerar, você pode "Visualizar o PDF", "Reenviar o boleto por e-mail", "Atualizar" e "Cancelar".
+7. Histórico: Há um botão "Histórico" que resume o total de boletos gerados, cancelados e liquidados.
+
+🛠 6. Perguntas Frequentes (FAQ)
+
+P: Cancelei um boleto, mas o responsável pagou o boleto cancelado. O que faço?
+R: 1. Verifique na Zoop se o boleto está "Pago" (ou tenha o comprovante).
+2. No Sponte, acesse `Financeiro ➣ Boletos Automatizados`.
+3. Clique no botão "Boletos Cancelados" e quite o boleto que foi pago.
+4. Cancele o *novo* boleto que você havia gerado para substituí-lo.
+5. Exclua a parcela do boleto cancelado (que foi pago) para que ela não fique "Pendente" no Contas a Receber.
+
+P: Quanto tempo leva para um cancelamento manual de boleto ser concluído?
+R: O processo (Zoop ➣ Banco ➣ Retorno) pode levar até dois dias úteis.
+
+P: Os boletos saem com layout do Bradesco, mas meu banco é Itaú.
+R: O layout padrão da Zoop é Bradesco, independentemente do seu banco. Os valores serão transferidos corretamente para sua conta (Itaú) informada na homologação.
+
+P: Existe um limite de valor para os boletos da Zoop?
+R: O limite padrão é de até 10 mil. Para limites maiores (ex: R$20 mil, R$100 mil), você deve solicitar o aumento à Zoop, enviando o ID/CNPJ, o novo limite e três notas fiscais recentes compatíveis com o valor.
+
+P: Como altero a conta bancária onde recebo os valores da Zoop?
+R: Você deve acessar o Portal Zoop (não o Sponte). Vá em "Meu Cadastro" ➩ "Meio de Recebimento" e cadastre a nova conta.
+
+P: Preciso editar uma parcela que já está "Quitada". Como faço?
+R: O sistema não permite editar parcelas "Quitadas". Para corrigir, você deve:
+1. Acessar `Financeiro ➣ Caixa` e excluir o lançamento (ENTRADA) referente à parcela.
+2. A parcela voltará a ser "Pendente".
+3. (Se foi Cartão ou Cheque) Você deve ir também ao `Controle de créditos` ou `Controle de cheques` e excluir a parcela de lá.
+4. Agora a parcela está "Pendente" no `Contas a receber` e pode ser corrigida.
+
+P: O sistema não deu baixa automática no boleto Zoop. Por quê?
+R: Provavelmente houve alteração no valor ou na data de vencimento da parcela *depois* que o boleto original foi gerado. Se o responsável pagou o boleto antigo (com dados antigos), a baixa automática falha.
+* O correto é: 1. Avisar o responsável para excluir o e-mail antigo; 2. Gerar novamente o boleto com os dados corretos.
+* Para corrigir: Quite manualmente a parcela no sistema.

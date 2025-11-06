@@ -1,0 +1,72 @@
+Recorrência Sponte Pay
+
+1. Status como paga, mas no Contas a Receber como liquidação pendente:
+
+Liquidação Pendente: significa que cobrou do seu aluno, mas está aguardando a baixa no Sponte, a qual ocorre de forma automática em 30 dias. Por isso na tela de Log de Recorrência ficará como paga, pois efetuou a cobrança com sucesso, mas esse valor ainda não foi repassado em conta e também não foi baixado em seu Sponte.
+
+2. O que significa parcela no Contas a Receber em processamento?
+
+É preciso validar o Status na tela de Log de Recorrência, mas significa que não deu certo a cobrança, ou não esteja com o status atualizado. Para isso pode ser consultado o status na tela de log de recorrência e verificar se houve mudança.
+
+3. Como enviar o link para cadastrar novo cartão?
+
+Acessando o plano financeiro do aluno na aba Financeiro ➩ Integração Sponte Pay ➩ Recorrência Sponte Pay *Dados da Recorrência*, nesta aba terá as opções do "Solicitar por" para realizar o envio de link.
+
+4. Como estornar, o que fazer com a parcela?
+
+Para realizar o estorno basta acessar a tela de Log de recorrência, caminho: Financeiro ➩ Integração Sponte Pay ➩ Recorrência Sponte Pay, selecionar a parcela e clicar em *cancelar/estornar*.
+
+Após é muito importante acessar o plano do aluno e realizar o cancelamento da mesma, para que não seja reenviado para cobrança em outro momento, de forma indevida.
+
+5. Como proceder no caso do aluno já possuir plano financeiro com parcelas quitadas e precisar alterar as próximas para pagamento com recorrência?
+
+Nesse caso, você pode editar o campo Forma de cobrança e alterá-lo para recorrência. Essa mudança pode ser feita pelo menu Financeiro ➩ Contas a Receber ou diretamente no contrato do aluno.
+
+Basta editar o plano e selecionar a forma de cobrança como Recorrência Sponte Pay. Se precisar alterar apenas algumas parcelas, acesse a aba "Parcelas" e faça os ajustes necessários.
+
+6. Dúvidas sobre o repasse, tempo de recebimento do repasse?
+
+O repasse ocorre em 29 dias, + 2 dias úteis + a configuração de transferência definida, podendo ser diária, semanal ou mensal.
+
+7. Para onde vai meu dinheiro?
+
+Quando realizamos o seu credenciamento no Sponte Pay, criamos uma conta digital da Pagar.me(Stone), conta de recebimento simples, a qual os valores ficaram até finalizar repasse, e após ter comando da configuração de transferência automática, ou até uma solicitação de saque (transferência manual).
+
+8. Dúvida sobre taxas acordadas?
+
+É possível validar as taxas acordadas dentro de seu Sponte, caminho: Financeiro ➩ Integração Sponte Pay ➩ Recorrência Sponte Pay ➩ Dados da Integração, listará as taxas de recorrência e crédito parcelado pelo Sponte Pay.
+
+9. Parcelas que baixaram no Controle de crédito, como estornar?
+
+Essa parcela já foi baixada no Sponte, entrou no caixa e para poder voltar a ficar pendente é necessário excluir a parcela do caixa e após ela ficará disponível para um estorno na tela de Log de Recorrência.
+
+10. Como deixar a baixa manual? Qual tela uso para fazer essa baixa?
+
+É possível realizar a baixa manual direto no Controle de Créditos.
+
+Para desmarcar a baixa automática é preciso acessar: Utilitários ➩ Opções ➩ Opções financeiras ➩ Processamento Automático, e desmarcar a opção de "Baixar crédito na data de repasse".
+
+11. Tenho pais separados, e cada uma paga uma parte, pode ser feita a divisão da mesma parcela em cartões diferentes?
+
+Hoje não é possível. A sugestão é gerar 2 planos independentes, por exemplo, mensalidade e material, e para cada plano 1 responsável diferente (um ficaria a mãe e outro o pai).
+
+12. Como gerar um relatório de alunos que realizaram o pagamento?
+
+Existem duas formas principais para relatórios de recorrência:
+
+Método 1: Controle de Créditos
+Você pode gerar um relatório financeiro do Controle de Créditos, marcar *Apenas cartões com transações via Sponte Pay* e buscar pela data de pagamento.
+
+Método 2: Contas a Receber
+É possível gerar um relatório buscando pelo Contas a Receber, filtrando por situação "quitada" e selecionando a forma de cobrança desejada (como Recorrência).
+
+13. Dúvidas sobre estar baixado no Sponte mas não ter recebido em conta?
+
+As parcelas têm baixa automática no Sponte.
+* Pix é instantâneo.
+* Boleto tem 2 dias úteis após liquidação.
+* Recorrência é baixa em 30 dias.
+
+Porém, esses valores serão transferidos em conta de forma automática de acordo com a configuração de transferência (semanal ou mensal). Se for recorrência, o repasse pode ter uma delonga maior, por ser em 29 dias corridos + 2 dias úteis.
+
+Por isso é possível que a parcela esteja baixada em seu Sponte, mas esteja aguardando a configuração para transferência automática, para ser transferida em conta.

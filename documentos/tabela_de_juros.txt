@@ -1,0 +1,33 @@
+Tabela de Juros
+
+Este manual explica como configurar a Tabela de Juros, que calcula automaticamente juros e multas em parcelas atrasadas (ex: boletos, carnês).
+
+Localização: Menu Utilitários ➩ Tabela de Juros.
+
+🛠 1. Configuração de Juros e Multas
+
+Nesta tela, definimos a partir de quantos dias o sistema começa a cobrar juros e multas. A configuração pode ser em Percentual (%) ou Valor (R$).
+
+O mais utilizado é Percentual:
+* Juros (Mora): A partir de 1 dia, 1% ao mês (0,033% ao dia). O sistema soma essa porcentagem diária sobre o valor original da parcela.
+* Multa por Atraso: A partir de 1 dia, multa de 2%.
+
+⚠️ Importância da Conciliação Bancária:
+Se você gera boletos, o ideal é que o juro e a multa configurados no Sponte sejam **iguais** aos que o seu banco cobra.
+Se os valores forem diferentes, o arquivo de retorno do banco falhará. Por exemplo, se o aluno pagou R$ 110 (com juros do banco), mas o Sponte esperava R$ 105 (com juros do sistema), o sistema encontrará uma diferença e a baixa automática não funcionará.
+
+Juros Simples vs. Juros Compostos:
+* Juros Simples (Padrão): Calcula a porcentagem sempre sobre o valor original (R$ 100).
+* Juros Compostos: Calcula juros sobre juros (ex: calcula a porcentagem sobre os R$ 102).
+
+🛠 2. Antecipação (Desconto Global)
+
+Esta seção permite configurar um desconto *global* para *todos* os alunos.
+* Exemplo 1: Quem pagar "até o dia do vencimento" (0 dias antes) ganha 10% de desconto.
+* Exemplo 2: Quem pagar 10 dias antes do vencimento ganha 15%.
+
+Se o desconto não for global (ou seja, for específico para um aluno ou convênio), você deve usar as "Bolsas de Desconto" (em Cadastros Gerais) e vinculá-las ao contrato do aluno.
+
+⚠️Obs: Se você utiliza a configuração por "Valor" (R$) em vez de Percentual (%), a opção de "Antecipação" (desconto) não estará disponível.
+
+Após definir as configurações, clique em "Salvar". É importante manter essas informações sempre atualizadas para garantir a precisão dos relatórios financeiros e da conciliação bancária.

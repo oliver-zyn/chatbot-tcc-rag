@@ -1,0 +1,65 @@
+Como realizar o pagamento - Crédito Sponte Pay
+
+Este manual descreve o pagamento de cobranças lançadas diretamente como "Crédito Sponte Pay".
+
+🛠 Fluxo 1: Pagamento pelo Cliente (Checkout)
+
+Assim que realizarmos a geração da cobrança, o aluno ou responsável irá receber um E-mail com as informações da cobrança e o link do pagamento.
+
+1- Assim que ele receber, será necessário clicar em "Seguir para o pagamento", para ir até o checkout.
+
+A cobrança será exibida com as informações da escola/unidade, sacado, valores, vencimentos e categorias.
+
+⚠️Obs: Caso os dados da escola estejam incorretos, vá no Sponte até o menu, Cadastros -> Dados da Empresa, e realize as atualizações necessárias.
+
+Também será exibida nessa tela, a opção do cadastramento do cartão, caso o aluno ou responsável ainda não tenha nenhum cadastrado. Para cadastrar, vamos então utilizar o botão "Cadastrar Cartão". Será exibida então a tela de configuração de dados do cartão (Número, Nome, Validade, CVV).
+
+2 - Após o preenchimento dos dados, teremos duas possibilidades:
+1ª - Alterar o cartão: Clicando em "Trocar Cartão", o sistema nos permite realizar a alteração do cartão.
+2ª - Realizar o pagamento:
+
+Antes de finalizar, confira se todas as informações da cobrança estão corretas.
+
+Escolha o parcelamento. O número de parcelas será baseado no valor da cobrança (onde o valor mínimo de cada parcela deve ser de 10 Reais) e na configuração de Utilitários -> Opções -> Opções Financeiras (Sponte Pay).
+
+⚠️Obs: Lembre-se que o valor mínimo para gerar uma cobrança em cartão de crédito, é 10 reais!
+
+✅Vamos selecionar então o número de parcelas desejadas, e posteriormente clicar em "Efetuar Pagamento".
+
+✅Serão exibidas então as mensagens de confirmação de pagamento.
+⚠️Obs: Caso ocorra algum erro, é necessário verificar os dados do cartão, limite ou possíveis bloqueios.
+
+🛠 Fluxo 2: Pagamento Manual pelo Admin (Quitação no Sponte)
+
+Também será possível realizar a quitação de parcelas de forma manual através do Sponte.
+
+1 - Vamos até o menu, Financeiro -> Contas a Receber, e buscar pela parcelas que desejamos quitar.
+
+2 - Selecione então a parcela, e clique em "Quitar"!
+
+3 - Verifique os valores da cobranças, e se ela está com o tipo de recebimento "Crédito Sponte Pay".
+
+4 - Aqui caso o sacado ainda não tenha um cartão, será possível cadastrá-lo de forma manual, caso ele já tenha, será exibido para seleção.
+
+5 - Para finalizar, selecione o parcelamento (de acordo com o preço e configuração).
+
+✅Para finalizar a quitação, clique no botão "Quitar", então será feita a baixa do pagamento!
+
+🛠 Fluxo 3: Reenvio da Cobrança pelo Admin
+
+Caso o responsável pelo pagamento não tenha recebido o e-mail (verifique primeiro se o e-mail cadastrado está correto), você poderá reenviar esta cobrança:
+
+1 - No Sponte, vá até o menu, Financeiro -> Integração Sponte Pay -> Crédito Sponte Pay.
+2 - Busque pela parcela/cobrança que deseja reenviar.
+3 - As seguintes opções estarão disponíveis para reenvio:
+* Copiar link da cobrança, e enviar novamente ao sacado.
+* Permite o envio da cobrança via WhatsApp (verifique se o número para envio está correto).
+* Reenviar o link da cobrança via E-mail (verifique se o e-mail para envio está correto).
+
+🛠 Fluxo 4: Acompanhamento da Cobrança pelo Admin
+
+Ainda no Sponte (Financeiro -> Integração Sponte Pay -> Crédito Sponte Pay), vá até a aba "Liquidações" para conferir as informações do pagamento da cobrança.
+
+Nesta tela ainda, será possível visualizar os detalhes da cobrança, e realizar o Estorno caso necessário (ambas estão disponíveis na coluna de ação).
+
+✅Após realizar todo o processo de pagamento, a cobrança será concluída, e a parcela será quitada no Sponte.

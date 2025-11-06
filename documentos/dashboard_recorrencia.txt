@@ -1,0 +1,16 @@
+Dados da Integração/Resumo de Cobranças - Recorrência Sponte Pay
+
+🛠 Acompanhamento de valores cobrados e recebidos - Recorrência
+
+Para complementar o acompanhamento dos valores cobrados e recebidos, acesse o menu Financeiro ➣ Integração Sponte Pay ➣ Dados da integração.
+
+Nesta aba, há um dashboard com alguns números relevantes. Realize os filtros necessários para acompanhar o andamento dos valores através das colunas[cite: 4, 12].
+
+Indicadores do Dashboard:
+* ⇨ Total de Cobranças: número de cobranças transacionadas no período aplicado no filtro[cite: 5].
+* ⇨ Valor a Receber: Soma de valores de contas a receber com o tipo de recebimento Recorrência que ainda não foram geradas com vencimento no período filtrado[cite: 6].
+* ⇨ Canceladas: Soma do valor das parcelas canceladas no período aplicado no filtro[cite: 7].
+* ⇨ Estornadas: Soma do valor das parcelas estornadas no período aplicado no filtro[cite: 8].
+* ⇨ Chargebacks: Soma do valor de chargebacks recebidos no período aplicado no filtro[cite: 9].
+
+💡Também será possível visualizar as tarifas que foram acordas, para cada bandeira! [cite: 11]

@@ -1,0 +1,49 @@
+Cadastros Gerais - Financeiro
+Localização: Menu Cadastros ➩ Cadastros Gerais ➩ Financeiro [cite: 1, 3]
+
+5.1. Bancos
+Localização: Menu Cadastros ➩ Cadastros Gerais ➩ Financeiro ➩ Bancos [cite: 3]
+
+Nesta opção é possível incluir os bancos com que a escola trabalha, para que assim seja possível obter um controle real da sua movimentação bancária[cite: 5]. Para cadastrar clique na ação Incluir, preencha as informações e clique em Salvar [cite: 5-6].
+
+5.2. Bolsas
+Localização: Menu Cadastros ➩ Cadastros Gerais ➩ Financeiro ➩ Bolsas [cite: 8]
+
+Este controle armazena todos os descontos concedidos aos alunos através de bolsas ou convênios com empresas[cite: 10].
+
+É possível também cadastrar bolsas de dois tipos [cite: 10-11]:
+* Percentual: Neste tipo de bolsa há possibilidade de informar quantos descontos em percentuais desejar, e até quantos dias antes da data de vencimento o aluno terá este desconto [cite: 11-13]. Ao quitar a parcela o sistema irá comparar a data de pagamento com a de vencimento e informará automaticamente o desconto [cite: 13-14].
+* Valor Em R$: Neste tipo de bolsa há possibilidade de informar quantos descontos em reais desejar, e até quantos dias antes da data de vencimento o aluno terá este desconto [cite: 14-16]. Ao quitar a parcela o sistema irá comparar a data de pagamento com a de vencimento e informará automaticamente o desconto [cite: 16-17].
+
+Para cadastrar clique na ação Incluir, preencha as informações e clique em Salvar [cite: 17-18].
+
+Na aba Descontos, é necessário Clicar no botão Incluir, e adicionar o desconto. Caso seja mais de uma data e percentual, é necessário clicar no botão Incluir novamente, e ir cadastrando as demais [cite: 19-21].
+
+5.3. Contas
+Localização: Menu Cadastros ➩ Cadastros Gerais ➩ Financeiro ➩ Contas [cite: 24]
+
+Este controle permite cadastrar todas as contas bancárias que a escola trabalha, para que assim, seja possível obter um controle real da sua movimentação bancária [cite: 26-27].
+
+As contas são utilizadas para fazer o controle do caixa da escola, não necessariamente tendo vínculo com o banco, podendo ser utilizadas apenas para controle interno [cite: 27-28]. Para incluir uma nova conta é necessário informar o titular, e se desejar pode informar o número da conta e o banco a qual pertence [cite: 28-29].
+
+O sistema possui uma conta caixa padrão cadastrada, caso a escola utilize mais que uma conta para operações, poderão ser criadas outras contas [cite: 30-31].
+
+5.4. Motivos de Renegociação de Parcelas
+Localização: Menu Cadastros ➩ Cadastros Gerais ➩ Financeiro ➩ Motivos de Renegociação de Parcelas [cite: 33]
+
+Neste controle devem ser informados os motivos de renegociação de parcelas, como por exemplo "acordo financeiro" . Estes motivos serão utilizados ao realizar uma renegociação de parcelas[cite: 35]. Para cadastrar clique em Incluir, preencha as informações e clique em Salvar [cite: 35-36].
+
+5.5. Operadoras de Cartão de Crédito / Débito
+Localização: Menu Cadastros ➩ Cadastros Gerais ➩ Financeiro ➩ Operadoras de Cartão de Crédito / Débito [cite: 39]
+
+Este módulo permite controlar informações das operadoras de cartões de Crédito individualizados por diferentes Operadoras de Cartões, o que permite controle e detalhamento destas operações financeiras [cite: 40-41]. Para cadastrar clique na ação Incluir, preencha as informações e clique em Salvar, após isso realize a inclusão dos parcelamentos clicando em Incluir parcelamento [cite: 41-43].
+
+5.6. Tipos de Cobrança / Recebimento
+Localização: Menu Cadastros ➩ Cadastros Gerais ➩ Financeiro ➩ Tipos de Cobrança / Recebimento [cite: 45]
+
+Neste cadastro são configuradas as formas de recebimento e cobranças que a escola oferece[cite: 47]. Para cadastrar clique em Incluir, preencha as informações e clique em Salvar [cite: 47-48].
+
+5.7. Tipos de Pgto. de Prof. Horistas
+Localização: Menu Cadastros ➩ Cadastros Gerais ➩ Financeiro ➩ Tipos de Pgto. de Prof. Horistas [cite: 50]
+
+Neste cadastro são configuradas as formas de pagamento de professores horistas, informando o valor padrão pago para cada tipo de aula[cite: 52]. Para cadastrar clique em Incluir, preencha as informações e clique em Salvar [cite: 52-53].

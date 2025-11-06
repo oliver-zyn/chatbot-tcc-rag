@@ -1,0 +1,132 @@
+Link de Pagamento Sponte Pay
+
+1. O que é o Link de Pagamento Sponte Pay?
+
+O link de pagamento é um recurso que permite gerar cobranças de parcelas, com opções de pagamento via Pix, Boleto, Crédito Parcelado e Recorrência. Ela facilita o gerenciamento financeiro, enviando as cobranças automaticamente (mediante configuração) para os responsáveis financeiros.
+
+2. Quais são os dados obrigatórios para gerar uma cobrança em Link de pagamento?
+
+Antes de gerarmos uma cobrança, os dados de CPF, E-mail e Número de Celular, precisam estar cadastrados nos dados do responsável pelo pagamento, seja aluno ou responsável financeiro.
+
+⚠️Obs Importante: Para cobranças em Link de Pagamento, Boleto Sponte Pay ou Pix, a data de nascimento deixa de ser obrigatória. O campo permanece disponível para preenchimento, porém, não será mais um campo obrigatório para emissão de cobranças dos tipos citados acima.
+
+3. Como posso gerar um Link de Pagamento Sponte Pay manualmente?
+
+Para gerar manualmente, siga os passos abaixo:
+1 - Acesse o menu "Financeiro".
+2 - Clique em "Integração Sponte Pay".
+3 - Selecione "Link de Pagamento Sponte Pay".
+4 - Realize o filtro pelo aluno ou responsável e defina a data das parcelas.
+5 - Selecione as parcelas desejadas e clique em "Gerar/Enviar Link de Pagamento".
+
+💡Esse processo pode ser feito parcela por parcela, ou então uma geração em massa. Utilize o botão na coluna "Ações", para gerar individualmente.
+
+4. Como gerar e enviar automaticamente os Links de Pagamento Sponte Pay?
+
+Na tela de geração de links, vá até o botão "Configurações":
+
+Nas configurações, você pode definir com quantos dias de antecedência deseja que o sistema gere a cobrança automaticamente. Por exemplo, se você configurou para gerar o link com 10 dias de antecedência e a parcela vence em 9 dias ou menos, a geração dessa primeira cobrança precisará ser feita manualmente.
+
+O envio automático é configurado para ocorrer X dias antes do vencimento. A rotina executa diariamente, filtrando as parcelas para envio com base nas configurações definidas.
+
+⚠️OBS Importante: Se a primeira parcela vencer com menos dias do que você configurou para a geração automática da cobrança, será necessário realizar o processo de geração manualmente para essa primeira parcela. As próximas serão enviadas automaticamente respeitando os dias antes do vencimento.
+
+5. Como agrupar parcelas do mesmo aluno ou responsável, que tenham o mesmo mês de vencimento?
+
+Na tela de geração de links, vá até o botão "Configurações":
+
+Marque as opções de agrupamento disponíveis e necessárias, seja por sacado ou por responsável financeiro.
+
+As duas opções irão possibilitar que na geração manual de parcelas, possamos agrupar parcelas (do mesmo mês) do mesmo aluno, ou de alunos diferentes que tenham o mesmo responsável financeiro, possibilitando então o pagamento de apenas uma cobrança.
+
+⚠️Obs Importante: Essa configuração de geração de parcelas do mesmo mês, só será válida para gerações manuais! Para gerações e envios automáticos, o sistema só irá considerar para o agrupamento, apenas parcelas que tenham o mesmo dia de vencimento!
+
+⚠️Parcelas com grupos de split diferentes não serão agrupadas.
+
+6. Quais opções de envio estão disponíveis para as cobranças no Link de Pagamento?
+
+As cobranças podem ser enviadas por e-mail ou WhatsApp. Após a geração, você pode escolher reenviar o link de pagamento pelo e-mail do responsável financeiro ou enviá-la via WhatsApp.
+
+7. O que acontece se o e-mail do sacado estiver incorreto?
+
+Caso ocorra um erro no envio da cobrança, como um e-mail inválido, você poderá atualizar as informações do sacado e reenviar o link.
+
+Se ocorrer um erro no envio, você verá um ponto de exclamação ao lado do nome do sacado, indicando que o e-mail está incorreto. Neste caso, a opção de gerar o link de pagamento não ficará habilitada até que todas as informações obrigatórias sejam preenchidas corretamente.
+
+Para evitar esse problema, recomendamos que você acesse o menu "Utilitários" > "Opções Gerais" e defina como obrigatórios os campos de CPF, número de celular e e-mail, além dos dados de endereço.
+
+8. O que é a aba "Links Processados"?
+
+A aba "Links Processados" lista todas as cobranças que já foram enviadas e processadas, mostrando informações sobre o meio de pagamento escolhido e permitindo fácil acesso ao histórico de cada cobrança.
+
+9. Posso cancelar uma cobrança em Link de Pagamento?
+
+Sim, é possível cancelar uma cobrança. Após o cancelamento, o cliente receberá um alerta informando que ela não está mais disponível.
+
+Após cancelar um link, você pode acessar a parcela correspondente e realizar edições, como alterar valores, data de vencimento e descontos. Depois de fazer as alterações necessárias, é possível gerar a cobrança novamente.
+
+10. Como posso visualizar uma cobrança gerada?
+
+Você pode visualizar uma cobrança clicando na ação "Visualizar Pagamento", que abrirá os detalhes em uma nova aba.
+
+11. Quais são os meios de pagamento disponíveis para o Link de Pagamento?
+
+As cobranças podem ser pagas via Pix, Boleto, Recorrência e Crédito Parcelado. Cada meio de pagamento oferece opções específicas para geração e envio.
+
+⚠️Obs: Só estarão disponíveis as opções que sua unidade contratou junto a Sponte.
+
+12. O que fazer após a cobrança já ter sido gerada?
+
+Após gerarmos a cobrança e enviarmos ao sacado, basta aguardar a seleção da forma de pagamento e, posteriormente, a quitação da parcela.
+
+Você poderá acompanhar o andamento e seleção da forma de pagamento através da aba "Links Processados". Após visualizar a forma de pagamento escolhida, vá até o menu da forma específica para acompanhar o pagamento.
+
+💡Exemplo: Gerei o link e enviei ao sacado, ele escolheu o Pix. Então vou precisar ir até o menu, Financeiro -> Integração Sponte Pay -> Pix Sponte Pay, para acompanhar o andamento.
+
+13. Como posso acessar o histórico de eventos relacionados às cobranças no link de pagamento?
+
+Você pode acessar o histórico de eventos na opção "Histórico", que permite filtrar por período, número da cobrança, ID Sponte Pay, entre outros.
+
+É importante notar que você deve entrar nas telas de cada tipo de pagamento escolhido pelos responsáveis (Pix, Boleto, Recorrência, etc.). Cada uma dessas telas possui um botão específico de histórico.
+
+14. Como cancelar as parcelas?
+
+Para parcelas que ainda NÃO foram geradas (links não criados):
+1. Acesse o "Contas a Receber".
+2. Selecione as parcelas desejadas e clique em "Cancelar".
+
+Para parcelas que JÁ FORAM GERADAS (links ativos):
+1. Acesse Financeiro ➩ Integração Sponte Pay ➩ Link de Pagamento Sponte Pay.
+2. Localize a parcela e clique em "Cancelar Link de Pagamento".
+3. Após cancelada, ela voltará a ficar pendente no "Contas a Recesem ber". Se desejar cancelar a parcela em si, siga o primeiro passo.
+
+15. Após gerada a cobrança, como voltar e alterar a forma de cobrança?
+
+Para parcelas já geradas voltarem a ficar pendentes e com possibilidade de alteração, é necessário cancelá-las:
+1. Acesse Financeiro ➩ Integração Sponte Pay ➩ Link de Pagamento Sponte Pay.
+2. Localize a parcela e clique em "Cancelar Link de Pagamento".
+3. A parcela voltará a ficar "Pendente" no Contas a Receber.
+4. Utilize o atalho de acesso ao plano financeiro para buscar a parcela e alterar a sua forma de cobrança (só é possível alterar parcelas "Pendentes").
+5. Após a alteração, realize a geração e envio da cobrança novamente.
+
+16. Como será considerado os juros na cobrança?
+
+Quando utilizamos o link de pagamento e as parcelas vencem, enquanto a cobrança não for paga, o sistema realizará o cálculo de juros de acordo com a Tabela de Juros do Sponte (acessível em Utilitários -> Tabela de Juros).
+
+Se o aluno recebeu a cobrança, selecionou a forma de cobrança (Apenas Boleto Sponte Pay) antes do vencimento, mas não realizou o pagamento, os juros serão calculados de acordo com a configuração de Multa e Mora diária da forma de cobrança. (Acessível em Financeiro ➩ Integração Sponte Pay ➩ Boleto Sponte Pay).
+
+17. Como incluir desconto no Link de Pagamento?
+
+Ao gerar cobranças por meio de "Link de Pagamento Sponte Pay", "Boleto Sponte Pay" ou "Pix Sponte Pay", você pode cadastrar e aplicar descontos de pontualidade no plano financeiro lançado no contrato ou diretamente pelo contas a receber.
+
+⚠️Obs Importante: Só serão suportados descontos de no máximo 90%, validos exclusivamente para pagamentos por Boleto e Pix!
+
+18. Dúvidas de como gerar um relatório de alunos que realizaram o pagamento?
+
+É possível gerar um relatório buscando pelo Contas a Receber, filtrando pela situação "Quitada" e selecionando a forma de cobrança desejada, como Boleto Sponte Pay, Pix Sponte Pay, Recorrência Sponte Pay, Crédito Sponte Pay e Link de Pagamento Sponte Pay, após definir os filtros basta clicar em "Relatório".
+
+19. Cobrança foi baixada no Sponte mas não recebi na conta?
+
+As parcelas têm baixa automática no Sponte, se Pix é instantâneo, se boleto tem 2 dias após liquidação. Porém esses valores serão transferidos em conta de forma automática de acordo com a configuração de transferência, podendo ser diária, semanal ou mensal. Por isso é possível que a parcela esteja baixada em seu Sponte, mas esteja aguardando a configuração para transferência automática, para ser transferida em conta.
+
+⚠️Importante: Para cobranças no Pix, por exemplo, a baixa será automática no Sponte, porém, para que o dinheiro vá direto para sua conta, é necessário solicitar o Saque através do menu de Operações por Recebedor. (Financeiro -> Integração Sponte Pay -> Operações por Recebedor)

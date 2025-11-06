@@ -1,0 +1,159 @@
+Pix e Boletos Sponte Pay
+
+O Boleto é a nova forma de emissão pelo sistema Sponte Pay, substituindo os boletos anteriormente emitidos pelo Bradesco. Esta atualização traz melhorias, incluindo a possibilidade de aplicar descontos pontualidade.
+
+1. Como definir a conta padrão para o recebimento de pagamentos no sistema?
+
+Para definir a conta padrão para o recebimento de pagamentos, siga estas etapas:
+Acesse Utilitários ➩ Opções ➩ Opções Financeiras.
+Nessa seção, você poderá escolher a conta padrão para os recebimentos no sistema.
+
+Além disso, dentro de cada método de cobrança (Pix, boleto, ou recorrência), também é possível configurar uma conta padrão específica para cada tipo de pagamento. Para isso, vá nas configurações de cada recurso e defina a conta correspondente.
+
+É muito importante garantir que a conta padrão esteja configurada corretamente. Caso essa configuração não seja feita, pode ocorrer o erro de não baixa da parcela no sistema, prejudicando o controle financeiro. Portanto, certifique-se de marcar a conta padrão para evitar problemas de processamento.
+
+2. Qual é o valor mínimo para a emissão de um boleto no Sponte Pay?
+
+O valor mínimo para a emissão de um boleto no Sponte Pay é R$ 20,00. Essa regra foi estabelecida após alterações realizadas pela plataforma Pagar.me, e agora todos os boletos gerados devem ter um valor mínimo de R$ 20,00 para que possam ser emitidos.
+
+3. Como funciona a geração automática de cobrança?
+
+A geração automática de boletos no Sponte permite que você defina nas configurações, com quantos dias de antecedência as parcelas devem ser geradas e enviadas por e-mail.
+
+Por exemplo, se você configurar para 10 dias antes, a primeira parcela que vencer em menos de 10 dias precisará ser enviada manualmente. As parcelas subsequentes, no entanto, serão enviadas automaticamente para o e-mail do responsável financeiro.
+
+4. Como gerar boleto/pix ou link de pagamento de forma manual?
+
+Para gerar manualmente um boleto, Pix ou link de pagamento, siga estas etapas:
+1. Acesse Financeiro ➩ Integração Sponte Pay ➩ Boletos Sponte Pay (ou Link de pagamento ou Pix, conforme necessário).
+2. Realize o filtro e selecione a parcela que deseja gerar.
+3. Clique na ação "Gerar".
+
+Para envio em massa, se você selecionar várias parcelas usando a checkbox, poderá optar por "Gerar/Enviar" na parte inferior.
+
+Para geração individual, cada parcela possui a ação de gerar separadamente.
+
+5. Como funciona a aplicação de descontos no Sponte Pay?
+
+Ao gerar cobranças por meio de "Link de Pagamento Sponte Pay", "Boleto Sponte Pay" ou "Pix Sponte Pay", você pode cadastrar e aplicar descontos de pontualidade no plano financeiro lançado no contrato ou diretamente pelo contas a receber.
+
+6. Como posso cancelar um boleto?
+
+Para cancelar um boleto, siga os passos abaixo:
+1. Acesse o menu Financeiro ➩ Integração Sponte Pay ➩ boletos Sponte Pay.
+2. Selecione o(s) boletos que deseja cancelar.
+3. Clique na opção "Cancelar".
+
+O status do boleto mudará para "Boleto Cancelado", e você poderá gerar um novo boleto a partir deste registro.
+
+7. Os sacados podem pagar boletos com valor menor?
+
+Não, com a mudança para a Stone, os sacados não poderão mais pagar boletos com valores menores do que o valor original emitido.
+
+No entanto, boletos gerados anteriormente pelo Bradesco ainda podem ser pagos com valores reduzidos até que sejam todos substituídos.
+
+8. O que acontece após gerar um boleto?
+
+Após a geração do boleto, pode levar até 10 minutos para que ele seja registrado e esteja disponível para pagamento. Uma mensagem será exibida após a geração, informando sobre esse processo.
+
+9. Quais são os limites para a aplicação de descontos?
+
+Atualmente, existe um limite de até 90% para a aplicação de bolsas e descontos em boletos emitidos pela Stone. Mensagens de atenção serão exibidas no sistema informando sobre essa limitação.
+
+10. O boleto pode ser pago após o vencimento? Aceita em qualquer banco?
+
+Sim, é possível realizar o pagamento após o vencimento, e será considerada multa e juros de acordo com a configuração. Não temos limitações de instituições bancárias para realizar o pagamento.
+
+11. O boleto pode ser protestado?
+
+É possível realizar o protesto em cartório. Não realizamos protesto automático.
+
+12. Boletos cancelados mas que foram liquidados, onde localizar?
+
+É possível acompanhar boletos cancelados que foram liquidados através do caminho:
+Financeiro ➩ Integração Sponte Pay ➩ Boletos Sponte Pay ➩ "Boletos Cancelados".
+
+OBS: Você pode escolher quitar outras parcelas com o valor ou estornar o valor no caixa e realizar a devolução do valor para o responsável financeiro.
+
+13. Como gerar um relatório de alunos que realizaram o pagamento?
+
+Existem duas abordagens para gerar este relatório:
+
+Abordagem Simples (Filtro Rápido):
+1. Acesse a seção "Contas a Receber".
+2. Filtre as informações pela situação "Quitada".
+3. Selecione a forma de cobrança desejada, como "Boleto" ou "PIX".
+4. Clique na opção "Relatório".
+Os filtros que você selecionou serão exibidos no relatório gerado.
+
+Abordagem Avançada (Layout Personalizado):
+Para gerar um relatório com informações personalizadas das parcelas dos alunos, utilize o relatório de Contas a Receber.
+
+1. Acesse o menu Relatórios ➩ Relatórios Financeiros ➩ Contas a Receber.
+2. Na aba "Layout", você pode escolher um layout existente ou incluir um novo.
+
+Para cadastrar um novo layout:
+1. Clique em "Incluir" e dê um nome ao Layout.
+2. Busque pelos campos desejados (ex: nome, valor, data).
+3. Preencha a coluna "Largura" (em mm, ex: 30-45).
+4. Marque "Imprimir" para o campo ser adicionado.
+5. Na coluna "Ordem", informe a ordem de impressão (1, 2, 3, ...).
+6. Clique em "Salvar".
+
+Após criar ou selecionar o layout, clique em "Visualizar" para gerar o relatório.
+
+14. A parcela foi baixada no Sponte mas não recebi em conta, como funciona?
+
+As parcelas têm baixa automática no Sponte.
+* Pix: O crédito é instantâneo.
+* Boletos: O crédito ocorre em até 3 dias após o pagamento pelo sacado.
+
+A transferência dos valores para a sua conta é automática e pode ser configurada para ocorrer diariamente, semanal ou mensalmente.
+
+15. Como posso quitar um boleto do Sponte Pay?
+
+Os boletos são baixados automaticamente em até 2 dias úteis após o pagamento pelo cliente.
+
+Se o aluno pagou diretamente à escola (em dinheiro ou PIX, sem usar o boleto), você precisará cancelar o boleto gerado.
+1. Acesse o controle "Boletos Sponte Pay" e cancele o boleto.
+2. Após o cancelamento, vá até a seção "Contas a Receber".
+3. Encontre a parcela e realize a quitação manual.
+
+16. Como emitir um novo boleto pelo Sponte Pay?
+
+Geração Automática:
+Se você já gerou a parcela com o tipo de cobrança "link de pagamento" ou "boleto", a geração será automática. Isso ocorre de acordo com a configuração de quantos dias antes do vencimento você deseja que o sistema envie a cobrança por e-mail.
+
+Geração Manual (após cancelamento ou ajuste):
+1. Vá até Financeiro ➩ Integração Sponte Pay ➩ Boleto Sponte Pay.
+2. Selecione a parcela desejada (que pode ter sido cancelada para ajustes).
+3. Após realizar os ajustes, basta gerar e enviar o boleto.
+O sistema gerará um novo boleto e o encaminhará para o responsável financeiro.
+
+17. O que devo fazer se um cliente relatar que não recebeu o boleto?
+
+1. Acesse "Financeiro" ➩ "Integração Sponte Pay" ➩ "Boleto Sponte Pay".
+2. Encontre a parcela e verifique se a situação está como "boleto gerado".
+3. Utilize a opção de acessar o cadastro do responsável para confirmar se o e-mail está correto. Se necessário, atualize e salve.
+4. Se o e-mail estiver correto, selecione a parcela e reenvie o boleto.
+
+Opções adicionais:
+* Copiar o link do boleto e enviá-lo diretamente.
+* Acessar o boleto para visualização.
+* Enviar o boleto pelo WhatsApp.
+
+18. Como ajustar o valor de um boleto antes de enviá-lo ao cliente?
+
+1. Acesse a seção de "Boletos Sponte Pay" ou "Financeiro ➩ Contas a Receber".
+2. Encontre a parcela correspondente ao boleto que deseja ajustar.
+3. Selecione a opção para editar.
+4. Modifique o valor conforme necessário.
+5. Após realizar o ajuste, gere e envie o boleto para o cliente.
+
+Certifique-se de revisar todas as informações antes de enviar.
+
+19. Qual o tempo de repasse?
+
+O tempo de repasse é o tempo para o valor ficar disponível para saque (transferência manual ou automática):
+* Pix: É instantâneo. Assim que liquidado (pago), ele baixa no Sponte e já fica disponível.
+* Boleto: É de até 2 dias úteis.

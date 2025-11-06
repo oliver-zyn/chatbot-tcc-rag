@@ -1,0 +1,39 @@
+Contas a Receber
+
+1. Como cancelar as parcelas?
+
+Acesse o menu Financeiro ➣ Contas a Receber. Encontre as parcelas que deseja cancelar.
+Se for necessário cancelar várias parcelas, no filtro coloque o vencimento “todos” e digite o nome do aluno e clique em filtrar.
+Selecione as parcelas e clique no botão “Cancelar”.
+
+2. Como imprimir um recibo de pagamento?
+
+Acesse o menu Financeiro ➣ Contas a Receber.
+Realize o filtro buscando somente as parcelas “Quitadas”.
+Selecione e clique em “Imprimir Recibo”. Pronto, você gerou a segunda via do recibo de pagamento.
+
+3. Como funciona o botão de “Renegociar Parcelas”?
+
+Este é um assistente que cancela parcelas antigas (geralmente vencidas) e cria um novo plano de pagamento para o aluno. Isso ajuda a tirar o aluno dos relatórios de inadimplentes.
+
+O fluxo é o seguinte:
+1. Acesse o menu Financeiro ➣ Contas a Receber e, no menu "Ações" à direita, clique em “Renegociar Parcelas”.
+2. Inicie o assistente e identifique o aluno.
+3. Selecione as parcelas a renegociar. Você pode marcar "somente as vencidas" ou "todas as parcelas".
+4. Defina o “Motivo da Renegociação” (ex: "Pandemia"). Isso é usado para gerar relatórios posteriores.
+5. ⚠️ AVISO DE BOLETO: O sistema avisará se boletos já foram gerados. Se você marcar "Sim" (para cancelar), o boleto é cancelado *no Sponte*. Se a remessa já foi enviada ao banco, você deve **cancelar o boleto manualmente no site do banco** para evitar cobrança duplicada.
+6. Avance para a tela de criação do novo plano. Aqui você pode definir o "Valor com Juros" (calculado) ou desmarcar e adicionar Juros e Desconto manualmente (em R$ or %).
+7. Defina o "Número de parcelas" e a "Data do primeiro vencimento", e clique em “Gerar Parcelas”.
+8. Avance para a tela de Categorias. Você pode manter a categoria original (ex: "Mensalidade") ou desmarcar e selecionar uma nova (ex: "Parcelas Renegociadas") para separar os relatórios financeiros. Você também pode definir a nova Forma de Cobrança (ex: "Dinheiro").
+9. Avance para a tela de confirmação final e clique em "Finalizar".
+
+Ao finalizar, as parcelas antigas selecionadas serão canceladas, e as novas parcelas serão geradas no Contas a Receber.
+
+4. Meu aluno não tinha o valor total da parcela e deseja realizar o pagamento parcial. Existe essa possibilidade?
+
+Sim. Acesse o menu Financeiro ➣ Contas a Receber, selecione a parcela e clique em “Quitar”.
+
+No “Valor Recebido” coloque o valor que o aluno tem. O sistema vai reconhecer como um “Desconto”, mas pode clicar em “Quitar”.
+O sistema vai perguntar se isso é um “Desconto” ou “Nova Parcela”. Clique em “Nova Parcela”.
+O Sponte vai perguntar para quando fica o vencimento da diferença. Defina e clique em confirmar.
+Será gerado um recibo de pagamento somente do valor pago parcialmente.

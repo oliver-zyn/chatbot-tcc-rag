@@ -1,0 +1,37 @@
+Financeiro e Marketplace
+
+Neste manual, veremos como acessar o menu Financeiro / Marketplace. Este menu é onde a Sponte disponibiliza os boletos de serviços da própria Sponte para a escola, e também onde se inicia a contratação de serviços adicionais (como emissão de Boletos, Notas Fiscais, etc.) [cite: 3-5].
+
+🛠 1. Liberação de Permissão
+
+Para que um usuário possa gerar a 2º via dos Boletos Sponte (a fatura da Sponte para a escola), uma permissão específica é necessária.
+
+1 - Acesse o menu Utilitários ➩ Usuários[cite: 7].
+2 - Selecione o usuário desejado e clique em Editar [cite: 9-10].
+3 - Vá para a guia de Permissões ➩ Outras Permissões[cite: 12].
+4 - Busque por "Geração de Cobranças", expanda as opções e habilite a permissão "Emitir Boleto de Cobrança Sponte" [cite: 12-14].
+5 - Clique em Salvar[cite: 16].
+
+🛠 2. Acesso ao Financeiro / Marketplace
+
+Após a permissão estar habilitada:
+1 - Volte para a tela Home (tela principal) do Sponte[cite: 17].
+2 - No canto superior direito, clique no nome do Usuário[cite: 18].
+3 - Clique no menu "Financeiro/Marketplace"[cite: 18].
+
+O sistema irá direcionar você para uma nova guia no navegador, contendo três seções:
+
+Aba 1: Financeiro
+
+Nesta guia, você pode visualizar as informações financeiras da sua escola com a Sponte [cite: 20-21].
+* Últimos pagamentos e o Boleto Sponte disponível para impressão (para gerar a 2º via para pagamento) [cite: 21-22].
+* Informação dos Alunos Gerenciados naquele período (Mês), que é usado para a precificação por Aluno [cite: 22-23].
+
+Aba 2: Marketplace
+
+Nesta guia, você tem acesso a todas as ferramentas oferecidas para contratação pela Sponte (ex: Geração de Boletos, Notas Fiscais, etc.) [cite: 26-28].
+O processo de contratação do serviço se inicia aqui e é encaminhado para o time Comercial da Sponte [cite: 27-28].
+
+Aba 3: Área do Cliente
+
+Nesta guia, você tem acesso às informações dos Representantes Legais da sua instituição e pode informar os dados de mais de uma pessoa, caso necessário [cite: 32-33].

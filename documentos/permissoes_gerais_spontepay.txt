@@ -1,0 +1,38 @@
+Liberação de Permissões - Sponte Pay
+
+Para que os usuários possam usar os módulos do Sponte Pay, é preciso realizar a liberação das permissões através do menu: Utilitários ➩ Usuários.
+
+1 - Em Utilitários ➩ Usuários, busque pelo usuário que deseja liberar as permissões, selecione-o e clique duas vezes sobre o cadastro dele.
+
+2 - Com o cadastro aberto, vá até a aba "Permissões", e na aba secundária "Menu", busque pela opção "Financeiro".
+
+3 - Clique para expandir "Financeiro" e busque pela opção "Integração Sponte Pay".
+
+Nela estarão disponíveis todas as permissões de módulo. Marque as que o usuário deve ter acesso:
+* Boletos Sponte Pay - Permite a geração de cobranças via boletos
+* Link de Pagamento Sponte Pay - Permite a geração de cobranças via link de pagamento
+* Operações por recebedor - Permite acessar a tela de detalhes de cobranças/recebimentos
+* Pix Sponte Pay - Permite a geração de cobranças via Pix
+* Recorrência Sponte Pay - Permite a geração de cobranças via recorrência
+* Crédito Sponte Pay (Nova) - Permite a geração de cobranças via crédito parcelado
+
+⚠️Obs 1: As permissões que irão aparecer serão de acordo com os serviços que sua unidade contratou.
+⚠️Obs 2: É interessante liberar a permissão de "Operações por Recebedor", apenas para pessoas que vão ter controle aos saldos, valores recebidos, e a possíveis saques na plataforma.
+
+4 - Após habilitar os menus, é preciso liberar as ações. Vá até a aba "Outras Permissões", e busque pela opção "Integração Sponte Pay".
+
+Nela, estarão disponíveis as seguintes permissões de ação:
+* Estornar Cobranças - Permite ao usuário efetuar o estorno de cobranças Sponte Pay
+* Informar dados de cartão - Permite ao usuário informar os dados de um cartão dentro do Sponte
+* Visualizar dashboard da integração - Permite ao usuário visualizar gráficos e resumos sobre os valores recebidos
+
+5 - Na mesma aba ("Outras Permissões"), é possível liberar permissões de estorno específicas para alguns módulos.
+
+* Para Estorno de Pix: Busque pela opção "Pix Sponte Pay" e marque a permissão de estorno.
+* Para Estorno de Crédito: Busque pela opção "Crédito Sponte Pay" e marque a permissão de estorno.
+
+6 - Para finalizar, vá até a aba "Cobrança/Recebimento", para que o usuário possa selecionar os serviços do Sponte Pay ao lançar um plano financeiro.
+
+Marque as opções a qual o usuário terá acesso (ex: "Link de Pagamento Sponte Pay", "Crédito Sponte Pay", "Recorrência Sponte Pay", etc.).
+
+7 - Após definir todas as permissões, clique em "Salvar". O sistema irá solicitar o logoff deste usuário (sair e entrar novamente) para que as permissões sejam aplicadas.

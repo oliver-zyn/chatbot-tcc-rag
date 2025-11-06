@@ -1,0 +1,91 @@
+Geração das Cobranças - Link de Pagamento Sponte Pay
+
+Como gerar as cobranças e enviar para pagamento?
+
+🛠 Como gerar as cobranças - Link de Pagamento Sponte Pay
+Com todas as configurações finalizadas, permissões de usuários liberadas e planos financeiros lançados no Sponte, podemos avançar então para a geração de cobranças, onde vamos selecionar as parcelas que serão geradas, além de verificarmos algumas informações importantes.
+
+Vamos então até o menu, Financeiro ➩ Integração Sponte Pay ➩ Link de Pagamento Sponte Pay.
+
+1 - Inicialmente, vamos realizar algumas configurações padrões, para que a geração de cobranças funcione da melhor maneira possível.
+
+Vamos então até o botão "Configurações":
+
+Nele vamos encontrar as seguintes opções:
+
+* Gerar Link automaticamente com X dias de antecedência - Nesta opção, podemos configurar para que o sistema gere as cobranças de maneira automática, tantos dias antes da data de vencimento das parcelas.
+* Agrupar valor das parcelas selecionadas do mês para o mesmo sacado - Podemos configurar para que o sistema faça a junção de parcelas que tiverem o mesmo mês de vencimento, e o mesmo sacado.
+* Agrupar valor das parcelas selecionadas do mês para o mesmo responsável financeiro (CPF/CNPJ) - Podemos configurar para que o sistema faça a junção de parcelas que tiverem o mesmo mês de vencimento, e o mesmo responsável financeiro.
+
+Ainda nesta tela, você poderá visualizar informações de tarifas, porém, elas não podem ser alteradas.
+
+Marque as opções em que deseja padronizar no sistema, neste caso, recomendamos que opção de geração automática se mantenha ativa por ao menos 10 dias de antecedência.
+
+⚠️Obs: Caso tenhamos configurado um número X de dias na primeira opção, e o vencimento da primeira parcela do plano já tenha passado desse período, a primeira geração deverá ser feita de forma manual, as demais seguem no formato automático.
+⚠️Obs 2: Ao selecionarmos a opção de geração automática de parcelas, o sistema passa a não considerar para agrupamento parcelas do mesmo mês, e sim apenas do mesmo dia.
+⚠️Obs 3: Parcelas com grupos de split diferentes não serão agrupadas.
+⚠️Não esqueça de Salvar!
+
+✅Finalizada a configuração, vamos para a geração de cobranças:
+
+2 - Você pode utilizar os filtros da tela para buscar pelo aluno ou responsável o qual deseja realizar a geração da cobrança. Você pode utilizar quantos filtros desejar (ex: sacado, situação, data de vencimento).
+
+3 - Após o sistema exibir as parcelas que você filtrou, será possível tomar algumas ações de verificação:
+
+Utilize a opção do "Plano", para visualizar as parcelas lançadas para o sacado neste plano, sendo possível realizar alterações pontuais antes da geração:
+
+Utilize a opção do "Cadastro", para visualizar as informações cadastrais do sacado, sendo possível realizar alterações pontuais antes da geração:
+
+⚠️Caso esteja faltando alguma informação importante no cadastro do sacado, que impeça a geração da cobrança, o sistema irá avisar com um ponto de exclamação ao lado do nome do sacado.
+
+4 - Feita a confirmação de todas as informações, valide questões de valores, datas, categorias, para impedir que a geração seja feita de maneira incorreta!
+
+Para gerar a cobrança marque a checkbox da parcela, e clique em "Gerar/Enviar Link de Pagamento", ou no canto direito em "Ações", ou no canto inferior esquerdo do sistema. Neste primeiro momento antes da geração, a situação ainda estará como "Não Gerado!"
+
+⚠️Obs: Lembre-se que, caso a configuração de geração automática esteja habilitada, e a parcela se encaixe no período de dias que você configurou, essa geração manual não precisa ser feita.
+⚠️Obs 2: Aqui nesta tela também, caso as parcelas do sacado tenham vencimento para o mesmo mês, basta marcar a checkbox de todas as parcelas que você deseja agrupar, e realizar a geração através do botão de geração no canto inferior esquerdo.
+
+5 - Após a geração realizada com sucesso, basta realizar a atualização da página. Feita a nova consulta, verifique que alguns campos foram atualizados ou adicionados:
+
+* Nº do Link - Após a geração, a parcela recebe um número de cobrança.
+* Data de Geração - Será exibido então a data em que a cobrança foi gerada.
+* Data de Visualização - Assim que o usuário visualizar a cobrança essa coluna será atualizada.
+* Data de Cancelamento - Caso haja um cancelamento na cobrança, a data também será exibida.
+* Situação - Caso a geração tenha ocorrido com sucesso, a situação será alterada para "Link Gerado".
+
+6 - Novas opções de ações também estarão disponíveis, nelas você poderá:
+
+* Copiar link, e enviar novamente ao sacado.
+* Visualizar pagamento te permite ir até os detalhes da cobrança.
+* Permite o envio do link via WhatsApp.
+* Reenviar o link via E-mail.
+* Cancelar a cobrança.
+
+Você ainda poderá trabalhar com os botões de ações em massa (no canto inferior) para:
+* Gerar e enviar o link das parcelas selecionadas.
+* Reenviar o e-mail com a cobrança para as parcelas selecionadas.
+* Cancelar cobranças selecionadas e já geradas.
+
+A opção de "Cancelar Link de Pagamento" nos permite realizar o cancelamento de um cobrança que já foi gerada. Após o cancelamento, você poderá realizar alterações manuais na parcela caso seja necessário, e posteriormente realizar uma nova geração desta cobrança.
+
+7 - ✅ Após realizarmos a geração da cobrança, é necessário que o sacado realize o pagamento para que a situação da cobrança seja atualizada e a baixa da parcela seja realizada no sistema.
+
+Para que possamos acompanhar os pagamentos, vamos até a aba "Links Processados". Lá será possível realizar alguns filtros para buscar pela cobrança caso ela já tenha sido paga.
+
+Nesta tela, podemos já visualizar qual foi o meio de pagamento escolhido pelo responsável pelo pagamento, basta visualizarmos a coluna "Pagamento Processado Via".
+
+8 - Ao identificar a forma de pagamento escolhida pelo sacado, vamos precisar ir até o menu correspondente para acompanhar os pagamentos e tomar ações necessárias:
+
+📍Pix
+Se o pagamento for no Pix Sponte Pay, vamos precisar acessar o menu, Financeiro -> Integração Sponte Pay -> Pix Sponte Pay.
+
+📍Recorrência
+Se o pagamento for na Recorrência Sponte Pay, vamos precisar acessar o menu, Financeiro -> Integração Sponte Pay -> Recorrência Sponte Pay. (E também o menu Financeiro -> Controle de Créditos).
+
+📍Boleto
+Se o pagamento for no Boleto Sponte Pay, vamos precisar acessar o menu, Financeiro -> Integração Sponte Pay -> Boletos Sponte Pay.
+
+📍Crédito Parcelado
+Se o pagamento for no Crédito Sponte Pay, vamos precisar acessar o menu, Financeiro -> Integração Sponte Pay -> Crédito Sponte Pay. (E também o menu Financeiro -> Controle de Créditos).
+
+✅Agora que você já gerou a cobrança, basta aguardar o pagamento por parte do sacado, e acompanhar o andamento através da tela inicial de Geração de Link, e também na tela de Links Processados.

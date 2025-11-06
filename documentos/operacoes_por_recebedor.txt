@@ -1,0 +1,53 @@
+Operações por Recebedor - Sponte Pay
+Quais as funções e para que serve esse menu?
+
+🛠 Transferências e Antecipações
+Para acessarmos o menu de "Operações por Recebedor", vamos até o menu, Financeiro -> Integração Sponte Pay -> Operações por Recebedor.
+
+Resumo Geral
+
+Inicialmente veremos um resumo geral do recebedor, trazendo informações da unidade cadastrada no Sponte Pay, além também de um resumo de informações financeiras, como o "Saldo Atual" e "Saldo a Receber".
+
+⚠️ As opções de Saldo Atual e Saldo a Receber já refletem os valores descontando as taxas acordadas.
+* Saldo Atual: É o valor disponível para saque imediato. Cobranças pagas no Pix já são contabilizadas diretamente aqui.
+* Saldo a Receber: São valores que ainda serão repassados. Cobranças pagas em Boleto, Recorrência ou Cartão de Crédito são contabilizadas aqui até que sejam baixadas, respeitando as datas de repasse.
+
+📍Transferências (Saques)
+
+A opção de "Transferência" nos permite realizar saques, onde o valor disponível será o "Saldo Atual".
+
+1 - Clique em "Solicitar Saque".
+2 - Então informe o valor escolhido para o saque, e clique em "Realizar Saque".
+
+⚠️Se atente as informações cadastrais da unidade e às instruções de horários.
+⚠️"O horário máximo para que esse saque ocorra no mesmo dia é até as 15h. Após esse horário, os valores serão transferidos pra sua conta bancária no próximo dia útil."
+
+📍Antecipações
+
+A opção de "Antecipações" nos permite realizar uma antecipação de valores, onde o valor disponível será o "Saldo a Receber".
+
+1 - Clique em "Solicitar Antecipação".
+2 - Selecione se deseja antecipar valores do início ou final (esta opção afeta o curso da sua antecipação).
+3. - Defina a data em que deseja receber (apenas dias úteis).
+4 - Informe se deseja que o valor seja transferido automaticamente para a conta bancária e valide se ela está correta.
+5 - Então informe o valor escolhido para a antecipação, e clique em "Solicitar Antecipação".
+
+⚠️Antecipações para o mesmo dia útil precisam ser solicitadas antes das 10:59 da manhã. Esta antecipação será analisada e poderá ser aprovada ou rejeitada.
+⚠️Após a aprovação, o valor a ser antecipado é adicionado ao saldo a partir das 12 horas do dia selecionado.
+
+🛠 Relatórios de Recebíveis
+
+Nesta aba, será possível gerar um relatório com todas as informações de recebíveis do Sponte Pay.
+
+1 - Selecione o "Recebedor", e informe a data da operação que deseja visualizar no relatório.
+2 - Selecione se serão exibidas apenas transferências.
+3 - Defina o formato (Excel ou XML).
+4. - Clique então em "Exportar" para gerar o relatório.
+
+🛠 Taxas por Operações/Grupos de Splits
+
+Nesta aba, será possível visualizar as taxas acordadas e configuradas para uso do Sponte Pay.
+
+📍É possível visualizar também, quais serviços de recebimento estão habilitados em sua unidade.
+
+📍Se sua unidade trabalha com mais de um grupo de split, também será possível visualizar quais são e estão configurados, além de termos um exemplo de divisão entre recebedores do grupo de split.
