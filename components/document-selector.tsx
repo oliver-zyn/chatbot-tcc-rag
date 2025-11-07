@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { FileText, X, ChevronDown } from "lucide-react";
+import { FileText, X, ChevronDown, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getFileTypeLabel } from "@/lib/utils/format";
 import { formatDate } from "@/lib/utils/date";
@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Input } from "@/components/ui/input";
 import type { Document } from "@/lib/db/schema/documents";
 import { cn } from "@/lib/utils";
 
@@ -35,22 +36,42 @@ export function DocumentSelector({
   disabled = false,
 }: DocumentSelectorProps) {
   const [open, setOpen] = React.useState(false);
+  const [searchQuery, setSearchQuery] = React.useState("");
 
   // Filtra apenas documentos que NÃO sejam tickets
   const nonTicketDocuments = documents.filter(doc =>
     !doc.fileName.toLowerCase().includes('ticket')
   );
 
+  // Filtra documentos baseado na busca
+  const filteredDocuments = React.useMemo(() => {
+    if (!searchQuery.trim()) return nonTicketDocuments;
+
+    const query = searchQuery.toLowerCase();
+    return nonTicketDocuments.filter(doc =>
+      doc.fileName.toLowerCase().includes(query)
+    );
+  }, [nonTicketDocuments, searchQuery]);
+
   const selectedDocument = nonTicketDocuments.find(doc => doc.id === selectedDocumentId);
 
   const handleSelect = (documentId: string) => {
     onSelectDocument(documentId === selectedDocumentId ? null : documentId);
     setOpen(false);
+    setSearchQuery(""); // Limpa busca ao selecionar
   };
 
   const handleClear = (e: React.MouseEvent) => {
     e.stopPropagation();
     onSelectDocument(null);
+  };
+
+  // Limpa busca quando fechar o popover
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+    if (!newOpen) {
+      setSearchQuery("");
+    }
   };
 
   if (nonTicketDocuments.length === 0) {
@@ -63,7 +84,7 @@ export function DocumentSelector({
         <Tooltip>
           <TooltipTrigger asChild>
             <span className="inline-flex">
-              <Popover open={open} onOpenChange={setOpen}>
+              <Popover open={open} onOpenChange={handleOpenChange}>
                 <PopoverTrigger asChild>
                   <Button
                     variant={selectedDocument ? "secondary" : "outline"}
@@ -102,15 +123,34 @@ export function DocumentSelector({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[320px] p-0" align="start">
-          <div className="flex items-center justify-between border-b px-3 py-2">
-            <p className="text-sm font-medium">Documentos disponíveis</p>
-            <p className="text-xs text-muted-foreground">
-              {nonTicketDocuments.length} {nonTicketDocuments.length === 1 ? "documento" : "documentos"}
-            </p>
+          <div className="border-b">
+            <div className="flex items-center justify-between px-3 py-2">
+              <p className="text-sm font-medium">Documentos disponíveis</p>
+              <p className="text-xs text-muted-foreground">
+                {filteredDocuments.length} {filteredDocuments.length === 1 ? "documento" : "documentos"}
+              </p>
+            </div>
+            <div className="px-3 pb-2">
+              <div className="relative">
+                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Buscar documento..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="h-9 pl-8"
+                  autoFocus
+                />
+              </div>
+            </div>
           </div>
           <ScrollArea className="h-[300px]">
             <div className="p-2 space-y-1">
-              {nonTicketDocuments.map((document) => {
+              {filteredDocuments.length === 0 ? (
+                <div className="px-3 py-8 text-center text-sm text-muted-foreground">
+                  Nenhum documento encontrado
+                </div>
+              ) : (
+                filteredDocuments.map((document) => {
                 const isSelected = document.id === selectedDocumentId;
                 return (
                   <button
@@ -138,7 +178,7 @@ export function DocumentSelector({
                     )}
                   </button>
                 );
-              })}
+              }))}
             </div>
           </ScrollArea>
           {selectedDocumentId && (

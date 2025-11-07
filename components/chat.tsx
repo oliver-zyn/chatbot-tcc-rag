@@ -183,7 +183,7 @@ export function Chat({ conversationId, initialMessages, conversationTitle, docum
         </div>
 
         {!isAtBottom && (
-          <div className="absolute bottom-28 inset-x-0 flex justify-center z-10 pointer-events-none">
+          <div className="absolute bottom-40 inset-x-0 flex justify-center z-10 pointer-events-none">
             <Button
               variant="outline"
               size="icon"
