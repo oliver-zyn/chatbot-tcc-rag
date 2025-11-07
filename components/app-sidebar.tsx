@@ -11,6 +11,7 @@ import {
   Library,
   MessageSquare,
   Loader2,
+  MessageSquareQuote,
 } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 
@@ -81,6 +82,13 @@ export function AppSidebar({
       icon: Library,
       isActive: pathname === "/documents/library",
     },
+    {
+      title: "Questionário de Avaliação",
+      url: "https://forms.gle/2jbfvaft4mM7v1od9",
+      icon: MessageSquareQuote,
+      isActive: false,
+      isExternal: true,
+    },
   ];
 
   return (
@@ -134,10 +142,21 @@ export function AppSidebar({
               {navDocuments.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={item.isActive}>
-                    <Link href={item.url}>
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
-                    </Link>
+                    {item.isExternal ? (
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <item.icon className="h-4 w-4" />
+                        <span>{item.title}</span>
+                      </a>
+                    ) : (
+                      <Link href={item.url}>
+                        <item.icon className="h-4 w-4" />
+                        <span>{item.title}</span>
+                      </Link>
+                    )}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
