@@ -41,6 +41,8 @@ export const appConfig = {
   tickets: {
     similarityThreshold: 0.7,
     maxSimilarTickets: 3,
+    maxChunksPerSearch: 100, // Quantos chunks buscar por embedding (maior = mais cobertura)
+    maxSourceEmbeddings: 3,  // Quantos embeddings do documento fonte usar
   },
 
   /**

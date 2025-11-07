@@ -33,7 +33,7 @@ export async function findDocumentByTicketNumber(ticketNumber: string): Promise<
 /**
  * Busca tickets similares baseado no conteúdo
  * Retorna tickets com problemas/soluções semelhantes
- * Apenas retorna se houver similaridade relevante (>70%)
+ * Usa múltiplos embeddings e pega a MAIOR similaridade (max) ao invés da média
  */
 export async function findSimilarTickets(
   documentId: string,
@@ -41,77 +41,89 @@ export async function findSimilarTickets(
   minSimilarity: number = appConfig.tickets.similarityThreshold
 ): Promise<Array<{ document: Document }>> {
   try {
-    // Busca embeddings do documento de origem
+    // Busca TODOS os embeddings do documento de origem (não apenas o primeiro)
     const sourceEmbeddings = await db
       .select({
         embedding: embeddings.embedding,
       })
       .from(embeddings)
-      .where(eq(embeddings.documentId, documentId))
-      .limit(1);
+      .where(eq(embeddings.documentId, documentId));
 
     if (sourceEmbeddings.length === 0) {
       return [];
     }
 
-    const sourceEmbedding = sourceEmbeddings[0].embedding;
-    const embeddingString = `[${sourceEmbedding.join(',')}]`;
+    // Pega os N primeiros embeddings (mais representativos) para não sobrecarregar
+    const topSourceEmbeddings = sourceEmbeddings.slice(0, appConfig.tickets.maxSourceEmbeddings);
 
-    // Busca documentos similares que sejam tickets (excluindo o próprio)
-    const similarDocs = await db
-      .select({
-        id: documents.id,
-        userId: documents.userId,
-        fileName: documents.fileName,
-        fileType: documents.fileType,
-        fileSize: documents.fileSize,
-        content: documents.content,
-        status: documents.status,
-        createdAt: documents.createdAt,
-        updatedAt: documents.updatedAt,
-        similarity: sql<number>`1 - (${embeddings.embedding} <=> ${embeddingString}::vector)`,
-      })
-      .from(embeddings)
-      .innerJoin(documents, eq(embeddings.documentId, documents.id))
-      .where(
-        sql`
-          ${documents.id} != ${documentId} AND
-          LOWER(${documents.fileName}) LIKE '%ticket%' AND
-          1 - (${embeddings.embedding} <=> ${embeddingString}::vector) > ${minSimilarity}
-        `
-      )
-      .orderBy(sql`${embeddings.embedding} <=> ${embeddingString}::vector`)
-      .limit(limit);
+    // Mapeia os resultados por documento para calcular similaridade máxima
+    const documentSimilarities = new Map<string, {
+      document: Document;
+      maxSimilarity: number;
+    }>();
 
-    // Agrupa por documento (pode ter múltiplos embeddings) e pega a maior similaridade
-    const groupedDocs = new Map<string, { document: Document; similarity: number }>();
+    // Para cada embedding do documento fonte
+    for (const sourceEmb of topSourceEmbeddings) {
+      const embeddingString = `[${sourceEmb.embedding.join(',')}]`;
 
-    for (const doc of similarDocs) {
-      const existing = groupedDocs.get(doc.id);
-      const document: Document = {
-        id: doc.id,
-        userId: doc.userId,
-        fileName: doc.fileName,
-        fileType: doc.fileType,
-        fileSize: doc.fileSize,
-        content: doc.content,
-        status: doc.status,
-        createdAt: doc.createdAt,
-        updatedAt: doc.updatedAt,
-      };
+      // Busca documentos similares que sejam tickets (excluindo o próprio)
+      // Usa threshold mais baixo na query para não perder resultados
+      const similarDocs = await db
+        .select({
+          id: documents.id,
+          userId: documents.userId,
+          fileName: documents.fileName,
+          fileType: documents.fileType,
+          fileSize: documents.fileSize,
+          content: documents.content,
+          status: documents.status,
+          createdAt: documents.createdAt,
+          updatedAt: documents.updatedAt,
+          similarity: sql<number>`1 - (${embeddings.embedding} <=> ${embeddingString}::vector)`,
+        })
+        .from(embeddings)
+        .innerJoin(documents, eq(embeddings.documentId, documents.id))
+        .where(
+          sql`
+            ${documents.id} != ${documentId} AND
+            LOWER(${documents.fileName}) LIKE '%ticket%' AND
+            1 - (${embeddings.embedding} <=> ${embeddingString}::vector) > ${minSimilarity}
+          `
+        )
+        .orderBy(sql`${embeddings.embedding} <=> ${embeddingString}::vector`)
+        .limit(appConfig.tickets.maxChunksPerSearch);
 
-      if (!existing || doc.similarity > existing.similarity) {
-        groupedDocs.set(doc.id, {
-          document,
-          similarity: doc.similarity,
-        });
+      // Pega a MAIOR similaridade para cada documento (não a média)
+      for (const doc of similarDocs) {
+        const existing = documentSimilarities.get(doc.id);
+        const document: Document = {
+          id: doc.id,
+          userId: doc.userId,
+          fileName: doc.fileName,
+          fileType: doc.fileType,
+          fileSize: doc.fileSize,
+          content: doc.content,
+          status: doc.status,
+          createdAt: doc.createdAt,
+          updatedAt: doc.updatedAt,
+        };
+
+        if (!existing || doc.similarity > existing.maxSimilarity) {
+          documentSimilarities.set(doc.id, {
+            document,
+            maxSimilarity: doc.similarity,
+          });
+        }
       }
     }
 
-    return Array.from(groupedDocs.values())
-      .sort((a, b) => b.similarity - a.similarity)
-      .slice(0, limit)
-      .map(item => ({ document: item.document }));
+    // Filtra por threshold e ordena pela maior similaridade
+    const resultsWithMaxSimilarity = Array.from(documentSimilarities.values())
+      .filter(item => item.maxSimilarity > minSimilarity)
+      .sort((a, b) => b.maxSimilarity - a.maxSimilarity)
+      .slice(0, limit);
+
+    return resultsWithMaxSimilarity.map(item => ({ document: item.document }));
   } catch (error) {
     console.error("Failed to find similar tickets:", error);
     throw new Error("Failed to find similar tickets");

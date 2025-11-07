@@ -65,13 +65,12 @@ export async function generateRAGResponse(
       FORMATAÇÃO DA RESPOSTA:
       - Use Markdown para organizar a resposta
       - **Negrito** para termos importantes
-      - \`código\` para comandos, funções ou variáveis
+      - \`\`\`código\`\`\` para comandos, funções ou variáveis
       - Listas com bullets (-) ou numeradas (1., 2., 3.)
       - ### Subtítulos quando necessário
       - > Citações diretas quando relevante
 
       MENÇÃO A TICKETS:
-      - Você PODE e DEVE mencionar números de tickets naturalmente (ex: "ticket #12345")
       - NÃO use colchetes para citações [1], apenas mencione diretamente${similarTicketsContext ? getSimilarTicketsInstructions() : ''}`,
             prompt: `Contexto dos documentos:
       ${context}${similarTicketsContext}
